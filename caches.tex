@@ -24,17 +24,22 @@
 \begin{document}
 \maketitle
 
-Considere uma cache com mapeamento direto e endereços de memória de 32 bits 
-organizados da forma abaixo, responda qual o espaço ocupado pela cache no 
-processador em bits. Considere que 1 bit de validade é usado por linha de cache.
+Considere uma cache com mapeamento \underline{direto} e endereços de memória de
+x bits organizados da forma abaixo, responda qual o espaço ocupado pela cache no
+processador em bits. Considere que c bits de controle são usado por linha de
+cache.
 
-\begin{tabular}{|c|c|c|}
-\hline TAG & ÍNDICE & OFFSET \\
-\hline 31-20 & 19-8 & 7-0 \\
-\hline
-\end{tabular}
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline TAG & ÍNDICE & OFFSET \\
+    \hline t bits & i bits & f bits \\
+    \hline
+  \end{tabular}
+\end{table}
 
-$2^{12}\times((32-12-8)+1+(2\times8\times8))$
+$$2^{i}\times((x-i-f)+c+(2^{f} \times 8))\ bits$$
+$$2^{i}\times((x-i-f)+c+(2^{f} \times))\ bytes$$
 
 Considere um sistema com as seguintes configurações:
 
@@ -49,7 +54,7 @@ Informe o tamanho da tabela de páginas em bits.
 
 $2^{25}\times(2+(22-11))$
 
-Considere uma cache com mapeamento 4-associativo e endereços de memória de 32 
+Considere uma cache com mapeamento 4-associativo e endereços de memória de 32
 bits organizados da forma abaixo, responda quantas linhas tem a cache.
 
 \begin{tabular}{|c|c|c|}
@@ -68,7 +73,7 @@ Considere um sistema com as seguintes configurações:
 \item Linhas de cache com 1 bit de validade
 \end{enumerate}
 
-Qual seria o tamanho efetivo da cache em bits caso ela fosse implementada com 
+Qual seria o tamanho efetivo da cache em bits caso ela fosse implementada com
 um mapeamento 4-associativo?
 
 $2^{3}\times(4\times(18+1+2^{7}\times8))$
