@@ -1,0 +1,42 @@
+ Performance counter stats for './matrix_access -r 1000 -c 1000 -byrow':
+
+   <not supported> L1-dcache-loads
+           121.086 L1-dcache-load-misses     #    0,00% of all L1-dcache hits
+   <not supported> LLC-load-misses
+            74.066 cache-misses
+        17.838.556 instructions
+
+       0,007189794 seconds time elapsed
+
+
+ Performance counter stats for './matrix_access -r 1000 -c 1000 -bycolumn':
+
+   <not supported> L1-dcache-loads
+         1.090.779 L1-dcache-load-misses     #    0,00% of all L1-dcache hits
+   <not supported> LLC-load-misses
+           139.617 cache-misses
+        17.767.281 instructions
+
+       0,011671361 seconds time elapsed
+
+
+ Performance counter stats for './matrix_access -r 10000 -c 10000 -bycolumn':
+
+   <not supported> L1-dcache-loads
+       117.876.845 L1-dcache-load-misses     #    0,00% of all L1-dcache hits
+   <not supported> LLC-load-misses
+        15.116.107 cache-misses
+     1.696.574.128 instructions
+
+       1,153914996 seconds time elapsed
+
+
+ Performance counter stats for './matrix_access -r 10000 -c 10000 -byrow':
+
+   <not supported> L1-dcache-loads
+        12.361.133 L1-dcache-load-misses     #    0,00% of all L1-dcache hits
+   <not supported> LLC-load-misses
+         6.465.904 cache-misses
+     1.636.549.360 instructions
+
+       0,320196129 seconds time elapsed
