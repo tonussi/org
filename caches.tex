@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek, brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+\author{Luke Skywalker}
+\title{Caches}
+\begin{document}
+\maketitle
+
+Considere uma cache com mapeamento direto e endereços de memória de 32 bits 
+organizados da forma abaixo, responda qual o espaço ocupado pela cache no 
+processador em bits. Considere que 1 bit de validade é usado por linha de cache.
+
+\begin{tabular}{|c|c|c|}
+\hline TAG & ÍNDICE & OFFSET \\
+\hline 31-20 & 19-8 & 7-0 \\
+\hline
+\end{tabular}
+
+$2^{12}\times((32-12-8)+1+(2\times8\times8))$
+
+Considere um sistema com as seguintes configurações:
+
+\begin{enumerate}
+\item Memória virtual de $2^36$ bytes
+\item Memória física de $2^22$ bytes
+\item Páginas de $2^11$ bytes
+\item 2 bits extra para o controle das páginas
+\end{enumerate}
+
+Informe o tamanho da tabela de páginas em bits.
+
+$2^{25}\times(2+(22-11))$
+
+Considere uma cache com mapeamento 4-associativo e endereços de memória de 32 
+bits organizados da forma abaixo, responda quantas linhas tem a cache.
+
+\begin{tabular}{|c|c|c|}
+\hline TAG & ÍNDICE & OFFSET \\
+\hline 31-26 & 25-10 & 9-0 \\
+\hline
+\end{tabular}
+
+$2^16 \times 4 = 262144$
+
+Considere um sistema com as seguintes configurações:
+
+\begin{enumerate}
+\item $2^28$ bytes endereçáveis de memória
+\item Cache com $2^5$ blocos de $2^7$ bytes cada
+\item Linhas de cache com 1 bit de validade
+\end{enumerate}
+
+Qual seria o tamanho efetivo da cache em bits caso ela fosse implementada com 
+um mapeamento 4-associativo?
+
+$2^{3}\times(4\times(18+1+2^{7}\times8))$
+
+Considere um sistema com as seguintes configurações:
+
+\begin{enumerate}
+\item Memória virtual de $2^33$ bytes
+\item Memória física de $2^24$ bytes
+\item Páginas de $2^11$ bytes
+\item 6 bits extra para o controle das páginas
+\end{enumerate}
+
+Informe o tamanho da tabela de páginas em bits.
+
+$2^{22}\times(6+(24-11))$
+
+\end{document}
