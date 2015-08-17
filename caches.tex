@@ -30,7 +30,6 @@ processador em bits. Considere que c bits de controle são usado por linha de
 cache.
 
 \begin{table}[ht!]
-  \centering
   \begin{tabular}{|c|c|c|}
     \hline TAG & ÍNDICE & OFFSET \\
     \hline t bits & i bits & f bits \\
@@ -38,15 +37,18 @@ cache.
   \end{tabular}
 \end{table}
 
-$$2^{i}\times((x-i-f)+c+(2^{f} \times 8))\ bits$$
-$$2^{i}\times((x-i-f)+c+(2^{f} \times))\ bytes$$
+$2^{i}\times((x-i-f)+c+(2^{f} \times 8))\ bits$\\
+\small{x: igual ao tamanho de bits do endereço, nesse caso 32 bits.}\\
+\small{c: igual  número de bits de controle por linha de cache.}\\
+
+$2^{i}\times((x-i-f)+c+(2^{f} \times))\ bytes$\\
 
 Considere um sistema com as seguintes configurações:
 
 \begin{enumerate}
-\item Memória virtual de $2^36$ bytes
-\item Memória física de $2^22$ bytes
-\item Páginas de $2^11$ bytes
+\item Memória virtual de $2^{36}$ bytes
+\item Memória física de $2^{22}$ bytes
+\item Páginas de $2^{11}$ bytes
 \item 2 bits extra para o controle das páginas
 \end{enumerate}
 
@@ -63,13 +65,13 @@ bits organizados da forma abaixo, responda quantas linhas tem a cache.
 \hline
 \end{tabular}
 
-$2^16 \times 4 = 262144$
+$2^{16} \times 4 = 262144$
 
 Considere um sistema com as seguintes configurações:
 
 \begin{enumerate}
-\item $2^28$ bytes endereçáveis de memória
-\item Cache com $2^5$ blocos de $2^7$ bytes cada
+\item $2^{28}$ bytes endereçáveis de memória
+\item Cache com $2^{5}$ blocos de $2^{7}$ bytes cada
 \item Linhas de cache com 1 bit de validade
 \end{enumerate}
 
@@ -81,9 +83,9 @@ $2^{3}\times(4\times(18+1+2^{7}\times8))$
 Considere um sistema com as seguintes configurações:
 
 \begin{enumerate}
-\item Memória virtual de $2^33$ bytes
-\item Memória física de $2^24$ bytes
-\item Páginas de $2^11$ bytes
+\item Memória virtual de $2^{33}$ bytes
+\item Memória física de $2^{24}$ bytes
+\item Páginas de $2^{11}$ bytes
 \item 6 bits extra para o controle das páginas
 \end{enumerate}
 
