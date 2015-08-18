@@ -1,0 +1,147 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek, brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=1.5cm, bottom=4.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+\author{Lucas}
+\title{Endian}
+\begin{document}
+\maketitle
+
+Imagine você lendo (da esquerda para direita $\rightarrow$) cada caractere dessa
+\verb|string "ABCDEFGH"| como um byte\footnote{em java um byte pode armazenar 
+dois caracteres ascii}.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline A & B & C & D & E & F & G & H \\ 
+  \hline 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\ 
+  \hline 
+  \end{tabular}
+  \caption{Big Endian, começa endereçar pelo MSB. Primeiro exemplo.}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline H & G & F & E & D & C & B & A \\ 
+  \hline 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\ 
+  \hline 
+  \end{tabular}
+  \caption{Little Endian, começa a endereçar pelo LSB. Primeiro exemplo.}
+\end{table}
+
+Agora você quer fazer um load byte de uma posição desses 8 bytes (que compõem 
+ao todo 64 bits), suponha que o endereço base para essa palavra dupla esta no 
+registrador \$s0.
+
+Na big endian, exemplo 1.
+
+\begin{verbatim}
+lb $t0, 6($s0) # $t0 conterá o valor 'B'
+\end{verbatim}
+
+E na little endian, exemplo 1.
+
+\begin{verbatim}
+lb $t0, 6($s0) # $t0 conterá o valor 'G'
+\end{verbatim}
+
+Imagine você lendo (da direita para esquerda ($\leftarrow$)) cada caractere 
+dessa \verb|string "ABCDEFGH"| como um byte.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline H & G & F & E & D & C & B & A \\ 
+  \hline 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\ 
+  \hline 
+  \end{tabular}
+  \caption{Big Endian, começa endereçar pelo MSB. Segundo exemplo.}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline A & B & C & D & E & F & G & H \\ 
+  \hline 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\ 
+  \hline 
+  \end{tabular}
+  \caption{Little Endian, começa a endereçar pelo LSB. Segundo exemplo.}
+\end{table}
+
+Agora você quer fazer um load byte de uma posição \textbf{5} desses 8 bytes 
+(que compõem ao todo 64 bits), suponha que o endereço base para essa palavra 
+dupla esta no registrador \$s0.
+
+Na big endian, exemplo 2.
+
+\begin{verbatim}
+lb $t0, 3($s0) # $t0 conterá o valor 'D'
+\end{verbatim}
+
+E na little endian, exemplo 2.
+
+\begin{verbatim}
+lb $t0, 3($s0) # $t0 conterá o valor 'E'
+\end{verbatim}
+
+\textbf{qualquer dúvida pergunta para o seu professor.}
+
+\section{Na sua máquina local, como verificar qual endian é.}
+
+Se você não tem a mínima ideia se sua máquina local em que você está trabalhando
+é little endian ou big endian. Aqui esta uma maneira rápida de verificar isso:
+
+No seu terminal local (windows/linux/unix):
+  \begin{verbatim}
+    python -c "import sys;sys.exit('0' if sys.byteorder=='big' else '1')"
+  \end{verbatim}
+Essa linha, retorna o caractere 0 se ordenamento de bytes na máquina em que você
+rodou esse comando é big-endian. E retorna o caractere '1' caso contrário 
+(little endian).
+
+  \begin{verbatim}
+    # por exemplo, na minha máquina:
+    [lucastonussi:/home/lucastonussi] 1 $ python -c "import sys;sys.exit('0' if 
+    sys.byteorder=='little' else '1')"
+    0
+    [lucastonussi:/home/lucastonussi] 1 $ python -c "import sys;sys.exit('0' if 
+    sys.byteorder=='big' else '1')"
+    1
+  \end{verbatim}
+
+No caso minha máquina é (\verb|uname -a|) Linux portia 3.13.0-61--generic 
+\#100-Ubuntu SMP Wed Jul 29 11:21:34 UTC 2015 x86\_64 x86\_64 x86\_64 GNU/Linux.
+
+Existem outras maneiras, ainda mais elegantes, veja (lscpu | grep -i byte):
+
+  \begin{verbatim}
+    [lucastonussi:/home/lucastonussi] $ lscpu | grep -i byte
+    Byte Order:            Little Endian
+  \end{verbatim}
+
+  \begin{verbatim}
+    [lucastonussi:/home/lucastonussi] $ dpkg-architecture | grep -i end
+    DEB_BUILD_ARCH_ENDIAN=little
+    DEB_HOST_ARCH_ENDIAN=little
+  \end{verbatim}
+
+\end{document}
