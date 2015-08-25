@@ -361,17 +361,32 @@ incondicionalmente nessa direção.
 
 \begin{table}[ht!]
 \begin{tabular}{|c|c|}
-\hline upwards(jump) & 1111 :: \underline{11111111111111111111111111 :: 00} = 
-0xFFFFFFFC = ${4294967292}$ bytes = 4 GiB  (gibibytes)\\ 
+\hline  Static Data & $\uparrow$ \\
+\hline upwards(jump) & 0001 :: \underline{11111111111111111111111111 :: 00} = 
+\verb|0x1FFFFFFC| \\ 
 \hline  & $\uparrow$ \\
-\hline $PC_{atual}[31-28]$ & [31-28]=[de 1111 até 0000] \tiny{4 bits MSB do PC} 
-vai variando conforme o pc se movimenta. 
+\hline  & \\
+\hline $PC_{atual}[31-28]$ & [31-28]=[de 0001 até 0000] \tiny{4 bits MSB do PC} 
+vai variando conforme o pc se movimenta (espaço text).
 \\
 \hline  & $\downarrow$ \\
+\hline PC $\rightarrow$ \verb|0x400000| & $\downarrow$ \\
+\hline  & Espaço de Memória Reservado \\
 \hline downards(jump) & 0000 :: 00000000000000000000000000 :: 00 = 0 \\ 
 \hline
 \end{tabular}
 \end{table}
+
+{\color{Red} \bfseries Se você observar o layout de memória, você vai ver que
+instruções ficam num espaço de \verb|0| até $\textsc{0x10000000}_{hex}$. Mas de
+\verb|0| até $\textsc{0x00400000}_{hex}$ é um espaço reservado pela memória que
+você não vai querer pular com jumps para lá, sem fazer perfeitamente o que esta
+fazendo. Ou seja, os jumps ficam pulando num espaço entre onde o pc inicia seu
+contador em $\textsc{0x00400000}_{hex}$ até $\textsc{0x10000000}_{hex}$ esse é 
+o espaço de \textsc{TEXT} para o jump pular, são 264241152 bytes, 66060288 
+endereços válidos. O mais longe que ele pode pular se o
+\verb|pc+4[31-28] == 0000| é FFFFFFC, são os 26 bits do jump iguais a 26{b'1'}
+assim ele desloca 2 para esquerda, e dá em FFFFFFC}.
 
 \pagebreak
 \paragraph{O loadword, storeword} e derivados do mesmo tipo, usam outro modo de 
@@ -431,22 +446,6 @@ sw $t0, 0xffffffe0     # ele estendeu o sinal de 0xffe0
                        # exatamente 0x10010060
                        # 0x50 aparecerá no byte menos significativo
                        # pois o mars implementa um mips tipo little endian
-\end{verbatim}
-
-Uma maneira de fazer parecer big endian é invertendo a lógica de deslocamento:
-
-\begin{verbatim}
-.text
-.globl main
-
-main:
-
-addi $t0, $0, 0xAA
-la $s0, 0x10010024 # (  base  )  + (deslocamento) (endereçando esq -> dir)
-sb $t0, -0x21($s0) # 0x1001 0024 + (0xffff ffdf) = 0x10010003
-sb $t0, -0x22($s0) # 0x1001 0024 + (0xffff ffde) = 0x10010002
-sb $t0, -0x23($s0) # 0x1001 0024 + (0xffff ffdd) = 0x10010001
-sb $t0, -0x24($s0) # 0x1001 0024 + (0xffff ffdc) = 0x10010000
 \end{verbatim}
 
 Load Upper Immediate (lui) é uma instrução do tipo \textbf{I} logo o que 
