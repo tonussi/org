@@ -107,28 +107,183 @@ grande estrago.
 
 \paragraph{2.1.1}
 
+Uma dica que eu dou é a seguinte. Existirão questões, na prova inclusive que
+exigem que você pense como a máquina pensa algebricamente. Máquina não sabe
+subtrair algebricamente, ela só sabe somar, complementar, etc. Então ela vai
+trabalhar as componentes para equalizar o seu resultado desejado. A
+complementação de constantes que serão adicionadas com endereços base que estão
+em registradores e constantes de branchs que levam para endereços menores que o
+do $PC_{atual}$ também seguem a mesma lógica.
+
+\begin{verbatim}
+a. sub f, g, h     -> sub $s0, $s1, $s2
+
+b. addi h, h, FFFB -> addi $s0, $s0, fffb
+   add f, g, h     -> add $s1, $s2, $s0
+\end{verbatim}
 
 
 \paragraph{2.2.1}
 
+\begin{verbatim}
+a. sub f, g, f      -> sub $s0, $s1, $s0
+
+b. addi h, h, FFFE  -> addi $s0, $s0, fffe
+   add f, g, h      -> add $s1, $s2, $s0
+\end{verbatim}
+
 \paragraph{2.3.1}
+
+Nessa questão minha dica é você tentar bolar um jeito de gerar código mips de
+uma maneira padrão. Sabemos que você pode criar estratégias para efetuar a mesma
+situação que o código c apresenta. Mas a máquina não tem a capacidade que nós
+seres humanos temos de raciocinar, ela apenas tem mais resistência física para
+cálculos repetitivos. Pensa em código mips gerado padrão.
+
+\begin{verbatim}
+a.1. f = $zero - f;   -> sub $s0, $zero, $s0
+a.2. f = f - g;       -> sub $s0, $s0, $s1
+
+b. f = g + (- f - 5); -> addi $s1, $s1, 0xfffb
+                      -> sub $s1, $s2, $s1
+sub ->          -
+               / \
+            $s2   +          <- addi
+                 / \
+               $s1  0xfffb
+\end{verbatim}
 
 \paragraph{2.2.4}
 
+Na versão 4 estendida do livro de organização de computadores. Essa questão 
+pede para transformar em código c.
+
 \paragraph{2.3.4}
 
-\paragraph{2.4.1}
+\begin{verbatim}
+a. addi f, f, -4
 
-\paragraph{2.4.4}
+addi $s0, $s0, 0xfffc
 
-\paragraph{2.5.4}
+b. add i, g, h
+   add f, i, f
 
-\paragraph{2.5.5}
+add $s0, $s1, $s2
+add $s3, $s0, $s3
+\end{verbatim}
+
+\paragraph{2.3.5} [5] 2.2 If the variables f , g , h , and i have values 1, 2,
+3, and 4, respectively, what is the end value of f ?
+
+\begin{verbatim}
+addi $s0, $s0, 0xfffc
+
+$s0 recebe 0x0001 + 0xfffc = 0xfffd (=> -3)
+
+b. add i, g, h
+   add f, i, f
+
+add $s0, $s1, $s2
+add $s3, $s0, $s3
+
+$s0 recebe 0x2 + 0x3 (=> 0x5)
+$s3 recebe 0x5 + 0x1 (=> 0x6)
+
+\end{verbatim}
+
+\paragraph{2.4.1 $\rightarrow$ 2.4.2}
+
+Nesse exercício você vai elaborar suas skills com push e pop e também e 
+eventualmente sacar que o lw e sw são um modo de endereçamento chamado base + 
+deslocamento.
+
+\begin{verbatim}
+f , g , h , i , j -> $s0, $s1, $s2, $s3, $s4,
+Assume that the base address of the arrays A and B are in registers $s6
+and $s7, respectively.
+
+a. f = -g -A[4];
+
+lw $t0, 0x10($s6)   #      A ->  0*4=0x00000000 [   data   ]
+sub $t0, $zero, $t0 #            1*4=0x00000004 [   data   ]
+sub $s0, $s1, $s0   #            2*4=0x00000008 [   data   ]
+                    #            3*4=0x0000000C [   data   ]
+                    #            4*4=0x00000010 [   data   ]
+
+b. B[8] = A[i–j];
+
+sub $t0, $s3, $s4
+sll $t1, $t1, 2
+add $t2, $t2, $s6
+lw $t3, 0($t0)
+
+sw $t3, 0x20($s7)
+\end{verbatim}
 
 \paragraph{2.11.5}
 
-\paragraph{2.12.1}
+Na prova de organização de computadores é exigido que você
+\underline{massantemente} traduza código mips para binário, e além disso calcule
+o deslocamento do branch equal ou branch not equal.
 
-\paragraph{2.12.2}
+Sempre olhar opcode primeiro (op) e depois funct. Pois eles são decodificados
+primeiro no datapath. Depois vc se preocupa com constantes em complemento de
+dois, se houverem, deslocamentos em relação a base em complemento de dois,
+etc... Já coloca em binário, no tamanho do comprimento do campo no formato que 
+você identificou para o opcode+funct. O registrador em base 10 te ajuda a 
+identificar qual é o registrador no cartão verde do mips.
+
+\begin{verbatim}
+
+a. op=0, rs=3, rt=2, rd=3, shamt=0, funct=34
+
+    op = 0 base10 -> 000000
+    rs = 3 base10 -> 00011
+    rt = 2 base10 -> 00010
+    rd = 3 base10 -> 00011
+ shamt = 0 base10 -> 00000
+funct = 34 base10 -> 22 base16 -> 100010
+
+sub $v1, $v0, $v1 # return x - y; em 'c/java'
+
+Subtract sub R R[rd] = R[rs] - R[rt] (1) 0 / 22 hex
+(1) May cause overflow exception
+
+b. op=0x23, rs=1, rt=2, const=0x4
+
+   op = 0x23 base16 -> 00100011
+      rs = 1 base10 -> 00001
+      rt = 2 base10 -> 00001
+const  = 0x4 base16 -> 0000000000000100
+
+lw $v0, 0x4($at)         # geralmente o $at quando
+                         # vem como source assim foi carregado
+                         # nele, automaticamente, um endereço
+                         # lui $at, 0x1001
+                         # lw $v0, 0x0004($at)
+                         # M[10010004] <- $v0
+
+Load Word lw I R[rt] = M[R[rs]+SignExtImm] (2) 23 hex
+(2) SignExtImm = { 16{immediate[15]}, immediate }
+
+\end{verbatim}
+
+\paragraph{2.15.4, questão de prova.}
+
+2.15.4 [5] 2.6 The table above shows different C statements that use logical
+operators. If the memory location at C[0] contains the integer values
+0x00001234, and the initial integer values of A and B are 0x00000000 and
+0x00002222, what is the result value of A ?
+
+\begin{verbatim}
+a. A = B | !A;
+A recebe 0xFFFFDDDD
+
+b. A = C[0] << 4;
+temp recebe C[0*4=0]
+temp = 0x00001234 << 4
+temp = 0000 | 0000 | 0000 | 0001 | 0010 | 0011 | 0100 | 0000
+temp = 0x00012340 = 0x12340
+\end{verbatim}
 
 \end{document}
