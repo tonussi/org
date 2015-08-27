@@ -24,6 +24,120 @@
 \begin{document}
 \maketitle
 
+% 122-136 pg
+\begin{enumerate}
+
+\item Sinalização contra não-sinalização se aplica a instruções 'loads' assim 
+como para instruções que mexem com aritmética (Patterson pg 124).
+
+\item Caracteres são normalmente combinados em \underline{strings}, essas 
+mesmas tem um número variado de caracteres. Existem três possibilidades para 
+representar uma string: (1) a primeira posição da string é reservada para 
+conter o comprimento da string, (2) outro variável parametrizada contém o 
+comprimento (como em uma estrutura de lista, pilha, fila, etc), ou (3) a última 
+posição da string é indicada por um caractere usado para marcar o fim da 
+string. C usa a terceira opção, terminando a string com um byte do qual o valor 
+é \'0' (nomeado null em ASCII). Por exemplo a string "Cal" é representada em C 
+por 4 bytes => \verb|67, 97, 108, 0|. Em laboratório o java usa a primeira 
+opção.
+
+\item Os modos de endereçamento da figura página 133 retratam bem, da forma que:
+
+\item O modo de endereçamento dos registradores utiliza os 5 bits para 
+identificar um dos 32 registradores no caso do mips 32. Mas por exemplo se eu 
+tivesse um banco de 43 registradores, quantos bits eu precisaria nos campos RS, 
+RT, RD, respectivamente ? ($log_2 43$)
+
+\item O modo de endereçamento "base+deslocamento" você \underline{soma} o 
+valor do campo de imediato << 2 e com sinal estendido, ao valor contido no 
+registrador base. Você pode capturar da com lb, lbu, lh, lhu, lw, ou também 
+pode salvar na memória usando sw, sh, sb. A forma como você vai somar um 
+deslocamento em relação à capturar ou salvar na memória usando esse modo de 
+endereçamento, vai da lógica de programação. E cuidado com essa ideia, pois 
+deslocar para bytes é diferente de deslocar para palavras inteiras, é óbvio mas 
+muita gente esquece e eu também .\_.
+
+\item O PC-relativo é o modo dos branchs eles movem o fluxo de execução de
+código baseando-se no valor completo do $PC_atual$. E isso dá uma flexibilidade
+boa para que seja possível a implementação de if then else (que são usado
+extensivamente em alto nível). O salvo do branch é menor que o do jump devido ao
+campo de imediato ser menor, 16 bits em relação ao campo de um tipo-j que é de
+26 bits. Lembrar que é $PC_{atual}$ + 4 + (SignExt :: BranchAddress :: 00). Pois
+o branch mexe no fluxo de execução de instruções do MIPS32 que é alinhado de 4
+em 4 bytes, outras arquiteturas como x86 tem um mecanismo de branching mais
+complexo, pois o tamanho das instruções varia e isso tem que ser cuidado pelo
+sistema. O x86 não perde desempenho por causa disso.
+
+\item Pseudo-Direct Adressing pega o valor direto do imediato como endereço, por
+exemplo jump. Porém saiba que o jump depende do último byte do valor do
+$PC_{atual}$ que em nem sempre é 0000, por vezes será 0001. Pois o último valor
+do espaço alocado no layout de memória para .text (instruções, seus programas,
+etc) é $10000000_{hex}$ (basta ver no mips greencard).
+\end{enumerate}
+
+\paragraph{Exercise 2.24}
+
+Assume that the register \$t1 contains the address 0x10000000 and the register
+\$t2 contains the address 0x10000010. Note the MIPS architecture utilizes big-
+endian addressing.
+
+\begin{verbatim}
+a. lbu  $t0, 0($t1)
+   sw   $t0, 0($t2)
+
+b. lb   $t0, 0($t1)
+   sh   $t0, 0($t2)
+\end{verbatim}
+
+\paragraph{2.24.1 [5] 2.9} Assume that the data (in hexadecimal) at address 
+0x10000000 is:
+
+\begin{verbatim}
+[10000000][12][34][56][78]
+\end{verbatim}
+
+What value is stored at the address pointed to by register \$t2 ? Assume that 
+the memory location pointed to \$t2 is initialized to 0xFFFFFFFF.
+
+\begin{itemize}
+\item Esse "inicializado para 0xffffffff" talvez queira dizer que tem 4GiB de 
+memória, não tenho certeza. Mas basta você entender que little endian começa 
+endereçar pelo byte menos significativo e vai em direção ao MSB. E o big endian 
+começa a endereçar pelo byte mais significativo e vai em direção ao LSB. Agora 
+a resposta se dá da seguinte forma. Lembre que o lb ele estende sinal, por isso 
+existe lbu. E também saiba que após o bit oitavo do byte os '1' estendidos não 
+tem valor significativo, mas representativo, representam um valor negativo.
+
+\item O valor que esta na memória tem o 0x12 como byte mais significativo. 
+Então é ele o candidato a ser trazido primeiro da memória. E não o byte 0x78.
+
+\item 0x12 = 00010010, então não vai acontecer de estender o sinal negativo.
+
+\item Após 0x12 ter cima carregado no registrador \$t1, a saber, 0x00000012. 
+Essa mesma palavra 0x00000012 vai ser inteiramente colocada na memória na 
+posição 0x10000010, deverá aparecer do jeito que esta 0x 00 00 00 12.
+
+\item Sim, por incrível que pareça, quando você coloca byte a byte, a sua 
+percepção de que é byte endian ou little endian melhora. Mas quando você coloca 
+uma palavra inteira de uma vez, a sua percepção diminui, pois você não está 
+vendo os "passos intermediários" de que ele esta colocando byte a byte, e 
+endereçando automaticamente para você da forma big endian addressing.
+
+\item Se a máquina fosse little endian? Aí sim a palavra sendo colocada 
+inteiramente apareceria 0x 78 00 00 00. Aqui 0x78, pois no passo anterior ao 
+'sw' ele carregaria 0x78, pois é little endian.
+\end{itemize}
+
+
+
+\begin{verbatim}
+a. lbu  $t0, 0($t1) # 
+   sw   $t0, 0($t2) #
+
+b. lb   $t0, 0($t1)
+   sh   $t0, 0($t2)
+\end{verbatim}
+
 \paragraph{Exercise 2.25}
 
 In this exercise, you will explore 32-bit constants in MIPS. For the following 
@@ -162,13 +276,6 @@ a. 0x00400000       beq $s0, $0, FAR
    ...
    0x00403100 FAR:  addi $s0, $s0, 1
 
-   (diferença em bytes é 3100)
-
-   0x00400000       j 0xffffc
-   ...
-   0x004030F8       beq $s0, $s0, 0x1
-   0x00403100 FAR:  addi $s0, $s0, 1
-
 ------------------------------------
 
 b. 0x00000100       j 3FFFC
@@ -190,5 +297,33 @@ I-type [opcode 6 bits][rs 5 bits][rt 5 bits][immed 8 bits]
 J-type [opcode 6 bits][immed 18 bits]
        [oooooo]       [iiiiiiiiiiiiiiiiii]
 \end{verbatim}
+
+Branch desloca em relação ao PC+4, então basta carrega a constante (0x3100 $>>$
+2) $==$ 0xC40 no campo imediato de 16 bits. Porém a questão pede para que esse
+campo seja reduzido a 8 bits no tipo I e 18 bits no campo imediato do tipo J.
+
+0xC40 é tranquilamente representável em um imediato de 12 bits (ARM). Porém, com
+apenas 8 bits você tem que trabalhar um jump e depois um branch para atingir o
+seu objetivo final que é chegar em FAR através da condição, isto é, se a
+condição \$s0 $==$ 0x00000000 permitir.
+
+\begin{verbatim}
+a. 0x00400000       j 0x300            # vai ser multiplicado por 4 (ou << 2)
+   ...
+   0x00403000 L1:   beq $s0, $0, 0x3F  # PC+4+(SignExt::BranchAddress::00)
+                                       # 0x403000 + 0x4 = 0x403004
+                                       # BranchAddress = 000... 0011 1111 00
+                                       # 0x3F << 2 -> FC
+                                       # 0x403004 + 0xFC = 0x403100 ----+
+                                                                        |
+   ...                                                                  |
+   0x00403100 FAR:  addi $s0, $s0, 1   <--------------------------------+
+\end{verbatim}
+
+%\begin{verbatim}
+%b. 0x00000100       j 3FFFC
+%   ...
+%   0x04000010 AWAY: addi $s0, $s0, 1
+%\end{verbatim}
 
 \end{document}
