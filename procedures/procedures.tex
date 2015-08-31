@@ -32,14 +32,14 @@
         (param0, param1, param2, param3) -> ($a0, $a1, $a2, $a3)
       \end{verbatim}
 
-    \item Transferir o fluxo de execução de instruções para o endereço do 
+    \item Transferir o fluxo de execução de instruções para o endereço do
     procedimento.
 
       \begin{verbatim}
         jal PROCEDIMENTO
       \end{verbatim}
 
-    \item Adquirir espaço na pilha necessário para o procedimento e salvar o 
+    \item Adquirir espaço na pilha necessário para o procedimento e salvar o
     contexto.
 
       \begin{verbatim}
@@ -48,7 +48,7 @@
         sw $s1, 4($sp)     # 0x00000008 -> [[8][9][10][11]] /
                                       |
                                       +--------------------> ponteiro setado
-                                                             uma palavra à 
+                                                             uma palavra à
                                                              frente
       \end{verbatim}
 
@@ -84,18 +84,18 @@
       \end{verbatim}
 
   \end{enumerate}
-  
-  \item Uma variável em C é geralmente uma localização na memória, e isso 
-  depende do tipo da variável e classe de armazenamento. Exemplos incluem 
+
+  \item Uma variável em C é geralmente uma localização na memória, e isso
+  depende do tipo da variável e classe de armazenamento. Exemplos incluem
   inteiros e caracteres. C tem duas classes de armazenamento: \verb|automático|
-  e \verb|estático|. Automático são locais para um procedimentos e são 
-  descartados quando o procedimento existe mais. Variáveis estáticas existem 
-  através \verb|saídas| de \verb|entradas| para procedimentos. Por fora de 
-  todos os outros procedimentos, variáveis em c são consideradas estáticas, 
-  como são qualquer tipo de variável declarada usando a palavra-chave 
-  \verb|estático|. O resto são considerados \verb|automático|. Para simplificar 
-  acesso para dados estáticos, software em MIPS reserva outros registradores 
-  chamado \verb|ponteiro global| ou  \$gp (Patterson Computer Org. and Design 
+  e \verb|estático|. Automático são locais para um procedimentos e são
+  descartados quando o procedimento existe mais. Variáveis estáticas existem
+  através \verb|saídas| de \verb|entradas| para procedimentos. Por fora de
+  todos os outros procedimentos, variáveis em c são consideradas estáticas,
+  como são qualquer tipo de variável declarada usando a palavra-chave
+  \verb|estático|. O resto são considerados \verb|automático|. Para simplificar
+  acesso para dados estáticos, software em MIPS reserva outros registradores
+  chamado \verb|ponteiro global| ou  \$gp (Patterson Computer Org. and Design
   página 118, Hardware/Software Interface).
 
 \end{enumerate}
@@ -107,7 +107,7 @@
 \end{figure}
 
 \pagebreak
-Função Fatorial da Página 117, 118 David Patterson, Computer Organization and 
+Função Fatorial da Página 117, 118 David Patterson, Computer Organization and
 Design.
 \begin{verbatim}
 fact:
@@ -150,8 +150,8 @@ $L3:
 \end{verbatim}
 
 
-Saiba que você pode eliminar o uso de \$fp e criar algumas optimizações, porém 
-esse código é o código gerado automaticamente por mipsel-none-elf-gcc é um 
+Saiba que você pode eliminar o uso de \$fp e criar algumas optimizações, porém
+esse código é o código gerado automaticamente por mipsel-none-elf-gcc é um
 cross-compilador.
 
 \begin{verbatim}
@@ -232,7 +232,7 @@ L4:
                        # programa função int alpha(int x,int z,int y);
 L1:
   move  $sp, $fp       # no livro do patterson ele simplifica o uso de $fp, $sp
-  lw    $31, 20($sp)   # jogando toda a responsabilidade para $sp, mas o 
+  lw    $31, 20($sp)   # jogando toda a responsabilidade para $sp, mas o
   compilador
                        # restaura também o $ra para poder voltar ao chamador
                        # e também porque ele é garantidamente preservado
@@ -245,8 +245,8 @@ L1:
 \pagebreak
 \paragraph{2.19.1a}
 
-A seguir todo o código traduzido para mips 32 da questão 2.19.1a da 4ª edição 
-\underline{revisada} do livro de organização e modulagem de computadores David 
+A seguir todo o código traduzido para mips 32 da questão 2.19.1a da 4ª edição
+\underline{revisada} do livro de organização e modulagem de computadores David
 Patterson e John Hennessy página 197.
 
 \begin{verbatim}
@@ -272,12 +272,12 @@ fib:
 
   lw      $2, 32($fp)   # $v0 recebe $a0
   nop
-  bne     $2, $0, L2    # se $a0 (em $v0) != $zero vai para L2 (onde tem outro 
+  bne     $2, $0, L2    # se $a0 (em $v0) != $zero vai para L2 (onde tem outro
   teste)
   nop
 
   move    $2, $0        # carrega 0x0 para o primeiro retorno
-  j       L3            # vai para L3 para restaurar contexto e retornar ao 
+  j       L3            # vai para L3 para restaurar contexto e retornar ao
   chamador
   nop
 
@@ -289,7 +289,7 @@ L2:
   nop
 
   li      $2, 1         # carrega 0x1 para o segundo retorno
-  j       L3            # vai para L3 para restaurar contexto e retornar ao 
+  j       L3            # vai para L3 para restaurar contexto e retornar ao
   chamador
   nop
 
@@ -305,9 +305,9 @@ L4:
                         # (que precisa ser restaurado ao final)
   move    $16, $2       # move $v0 para $s0
   lw      $2, 32($fp)   # carrega o valor de $a0 salvo no local 32($fp) em $v0
-                        # a cada chamada recursiva a pilha vai abrindo novas 
-                        # 8 posições para novos dados, mas aqui pegamos sempre 
-                        # o n da vez para fazer corretamente fib(n-1) + 
+                        # a cada chamada recursiva a pilha vai abrindo novas
+                        # 8 posições para novos dados, mas aqui pegamos sempre
+                        # o n da vez para fazer corretamente fib(n-1) +
                         # fib(n-2);
   nop
   addiu   $2, $2, -2    # faz n - 2 para a chamar fib(n-2)
@@ -316,7 +316,7 @@ L4:
   nop
 
   addu    $2, $16, $2   # soma ambos fib(n-1) + fib(n-2)
-                        # $v0 recebe $s0 + $v0 (v0 agora contém o resultado 
+                        # $v0 recebe $s0 + $v0 (v0 agora contém o resultado
                         # de fib(n-2)
 L3:
   move    $sp, $fp
@@ -334,10 +334,10 @@ L3:
 A função recursiva com inline tem um certo limite que geralmente é imposto pelo
 compilador, de por exemplo, entrar 8x dentro da recursão. Vou fazer o inline da
 questão 2.19.1a da 4ª edição \underline{revisada} do livro de organização e
-modulagem de computadores David Patterson e John Hennessy página 197. Para 
-realizar inline de funções recursivas você precisa primeira fazer um 
-esquemático da função recursiva em forma de árvore, vai abrindo as recursões 
-até um certo nível. Cada chamada irá requisitar novos registradores para 
+modulagem de computadores David Patterson e John Hennessy página 197. Para
+realizar inline de funções recursivas você precisa primeira fazer um
+esquemático da função recursiva em forma de árvore, vai abrindo as recursões
+até um certo nível. Cada chamada irá requisitar novos registradores para
 armazenar os valores.
 
 \begin{verbatim}
@@ -388,9 +388,9 @@ L3:
   nop
 \end{verbatim}
 
-Agora com inline em \underline{addit}. Com a adição de inline addit passou a 
-ser 1 instruções apenas dentro do corpo do procedimento positive, porém isso 
-tem um limite de até no máximo o uso de todos os registradores de uso geral no 
+Agora com inline em \underline{addit}. Com a adição de inline addit passou a
+ser 1 instruções apenas dentro do corpo do procedimento positive, porém isso
+tem um limite de até no máximo o uso de todos os registradores de uso geral no
 MIPS 32, os registradores reservados seriam deixados privados.
 
 \begin{verbatim}
@@ -427,13 +427,13 @@ L3:
 
 \paragraph{2.19.4a}
 
-Veja que eu não estou preservando a0, a1, a2, a3 pois as funções chamadas não 
-sou obrigadas, segundo a conversão de chamada, a preservarem eles. Porém dentro 
-da função elas podem preservar o necessário para executar a lógica desejada 
-pelo programador. O cross-compilador gcc-mips não altera a ordem lógica dos 
-parâmetros e isso é uma curiosidade, sendo que você não tem a \verb|func| 
-definida, nem mesmo seu protótipo. Ele mantém a ordem lógica dos parâmetros, 
-visando que alterar, reordenar a ordem lógica dos parâmetros para as funções 
+Veja que eu não estou preservando a0, a1, a2, a3 pois as funções chamadas não
+sou obrigadas, segundo a conversão de chamada, a preservarem eles. Porém dentro
+da função elas podem preservar o necessário para executar a lógica desejada
+pelo programador. O cross-compilador gcc-mips não altera a ordem lógica dos
+parâmetros e isso é uma curiosidade, sendo que você não tem a \verb|func|
+definida, nem mesmo seu protótipo. Ele mantém a ordem lógica dos parâmetros,
+visando que alterar, reordenar a ordem lógica dos parâmetros para as funções
 pode ser desastroso.
 
 \begin{verbatim}

@@ -30,9 +30,9 @@
 \maketitle
 
 \section{Intro}
-As .dll ou .so são bibliotecas que contém rotinas já previamente compiladas. 
+As .dll ou .so são bibliotecas que contém rotinas já previamente compiladas.
 Para que o processo de reutilização dessas rotinas pelo seus programas seja mais
-ágil e menos custoso, pois enxergasse que serão reutilizadas muitas vezes pelos 
+ágil e menos custoso, pois enxergasse que serão reutilizadas muitas vezes pelos
 seus programas.
 
 \section{Estabelecendo ligação dinâmica pela primeira vez}
@@ -53,8 +53,8 @@ seus programas.
     irá desviar para o identificador.
 
     \item O código do identificador da rotina não local que o programa quer,
-    será visto pelo montador como um \verb|li $s0, I| (li = load immediate), 
-    logo após carregar \textbf{[LC]} ele desviará para o ligador/carregador 
+    será visto pelo montador como um \verb|li $s0, I| (li = load immediate),
+    logo após carregar \textbf{[LC]} ele desviará para o ligador/carregador
     (LC).
 
     \item O LC irá caregar o código da rotina em memória e irá mapear o endereço

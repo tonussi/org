@@ -27,34 +27,34 @@
 % 122-136 pg
 \begin{enumerate}
 
-\item Sinalização contra não-sinalização se aplica a instruções 'loads' assim 
+\item Sinalização contra não-sinalização se aplica a instruções 'loads' assim
 como para instruções que mexem com aritmética (Patterson pg 124).
 
-\item Caracteres são normalmente combinados em \underline{strings}, essas 
-mesmas tem um número variado de caracteres. Existem três possibilidades para 
-representar uma string: (1) a primeira posição da string é reservada para 
-conter o comprimento da string, (2) outro variável parametrizada contém o 
-comprimento (como em uma estrutura de lista, pilha, fila, etc), ou (3) a última 
-posição da string é indicada por um caractere usado para marcar o fim da 
+\item Caracteres são normalmente combinados em \underline{strings}, essas
+mesmas tem um número variado de caracteres. Existem três possibilidades para
+representar uma string: (1) a primeira posição da string é reservada para
+conter o comprimento da string, (2) outro variável parametrizada contém o
+comprimento (como em uma estrutura de lista, pilha, fila, etc), ou (3) a última
+posição da string é indicada por um caractere usado para marcar o fim da
 string. C usa a terceira opção, terminando a string com um byte do qual o valor 
-é \'0' (nomeado null em ASCII). Por exemplo a string "Cal" é representada em C 
-por 4 bytes => \verb|67, 97, 108, 0|. Em laboratório o java usa a primeira 
+é \'0' (nomeado null em ASCII). Por exemplo a string "Cal" é representada em C
+por 4 bytes => \verb|67, 97, 108, 0|. Em laboratório o java usa a primeira
 opção.
 
 \item Os modos de endereçamento da figura página 133 retratam bem, da forma que:
 
-\item O modo de endereçamento dos registradores utiliza os 5 bits para 
-identificar um dos 32 registradores no caso do mips 32. Mas por exemplo se eu 
-tivesse um banco de 43 registradores, quantos bits eu precisaria nos campos RS, 
+\item O modo de endereçamento dos registradores utiliza os 5 bits para
+identificar um dos 32 registradores no caso do mips 32. Mas por exemplo se eu
+tivesse um banco de 43 registradores, quantos bits eu precisaria nos campos RS,
 RT, RD, respectivamente ? ($log_2 43$)
 
-\item O modo de endereçamento "base+deslocamento" você \underline{soma} o 
-valor do campo de imediato << 2 e com sinal estendido, ao valor contido no 
-registrador base. Você pode capturar da com lb, lbu, lh, lhu, lw, ou também 
-pode salvar na memória usando sw, sh, sb. A forma como você vai somar um 
-deslocamento em relação à capturar ou salvar na memória usando esse modo de 
-endereçamento, vai da lógica de programação. E cuidado com essa ideia, pois 
-deslocar para bytes é diferente de deslocar para palavras inteiras, é óbvio mas 
+\item O modo de endereçamento "base+deslocamento" você \underline{soma} o
+valor do campo de imediato << 2 e com sinal estendido, ao valor contido no
+registrador base. Você pode capturar da com lb, lbu, lh, lhu, lw, ou também
+pode salvar na memória usando sw, sh, sb. A forma como você vai somar um
+deslocamento em relação à capturar ou salvar na memória usando esse modo de
+endereçamento, vai da lógica de programação. E cuidado com essa ideia, pois
+deslocar para bytes é diferente de deslocar para palavras inteiras, é óbvio mas
 muita gente esquece e eu também .\_.
 
 \item O PC-relativo é o modo dos branchs eles movem o fluxo de execução de
@@ -89,49 +89,49 @@ b. lb   $t0, 0($t1)
    sh   $t0, 0($t2)
 \end{verbatim}
 
-\paragraph{2.24.1 [5] 2.9} Assume that the data (in hexadecimal) at address 
+\paragraph{2.24.1 [5] 2.9} Assume that the data (in hexadecimal) at address
 0x10000000 is:
 
 \begin{verbatim}
 [10000000][12][34][56][78]
 \end{verbatim}
 
-What value is stored at the address pointed to by register \$t2 ? Assume that 
+What value is stored at the address pointed to by register \$t2 ? Assume that
 the memory location pointed to \$t2 is initialized to 0xFFFFFFFF.
 
 \begin{itemize}
-\item Esse "inicializado para 0xffffffff" talvez queira dizer que tem 4GiB de 
-memória, não tenho certeza. Mas basta você entender que little endian começa 
-endereçar pelo byte menos significativo e vai em direção ao MSB. E o big endian 
-começa a endereçar pelo byte mais significativo e vai em direção ao LSB. Agora 
-a resposta se dá da seguinte forma. Lembre que o lb ele estende sinal, por isso 
-existe lbu. E também saiba que após o bit oitavo do byte os '1' estendidos não 
+\item Esse "inicializado para 0xffffffff" talvez queira dizer que tem 4GiB de
+memória, não tenho certeza. Mas basta você entender que little endian começa
+endereçar pelo byte menos significativo e vai em direção ao MSB. E o big endian
+começa a endereçar pelo byte mais significativo e vai em direção ao LSB. Agora
+a resposta se dá da seguinte forma. Lembre que o lb ele estende sinal, por isso
+existe lbu. E também saiba que após o bit oitavo do byte os '1' estendidos não
 tem valor significativo, mas representativo, representam um valor negativo.
 
-\item O valor que esta na memória tem o 0x12 como byte mais significativo. 
+\item O valor que esta na memória tem o 0x12 como byte mais significativo.
 Então é ele o candidato a ser trazido primeiro da memória. E não o byte 0x78.
 
 \item 0x12 = 00010010, então não vai acontecer de estender o sinal negativo.
 
-\item Após 0x12 ter cima carregado no registrador \$t1, a saber, 0x00000012. 
-Essa mesma palavra 0x00000012 vai ser inteiramente colocada na memória na 
+\item Após 0x12 ter cima carregado no registrador \$t1, a saber, 0x00000012.
+Essa mesma palavra 0x00000012 vai ser inteiramente colocada na memória na
 posição 0x10000010, deverá aparecer do jeito que esta 0x 00 00 00 12.
 
-\item Sim, por incrível que pareça, quando você coloca byte a byte, a sua 
-percepção de que é byte endian ou little endian melhora. Mas quando você coloca 
-uma palavra inteira de uma vez, a sua percepção diminui, pois você não está 
-vendo os "passos intermediários" de que ele esta colocando byte a byte, e 
+\item Sim, por incrível que pareça, quando você coloca byte a byte, a sua
+percepção de que é byte endian ou little endian melhora. Mas quando você coloca
+uma palavra inteira de uma vez, a sua percepção diminui, pois você não está
+vendo os "passos intermediários" de que ele esta colocando byte a byte, e
 endereçando automaticamente para você da forma big endian addressing.
 
-\item Se a máquina fosse little endian? Aí sim a palavra sendo colocada 
-inteiramente apareceria 0x 78 00 00 00. Aqui 0x78, pois no passo anterior ao 
+\item Se a máquina fosse little endian? Aí sim a palavra sendo colocada
+inteiramente apareceria 0x 78 00 00 00. Aqui 0x78, pois no passo anterior ao
 'sw' ele carregaria 0x78, pois é little endian.
 \end{itemize}
 
 
 
 \begin{verbatim}
-a. lbu  $t0, 0($t1) # 
+a. lbu  $t0, 0($t1) #
    sw   $t0, 0($t2) #
 
 b. lb   $t0, 0($t1)
@@ -140,7 +140,7 @@ b. lb   $t0, 0($t1)
 
 \paragraph{Exercise 2.25}
 
-In this exercise, you will explore 32-bit constants in MIPS. For the following 
+In this exercise, you will explore 32-bit constants in MIPS. For the following
 problems, you will be using the binary data in the table below.
 
 \begin{verbatim}
@@ -148,7 +148,7 @@ a. 0010 0000 0000 0001 0100 1001 0010 0100 two
 b. 0000 1111 1011 1110 0100 0000 0000 0000 two
 \end{verbatim}
 
-\paragraph{2.25.1  [10] 2.10} Write the MIPS assembly code that creates the 
+\paragraph{2.25.1  [10] 2.10} Write the MIPS assembly code that creates the
 32-bit constants listed above and stores that value to register \$t1 .
 
 \begin{verbatim}
@@ -159,8 +159,8 @@ b. lui $at, 0x0fbe
    ori $t1, $at, 0x4000
 \end{verbatim}
 
-\paragraph{2.25.2 [5] 2.6, 2.10} If the current value of the PC is 0x00000000, 
-can you use a single jump instruction to get to the PC address as shown in the 
+\paragraph{2.25.2 [5] 2.6, 2.10} If the current value of the PC is 0x00000000,
+can you use a single jump instruction to get to the PC address as shown in the
 table above?
 
 \begin{verbatim}
@@ -185,8 +185,8 @@ min(pc) -> pc+4[31-28] == 0000 :: 0000 0000 0000 0000 0000 0000 00 :: 00
 ffffffc > fbe4000, portanto alcança.
 \end{verbatim}
 
-\paragraph{2.25.3 [5] 2.6, 2.10} If the current value of the PC is 0x00000600, 
-can you use a single branch instruction to get to the PC address as shown in 
+\paragraph{2.25.3 [5] 2.6, 2.10} If the current value of the PC is 0x00000600,
+can you use a single branch instruction to get to the PC address as shown in
 the table above?
 
 \begin{verbatim}
@@ -211,8 +211,8 @@ min(pc) -> pc+4[31-28] == 0000 :: 0000 0000 0000 0000 0000 0000 00 :: 00
 ffffffc > fbe4000, portanto alcança.
 \end{verbatim}
 
-\paragraph{2.25.4  [5] 2.6, 2.10} If the current value of the PC is 0x1FFFf000, 
-can you use a single branch instruction to get to the PC address as shown in 
+\paragraph{2.25.4  [5] 2.6, 2.10} If the current value of the PC is 0x1FFFf000,
+can you use a single branch instruction to get to the PC address as shown in
 the table above?
 
 \begin{verbatim}
@@ -224,7 +224,7 @@ max(pc) -> pc+4[31-28] == 0001 :: 1111 1111 1111 1111 1111 1111 11 :: 00
 
 min(pc) -> pc+4[31-28] == 0001 :: 0000 0000 0000 0000 0000 0000 00 :: 00
 
-ffffffc < 20014924, portanto não alcança, por poucos bytes, precisaria de mais 
+ffffffc < 20014924, portanto não alcança, por poucos bytes, precisaria de mais
 um jump para completar.
 
 b. 0000 1111 1011 1110 0100 0000 0000 0000 two = 0x0fbe4000
@@ -238,8 +238,8 @@ min(pc) -> pc+4[31-28] == 0000 :: 0000 0000 0000 0000 0000 0000 00 :: 00
 ffffffc > fbe4000, portanto alcança.
 \end{verbatim}
 
-\paragraph{2.25.5  [10] 2.10} If the immediate field of an MIPS instruction was 
-only 8 bits wide, write the MIPS code that creates the 32-bit constants listed 
+\paragraph{2.25.5  [10] 2.10} If the immediate field of an MIPS instruction was
+only 8 bits wide, write the MIPS code that creates the 32-bit constants listed
 above and stores that value to register \$t1.
 
 \begin{verbatim}

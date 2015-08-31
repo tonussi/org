@@ -32,14 +32,14 @@ claro ele será menor que qualquer número positivo que começa com 0 no seu bit
 mais significativo.
 
 \# máquina 32 bits você teria o seguinte exemplo:\\
-$0xF000CCCC < 0x700C8000 == 11110000000000001100110011001100 < 
+$0xF000CCCC < 0x700C8000 == 11110000000000001100110011001100 <
 01110000000011001000000000000000$, pensando em números sinalizados.
 
 Por outro lado, números sem sinal, o 1 no bit mais significativo representa um
 número maior que qualquer outro que começa com 0 no seu bit mais significativo.
 
 Agora com números sem sinal, o exemplo acima, se inverte:\\
-$0xF000CCCC > 0x700C8000 == 11110000000000001100110011001100 >    
+$0xF000CCCC > 0x700C8000 == 11110000000000001100110011001100 >
 01110000000011001000000000000000$, pensando em números sem sinal.
 
 (Existe uma maneira de reduzir o custo de checagem de limitantes em arrays de
@@ -47,7 +47,7 @@ dados que se utiliza de checadores do tipo unsigned em mips. Em java isso
 acontece bastante, visto que ele checa os limitantes do array automaticamente
 para você---facilidade do Java. Já em C/C++ não existe essa checagem automatica
 dos limitantes da estrutura de dados, e você tem que fazer isso na mão, quando
-está criando seus programas em C/C++---Pg 110 - Chapter 2  Instructions: 
+está criando seus programas em C/C++---Pg 110 - Chapter 2  Instructions:
 Language of the Computer).
 
 \begin{tabular}{|c|c|c|c|c|}
@@ -68,7 +68,7 @@ Mips oferece duas versões de comparação \textbf{set on less than}:
 \item Set on less than immediate ( slti ) \# trabalha com números com sinal
 
 \item Set on less than unsigned ( sltu ) \# trabalha com números sem sinal
-\item Set on less than immediate unsigned ( sltiu ) \# trabalha com números sem 
+\item Set on less than immediate unsigned ( sltiu ) \# trabalha com números sem
 sinal
 \end{enumerate}
 
@@ -81,7 +81,7 @@ b. orn $t1, $t2, $t3 // bit-wise OR of $t2, !$t3
 
 2.15.2  [10] <2.6> The logical instructions above are not included in the MIPS
 instruction set, but can be synthesized using one or more MIPS assembly instruc-
-tions. Provide a minimal set of MIPS instructions that may be used in place of 
+tions. Provide a minimal set of MIPS instructions that may be used in place of
 the instructions in the table above.
 
 \begin{verbatim}
@@ -98,8 +98,8 @@ b. orn $t1, $t2, $t3 // bit-wise OR of $t2, !$t3
 \end{verbatim}
 
 \paragraph{2.16}
-For these problems, the table holds various binary values for register \$t0 . 
-Given the value of \$t0 , you will be asked to evaluate the outcome of 
+For these problems, the table holds various binary values for register \$t0 .
+Given the value of \$t0 , you will be asked to evaluate the outcome of
 different branches.
 
 \begin{verbatim}
@@ -108,8 +108,8 @@ b. 0101 1111 1011 1110 0100 0000 0000 0000 = 0x5FBE4000
 \end{verbatim}
 
 2.16.1 [5] 2.7 Suppose that register \$t0 contains a value from above and \$t1
-has the value 0011 1111 1111 1000 0000 0000 0000 0000 = 0x3FF80000. Note the 
-result of executing these instructions on particular registers. What is the 
+has the value 0011 1111 1111 1000 0000 0000 0000 0000 = 0x3FF80000. Note the
+result of executing these instructions on particular registers. What is the
 value of \$t2 after the following instructions?
 
   \begin{verbatim}
@@ -161,11 +161,11 @@ will \$t2 be equal to 1?
 
 \verb|slti $t2, $t0, X|
 
-\textbf{Comentário}: Quando o valor de \$t0 é 0x5FBE4000 e X é negativo então o 
+\textbf{Comentário}: Quando o valor de \$t0 é 0x5FBE4000 e X é negativo então o
 valor de \$t2 será 0 pois um valor positivo é maior que um valor negativo.
 
-Se o valor de \$t0 é 0x5FBE4000 e X é positivo, vai depender de quem é maior ou 
-menor, se o resultado da subtração entre eles for negativo, 0x5FBE4000 será 
+Se o valor de \$t0 é 0x5FBE4000 e X é positivo, vai depender de quem é maior ou
+menor, se o resultado da subtração entre eles for negativo, 0x5FBE4000 será
 menor que X, caso contrário não.
 
 O raciocínio é o mesmo para a letra b.
@@ -175,7 +175,7 @@ O raciocínio é o mesmo para a letra b.
 \end{verbatim}
 
 For these problems, the table holds MIPS assembly code fragments. You will be
-asked to evaluate each of the code fragments, familiarizing you with the 
+asked to evaluate each of the code fragments, familiarizing you with the
 different MIPS branch instructions.
 
 \begin{verbatim}
@@ -189,8 +189,8 @@ LOOP: lw $s1, 0($s0)     # s1 recebe M[s0]
       bne $t1, $0, LOOP  # desvia para LOOP se t1 != zero
 \end{verbatim}
 
-2.18.5 [5] 2.7 Translate the loops above into C. Assume that the C-level 
-integer i is held in register \$t1, \$s2 holds the C-level integer called 
+2.18.5 [5] 2.7 Translate the loops above into C. Assume that the C-level
+integer i is held in register \$t1, \$s2 holds the C-level integer called
 result, and \$s0 holds the base address of the integer MemArray.
 
 \begin{verbatim}
@@ -231,11 +231,11 @@ LOOP: lw $s1, 0($s0)     # s1 recebe M[s0]
       bne $t1, $0, LOOP  # desvia para LOOP se t1 != zero
 \end{verbatim}
 
-\textbf{Comentário: } o que eu consegui mudar eliminar foi 1 instrução. Ao 
-invés de somar acumular à \$s2 os valores puxados da memória. Puxa primeiro os 
-dois valores e depois acumula somando os dois a uma terceira variáveis \$s3. 
-Isso acarreta em queda de desempenho pois \verb|add $s3, $s1, $s2|. Podemos 
-mover os dois addi para cima, para que sobre tempo para os loads carregarem 
+\textbf{Comentário: } o que eu consegui mudar eliminar foi 1 instrução. Ao
+invés de somar acumular à \$s2 os valores puxados da memória. Puxa primeiro os
+dois valores e depois acumula somando os dois a uma terceira variáveis \$s3.
+Isso acarreta em queda de desempenho pois \verb|add $s3, $s1, $s2|. Podemos
+mover os dois addi para cima, para que sobre tempo para os loads carregarem
 completamente os valores em \$s1, \$s2.
 
 \begin{verbatim}
@@ -251,8 +251,8 @@ LOOP: lw $s1, 0($s0)     # s1 recebe M[s0]
 \pagebreak
 \section{Extra}
 
-Suponha que você tem seu $PC_{atual}$ setado com o valor \verb|0x0040054|. E 
-pedem para você medir o alcance de um branch ou um jump a partir desse valor de 
+Suponha que você tem seu $PC_{atual}$ setado com o valor \verb|0x0040054|. E
+pedem para você medir o alcance de um branch ou um jump a partir desse valor de
 $PC_{atual}$.
 
 \paragraph{O Branch} seguindo a mips greensheet, pega seu valor imediato e
@@ -273,9 +273,9 @@ greensheet e as instruções são todas de mesmo tamanho 32 bits (4 bytes).
 
 \begin{table}[ht!]
 \begin{tabular}{|c|c|c|c|}
-\hline opcode & rs & rt & immed \\ 
-\hline $B_{31-26}$ & $B_{25-21}$ & $B_{20-16}$ & $B_{15-0}$ \\ 
-\hline 000000 & sssss & ttttt & iiii iiii iiii iiii \\ 
+\hline opcode & rs & rt & immed \\
+\hline $B_{31-26}$ & $B_{25-21}$ & $B_{20-16}$ & $B_{15-0}$ \\
+\hline 000000 & sssss & ttttt & iiii iiii iiii iiii \\
 \hline
 \end{tabular}
 \end{table}
@@ -287,19 +287,19 @@ eeee eeee eeee iiii iiii iiii iiii 00. Percebeu como o endereço do branch esta
 válido e agora ele pode ser somado a $PC_{atual} + 4$ ? Percebeu como a
 distância aumentou de $2^{15}$ para $2^{17}$?
 
-Se para subir o máximo possível a partir do endereço de $PC_{atual} + 4$ basta 
+Se para subir o máximo possível a partir do endereço de $PC_{atual} + 4$ basta
 pegar o comprimento do campo de imediato, contar quantos bits tem e estabelecer
 o comprimento possível, lembrando que é complemento de 2, ou seja, ele considera
-o bit de sinal, saiba que se o branch enxergar 1 no bit da posição 15ª ele vai 
+o bit de sinal, saiba que se o branch enxergar 1 no bit da posição 15ª ele vai
 estender esse bit, considerando que o valor ali é negativo.
 
 \begin{table}[ht!]
 \begin{tabular}{|c|c|}
-\hline upwards(branch) & 0x400058 + 0x1FFFC = 0x420054 \\ 
+\hline upwards(branch) & 0x400058 + 0x1FFFC = 0x420054 \\
 \hline  & $\uparrow$ \\
 \hline $PC_{atual} + 4$ & 0x400058 \\
 \hline  & $\downarrow$ \\
-\hline downards(branch) & \textbf{\color{Red} 0x400058 - 0x20000} = 0x3E0058 \\ 
+\hline downards(branch) & \textbf{\color{Red} 0x400058 - 0x20000} = 0x3E0058 \\
 \hline
 \end{tabular}
 \end{table}
@@ -312,8 +312,8 @@ alcances finais são múltiplos de 4.
 
 O negrito e vermelho essa operação \textbf{\color{Red} 0x400058 - 0x20000} ? ...
 Por que ela não existe para máquina. A máquina não sabe subtrair, ela só sabe
-somar. O que ela faz é somar $0x400058 + (-0x20000)$, isto é, $a + 
-\bar{b} = 
+somar. O que ela faz é somar $0x400058 + (-0x20000)$, isto é, $a +
+\bar{b} =
 c$.
 
 \begin{verbatim}
@@ -324,35 +324,35 @@ soma 1
 0x FFFE 0000 é 1111 1111 1111 1110 0000 0000 0000 0000
 \end{verbatim}
 
-Pronto, o valor que a máquina vai somar com 0x400058 é 0x FFFE 0000 = 0x 003E 
-0058 (o resultado já sai do jeito que você quer, não precisa refazer o 
+Pronto, o valor que a máquina vai somar com 0x400058 é 0x FFFE 0000 = 0x 003E
+0058 (o resultado já sai do jeito que você quer, não precisa refazer o
 complemento de 2 em cima do resultado.)
 
-\paragraph{O Jump} é mais simples, ele usa o modo de endereçamento 
+\paragraph{O Jump} é mais simples, ele usa o modo de endereçamento
 pseudo-direto.
 
 \begin{table}[ht!]
   \begin{tabular}{|c|c|c|c|}
-    \hline opcode & target address \\ 
-    \hline $B_{31-26}$ & $B_{25-0}$ \\ 
-    \hline 000000 & tt tttt tttt tttt tttt tttt tttt \\ 
+    \hline opcode & target address \\
+    \hline $B_{31-26}$ & $B_{25-0}$ \\
+    \hline 000000 & tt tttt tttt tttt tttt tttt tttt \\
     \hline
   \end{tabular}
 \end{table}
 
-Ele depende dos 4 bits mais significativos do valor de $PC_{atual} + 4$. Ou 
-seja, ele vai fazer o seguinte: digamos que 'pppp' são os 4 bits do $PC_{atual} 
+Ele depende dos 4 bits mais significativos do valor de $PC_{atual} + 4$. Ou
+seja, ele vai fazer o seguinte: digamos que 'pppp' são os 4 bits do $PC_{atual}
 + 4$ $\rightarrow$ concatena os 4 bits na parte MSB do campo target do formato
 \textbf{J} $\rightarrow$ pppp tt tttt tttt tttt tttt tttt tttt $\rightarrow$
 concatena '00' na parte LSB do campo target do formato \textbf{J} $\rightarrow$
-pppp tt tttt tttt tttt tttt tttt tttt 00. É importante lembrar do +4, pois pode 
-ser que falte apenas +4 para que na parte dos 4 bits mais significativos do PC 
-fique, por exemplo, 0001. E isso pode fazer uma diferença monstruosa em questão 
+pppp tt tttt tttt tttt tttt tttt tttt 00. É importante lembrar do +4, pois pode
+ser que falte apenas +4 para que na parte dos 4 bits mais significativos do PC
+fique, por exemplo, 0001. E isso pode fazer uma diferença monstruosa em questão
 de endereços.
 
-Exemplo: 0x\textbf{\color{Red} 0}0400054 + 4 = \textbf{\color{Red} 
-0000}0000010000000000000001011000. Finge que o target de 26 bits é o seguinte 
-valor: \textbf{\color{Blue} 10011000000010010001110000}, concatena 
+Exemplo: 0x\textbf{\color{Red} 0}0400054 + 4 = \textbf{\color{Red}
+0000}0000010000000000000001011000. Finge que o target de 26 bits é o seguinte
+valor: \textbf{\color{Blue} 10011000000010010001110000}, concatena
 \textbf{\color{Green} 00} no LSB e PC[31-28] no MSB.
 
 Endereço alvo exemplo: \textbf{\color{Red} 0000}\textbf{\color{Blue}
@@ -362,17 +362,17 @@ incondicionalmente nessa direção.
 \begin{table}[ht!]
 \begin{tabular}{|c|c|}
 \hline  Static Data & $\uparrow$ \\
-\hline upwards(jump) & 0001 :: \underline{11111111111111111111111111 :: 00} = 
-\verb|0x1FFFFFFC| \\ 
+\hline upwards(jump) & 0001 :: \underline{11111111111111111111111111 :: 00} =
+\verb|0x1FFFFFFC| \\
 \hline  & $\uparrow$ \\
 \hline  & \\
-\hline $PC_{atual}[31-28]$ & [31-28]=[de 0001 até 0000] \tiny{4 bits MSB do PC} 
+\hline $PC_{atual}[31-28]$ & [31-28]=[de 0001 até 0000] \tiny{4 bits MSB do PC}
 vai variando conforme o pc se movimenta (espaço text).
 \\
 \hline  & $\downarrow$ \\
 \hline PC $\rightarrow$ \verb|0x400000| & $\downarrow$ \\
 \hline  & Espaço de Memória Reservado \\
-\hline downards(jump) & 0000 :: 00000000000000000000000000 :: 00 = 0 \\ 
+\hline downards(jump) & 0000 :: 00000000000000000000000000 :: 00 = 0 \\
 \hline
 \end{tabular}
 \end{table}
@@ -382,24 +382,24 @@ instruções ficam num espaço de \verb|0| até $\textsc{0x10000000}_{hex}$. Mas
 \verb|0| até $\textsc{0x00400000}_{hex}$ é um espaço reservado pela memória que
 você não vai querer pular com jumps para lá, sem fazer perfeitamente o que esta
 fazendo. Ou seja, os jumps ficam pulando num espaço entre onde o pc inicia seu
-contador em $\textsc{0x00400000}_{hex}$ até $\textsc{0x10000000}_{hex}$ esse é 
-o espaço de \textsc{TEXT} para o jump pular, são 264241152 bytes, 66060288 
+contador em $\textsc{0x00400000}_{hex}$ até $\textsc{0x10000000}_{hex}$ esse é
+o espaço de \textsc{TEXT} para o jump pular, são 264241152 bytes, 66060288
 endereços válidos. O mais longe que ele pode pular se o
 \verb|pc+4[31-28] == 0000| é FFFFFFC, são os 26 bits do jump iguais a 26{b'1'}
 assim ele desloca 2 para esquerda, e dá em FFFFFFC}.
 
 \pagebreak
-\paragraph{O loadword, storeword} e derivados do mesmo tipo, usam outro modo de 
+\paragraph{O loadword, storeword} e derivados do mesmo tipo, usam outro modo de
 endereçamento chamado base+deslocamento.
 
-O deslocamento não vai não vai ser multiplicado por 4, pois fica a cargo do 
+O deslocamento não vai não vai ser multiplicado por 4, pois fica a cargo do
 programador que pedaço da memória ele quer acessar. Mas o valor do deslocamento
-vai ser estendido para completar um valor de 32 bits, para ser somado ao valor 
+vai ser estendido para completar um valor de 32 bits, para ser somado ao valor
 que o registrador base (\$s0,1,2,3, etc.. \$t0,1,2,3,4,etc...) contém.
 
-\textbf{16 $\times$ {posição 15 do campo imediato} (essa é a extensão de 
-sinal) concatenado com o próprio valor do campo imediato}, e não precisa 
-multiplicar por 4 nesse caso, pois o programador pode querer acessar apenas 
+\textbf{16 $\times$ {posição 15 do campo imediato} (essa é a extensão de
+sinal) concatenado com o próprio valor do campo imediato}, e não precisa
+multiplicar por 4 nesse caso, pois o programador pode querer acessar apenas
 bytes ímpares por exemplo, depende da lógica do programa.
 
 \begin{verbatim}
@@ -409,9 +409,9 @@ bytes ímpares por exemplo, depende da lógica do programa.
 
 \begin{table}[ht!]
   \begin{tabular}{|c|c|c|c|}
-    \hline opcode & rs & rt & immed \\ 
-    \hline $B_{31-26}$ & $B_{25-21}$ & $B_{20-16}$ & $B_{15-0}$ \\ 
-    \hline 000000 & sssss & ttttt & eiii iiii iiii iiii \\ 
+    \hline opcode & rs & rt & immed \\
+    \hline $B_{31-26}$ & $B_{25-21}$ & $B_{20-16}$ & $B_{15-0}$ \\
+    \hline 000000 & sssss & ttttt & eiii iiii iiii iiii \\
     \hline
   \end{tabular}
 \end{table}
@@ -448,8 +448,8 @@ sw $t0, 0xffffffe0     # ele estendeu o sinal de 0xffe0
                        # pois o mars implementa um mips tipo little endian
 \end{verbatim}
 
-Load Upper Immediate (lui) é uma instrução do tipo \textbf{I} logo o que 
-\textbf{chega} pra esse cara é um valor no campo imediato de 16 bits, esse 16 
+Load Upper Immediate (lui) é uma instrução do tipo \textbf{I} logo o que
+\textbf{chega} pra esse cara é um valor no campo imediato de 16 bits, esse 16
 bits ele apenas insere na \textbf{parte alta} de algum alvo de 32 bits, só isso.
 
 \begin{verbatim}

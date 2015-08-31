@@ -29,26 +29,26 @@
 \begin{itemize}
 \item O princípio desse capítulo é: "relationship between high-level programming
 languages and this more primitive one." (página 76 - Organização de Computadores
-4ª). Relacionamento entre programação de alto nível e sua linguagem mais 
+4ª). Relacionamento entre programação de alto nível e sua linguagem mais
 primitiva (ou à nível mais primitivo).
 
-\item \textbf{stored-program concept}: The idea that instructions and data of 
-many types can be stored in memory as numbers, leading to the stored-program 
-computer. (Conceito de programa-armazenado, é a ideia que instruções e dados de 
+\item \textbf{stored-program concept}: The idea that instructions and data of
+many types can be stored in memory as numbers, leading to the stored-program
+computer. (Conceito de programa-armazenado, é a ideia que instruções e dados de
 muitos tipos podem ser armazenados em memória como valores).
 
-\item Na página 78 existem um quadro com as instruções da arquitetura mips, 
-desse quadro podemos retirar alguns conceitos irados, de que $2^{30}$ palavras 
-de memória são a sequência \verb|Memory[0]|, \verb|Memory[4]|, ..., 
-\verb|Memory[4294967292]|. \verb|4294967292 bytes| são \textbf{\underline{4 
+\item Na página 78 existem um quadro com as instruções da arquitetura mips,
+desse quadro podemos retirar alguns conceitos irados, de que $2^{30}$ palavras
+de memória são a sequência \verb|Memory[0]|, \verb|Memory[4]|, ...,
+\verb|Memory[4294967292]|. \verb|4294967292 bytes| são \textbf{\underline{4
 GiB}}.
 
-\item No final da tabela tem os jumps, j 2500, e go to 10000. Esse 2500 é em 
-hexadecimal $(2500)_{base16} << 2 == (10000)_{base10} == 
+\item No final da tabela tem os jumps, j 2500, e go to 10000. Esse 2500 é em
+hexadecimal $(2500)_{base16} << 2 == (10000)_{base10} ==
 (10011100010000)_{base2}$.
 
-\item Com o \textbf{nor} \$s1 = ~ (\$s2 | \$s3), você pode trabalhar ele 
-zerando \$s3 ou simplesmente colocar \$zero no lugar, para negar \$s2 e 
+\item Com o \textbf{nor} \$s1 = ~ (\$s2 | \$s3), você pode trabalhar ele
+zerando \$s3 ou simplesmente colocar \$zero no lugar, para negar \$s2 e
 "armazenar no registrador \$s1".
 
 \item O load linked: ll \$s1,20(\$s2) e o Store Conditional: sc \$s1,20(\$s2)
@@ -75,21 +75,21 @@ certeza que você esta pegando um endereço válido nos termos naturais de
 alinhamento de instruções 4 por 4 bytes. Na página 84 do livro-texto de
 Organização de Computadores diz: "Computers divide into those that use the
 address of the leftmost or “big end” byte as the word address versus those that
-use the rightmost or “little end” byte. MIPS is in the big-endian camp.". Você 
-pode testar essa afirmação dele no MARS, Simulador de MIPS. No apêndice 
+use the rightmost or “little end” byte. MIPS is in the big-endian camp.". Você
+pode testar essa afirmação dele no MARS, Simulador de MIPS. No apêndice
   \begin{verbatim}
     lui         $t0, 0x1DE              # $t0 = 0x01DE0000
-    ori         $t0, $t0, 0xCADE        # $t0 = 0x01DECADE 
+    ori         $t0, $t0, 0xCADE        # $t0 = 0x01DECADE
     lui         $t1, 0x1001             # $t1 = 0x10010000
-    sb          $t0, 200 ($t1)          # $t1 + 200 bytes = 0x01DECADE 
+    sb          $t0, 200 ($t1)          # $t1 + 200 bytes = 0x01DECADE
     lb          $t2, 200 ($t1)          # $t2 = 0x01DECADE
   \end{verbatim}
-Se o byte 'DE' for para memória na posição do byte menos significativo, o MARS 
-é little endian, quando reordenando na memória. Se você carregasse a palavra 
+Se o byte 'DE' for para memória na posição do byte menos significativo, o MARS
+é little endian, quando reordenando na memória. Se você carregasse a palavra
 inteira 01DECADE com 'sw' a palavra apareceria nessa mesma ordem em memória.
 
-\item Quando você utilizar load byte signed (lb) para armazenar alguma coisa em 
-registrador, saiba que você esta sujeito a estender o sinal (só isso). Por 
+\item Quando você utilizar load byte signed (lb) para armazenar alguma coisa em
+registrador, saiba que você esta sujeito a estender o sinal (só isso). Por
 exemplo:
 
   \begin{verbatim}
@@ -98,9 +98,9 @@ exemplo:
     $s1 <= 0xffffffde
   \end{verbatim}
 
-\item Portando te você precisar puxar um \textbf{\color{Red} \underline{dado}}, 
-use lbu, para ter certeza que seu byte não vai estragar o resto dos dados. Se 
-você sabe que byte que você esta puxando é "positivo" (pe: 0x2), não vai causar 
+\item Portando te você precisar puxar um \textbf{\color{Red} \underline{dado}},
+use lbu, para ter certeza que seu byte não vai estragar o resto dos dados. Se
+você sabe que byte que você esta puxando é "positivo" (pe: 0x2), não vai causar
 grande estrago.
 
 \end{itemize}
@@ -155,7 +155,7 @@ sub ->          -
 
 \paragraph{2.2.4}
 
-Na versão 4 estendida do livro de organização de computadores. Essa questão 
+Na versão 4 estendida do livro de organização de computadores. Essa questão
 pede para transformar em código c.
 
 \paragraph{2.3.4}
@@ -193,8 +193,8 @@ $s3 recebe 0x5 + 0x1 (=> 0x6)
 
 \paragraph{2.4.1 $\rightarrow$ 2.4.2}
 
-Nesse exercício você vai elaborar suas skills com push e pop e também e 
-eventualmente sacar que o lw e sw são um modo de endereçamento chamado base + 
+Nesse exercício você vai elaborar suas skills com push e pop e também e
+eventualmente sacar que o lw e sw são um modo de endereçamento chamado base +
 deslocamento.
 
 \begin{verbatim}
@@ -229,8 +229,8 @@ o deslocamento do branch equal ou branch not equal.
 Sempre olhar opcode primeiro (op) e depois funct. Pois eles são decodificados
 primeiro no datapath. Depois vc se preocupa com constantes em complemento de
 dois, se houverem, deslocamentos em relação a base em complemento de dois,
-etc... Já coloca em binário, no tamanho do comprimento do campo no formato que 
-você identificou para o opcode+funct. O registrador em base 10 te ajuda a 
+etc... Já coloca em binário, no tamanho do comprimento do campo no formato que
+você identificou para o opcode+funct. O registrador em base 10 te ajuda a
 identificar qual é o registrador no cartão verde do mips.
 
 \begin{verbatim}
