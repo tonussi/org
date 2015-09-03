@@ -104,6 +104,10 @@
 \begin{figure}[ht!]
   \centering
   \includegraphics[width=\linewidth]{leaf_example.png}
+  \caption{Addu, Subu, Addiu, desabilitam o tratamento de overflow, eles operam
+  normalmente assim como as instruções Add, Sub, Addi, porém elas não tratam
+  \underline{overflow}. Ao passo que Add, Sub, Addi, liberam para que o
+  tratamento de overflow aconteça.}
 \end{figure}
 
 \pagebreak
@@ -404,7 +408,7 @@ positive:
 
   lw  $4, 24($fp)         # carrega a0
   lw  $5, 28($fp)         # carrega a1
-	addu $2, $4, $5         # addit reduzido à uma instrução.
+  addu $2, $4, $5         # addit reduzido à uma instrução.
   nop                     # antes eram 14 instruções
 
   blez  $2, L2            # se o resultado em v0 (retornado por addit(a, b)
