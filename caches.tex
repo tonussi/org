@@ -37,11 +37,12 @@ cache.
   \end{tabular}
 \end{table}
 
-$2^{i}\times((x-i-f)+c+(2^{f} \times 8))\ bits$\\
+$2^{i}\times(\underline{(x-i-f)}+c+(2^{f} \times 8))\ bits$\\
+
 \small{x: igual ao tamanho de bits do endereço, nesse caso 32 bits.}\\
 \small{c: igual  número de bits de controle por linha de cache.}\\
 
-$2^{i}\times((x-i-f)+c+(2^{f} \times))\ bytes$\\
+$2^{i}\times(\underline{(x-i-f)}+c+2^{f})\ bytes$\\
 
 Considere um sistema com as seguintes configurações:
 
@@ -54,6 +55,22 @@ Considere um sistema com as seguintes configurações:
 
 Informe o tamanho da tabela de páginas em bits.
 
+\pagebreak
+\begin{verbatim}
+O campo de offset para memória virtual e para memória física é o mesmo.
+virtual memory address  [ tag virtual   |  offset virtual ]
+                           |                     |
+                 (36-11=25)|                 (11)|
+                           |                     |
+                        transl.                  |
+                           |                     |
+                 (22-11=11)|                 (11)|
+                           |                     |
+physical memory address [ tag phys      |  offset phys    ]
+\end{verbatim}
+
+$2^{36-11}\times(2+(22-11))$
+
 $2^{25}\times(2+(22-11))$
 
 Considere uma cache com mapeamento 4-associativo e endereços de memória de 32
@@ -62,10 +79,13 @@ bits organizados da forma abaixo, responda quantas linhas tem a cache.
 \begin{tabular}{|c|c|c|}
 \hline TAG & ÍNDICE & OFFSET \\
 \hline 31-26 & 25-10 & 9-0 \\
+\hline 6 bits & 16 bits & 10 bits \\
 \hline
 \end{tabular}
 
-$2^{16} \times 4 = 262144$
+$\text{n-way} \times 2^{\text{índice bits size}}$
+
+$4 \times 2^{16} = 262144$ linhas
 
 Considere um sistema com as seguintes configurações:
 
@@ -78,8 +98,11 @@ Considere um sistema com as seguintes configurações:
 Qual seria o tamanho efetivo da cache em bits caso ela fosse implementada com
 um mapeamento 4-associativo?
 
-$2^{3}\times(4\times(18+1+2^{7}\times8))$
+$\text{n-way} \times \frac{2^{5}}{4} \times((28-7-3)+1+2^{7}\times8)$
 
+$4 \times \frac{2^{5}}{4}\times(18+1+2^{7}\times8)$
+
+\pagebreak
 Considere um sistema com as seguintes configurações:
 
 \begin{enumerate}
@@ -91,6 +114,8 @@ Considere um sistema com as seguintes configurações:
 
 Informe o tamanho da tabela de páginas em bits.
 
-$2^{22}\times(6+(24-11))$
+$2^{33-11}\times(6+(24-11))$
+
+$2^{22}\times(6+13))$
 
 \end{document}
