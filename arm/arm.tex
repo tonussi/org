@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek, brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+\author{Lucas}
+\title{Questões de Operações}
+\begin{document}
+\maketitle
+
+\section{Operações, alguns comentários}
+
+Por que o MARS faz essa conversão?
+\begin{verbatim}
+addi $s1, $s2, 0xfffd   # quando coloca 0xfffd, ele faz essa:
+=>
+  lui $1, 0             (cod: 0x3c01 0000)
+  ori $1, $1, 0xfffd    (cod: 0x3421 fffd)
+  add $17, $18, $1      (cod: 0x0241 8820)
+\end{verbatim}
+Ao invés dessa?
+\begin{verbatim}
+addi $s1, $s2, -3       # quando coloca -3, ele faz essa:
+=>
+  addi $s1, $s2, 0xfffd (cod: 0x2251 fffd)
+\end{verbatim}
+
+\begin{enumerate}
+
+\item[pg. 161] compiladores modernos fazem o levantamento pesado, por exemplo
+você hoje não precisa mais ficar se preocupando em fazer tudo em código usando
+ponteiros, pois o compilador irá trabalhar para deixar seu código que usa
+arrays, listas, etc, bem optimizado para atingir boa performance. E ARM não tem
+um registrador contendo estilo \$zero no mips, para operações aritméticas, etc.
+Mips tem 3 modos de endereçamento simples, ARM tem 9 modos mais complexos.
+\item[pg. 162] ARM inclui shifts como parte de cada instruções que opera em
+dados, os shifts lsl, lsr, asr são uma variação da instrução move no MIPS, ARM
+não tem instrução diz, diu já no MIPS essas instruções existem. \item[pg. 163]
+ARM usa flags para suas instruções de condições, tais como negative, zero,
+carry, overflow. Essas flags podem ser setadas em qualquer instruções lógica ou
+aritmética.
+\item[pg. 164] ARM tem um campo chamado Opx que aparece em todos os formatos e 
+serve tanto para diferenciar se precisa ser lido mais informação para saber que 
+instrução é, quanto para sinalizar que aquela instrução deve ser anulada 
+(tornada um nop) caso necessário, então todas as instruções ARM podem virar 
+nops. A figura na página 164 mostra bem isso, juntamente com a comparação com o 
+formato das instruções MIPS. O campo com 12-bits imediato do ARM faz a seguinte 
+operação binárias, ele estende com zeros para 32 bits, o valor é então 
+rotacionado para direita o número de bits especificado nos primeiro 4 bits do 
+campo multiplicado por 2. Essa operação faz com que se possa representar todas 
+as potencias de 2 numa palavra de 32 bits.
+\item[pg. 165] ARM tem instruções para fazer \verb|LOAD| e \verb|STORE| de 
+blocos de dados, MIPS não contém isso.
+\item[pg. 166]
+\item[pg. 167]
+\item[pg. 168]
+\item[pg. 169]
+\item[pg. 170]
+\item[pg. 171]
+\item[pg. 172]
+\item[pg. 173]
+
+\end{enumerate}
+
+\paragraph{2.34.1a}
+\paragraph{2.35.2a}
+\paragraph{2.36.1a}
+\paragraph{2.37.2a}
+\paragraph{2.37.4b}
+
+\end{document}
