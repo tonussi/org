@@ -67,18 +67,85 @@ campo multiplicado por 2. Essa operação faz com que se possa representar todas
 as potencias de 2 numa palavra de 32 bits.
 \item[pg. 165] ARM tem instruções para fazer \verb|LOAD| e \verb|STORE| de 
 blocos de dados, MIPS não contém isso.
-\item[pg. 166]
-\item[pg. 167]
-\item[pg. 168]
-\item[pg. 169]
-\item[pg. 170]
-\item[pg. 171]
-\item[pg. 172]
-\item[pg. 173]
+\item[pg. 166] Pode-se perceber um aumento no número de instruções das
+arquiteturas da timeline dessas páginas, aumento de instruções especializadas e
+consideravelmente mais complexas para executar tarefas específicas de nichos
+específicos, instruções especiais sum of absolute differences, dot products for
+arrays of structures, sign or zero extension of narrow data to wider sizes,
+population count, etc (intel, 2006). Porém note que apesar disso sempre foram
+mantidas as instruções simples de sempre, e o compilador mapeia para essas
+instruções mais simples e estrincha sobre elas, com uma porcentagem baixa de uso
+das instruções complexadas, ou seja, RISC sempre esteve contido no núcleo
+de instruções.
+\item[pg. 168] \textbf{x86} provê suporte para ambos 8 bit (byte) e 16 bit 
+(word). O 80386 adiciona endereçamento de 32 bits (double word). (AMD64 
+adiciona 64 endereçamento de 64 bits e dados de 64 bits, chamados quad words). 
+x86 refere ao processador 80386 da Intel.
+\item[pg. 169] \textbf{x86} tem 8 registradores de propósito geral. começam com 
+'E' de \textbf{extended}.
+\item[pg. 170] A operação com inteiro do x86 pode ser dividida em quatro 
+principais classes:
+\begin{enumerate}
+\item Instruções de transações de dados, incluindo move, push e pop.
+\item Aritmética e lógica, incluindo operações aritméticas de teste, inteiros, 
+e decimais.
+\item Controle de fluxo, incluindo branchs condicionais, jump incondicionais, 
+chamadas de função e retornos.
+\item Instruções de strings, incluindo 'string move' e 'string compare'.
+\end{enumerate}
+\item[pg. 171] Contrário de ARM and MIPS, 80386 não tem todas suas instruções 
+no formato 4 bytes, mas sim formatos muito variados em tamanho, desde 1 byte, 
+quando não tem operadores, até 15 bytes.
+\item[pg. 172] Se olharmos na tabela 2.40 da página 172 vemos que muitas 
+instruções são realizadas com a RISC. E instruções como \verb|cmp|, 
+\verb|test|, que são 
+realizadas usando \verb|slt|, \verb|sltu|, \verb|sltiu|, etc.
+\item[pg. 173] Muitas instruções \verb|x86| contém um campo de 1-bit que
+determina se a operação em questão é do tamanho de um byte ou de uma palavra
+dupla (8, 16 respectivamente). O campo \verb|MOV| é usado em instruções que
+podem mover para memória ou trazer da memória, o campo \verb|MOV| mostra a
+direção da transação. AMD e Intel tem recursos financeiros para sobreviver à
+adições de grandes complexidades aos seus respectivos conjunto de instruções. Na
+página 172 mostra só a superfície da arquitetura \textbf{x86}.
+\item[pg. 179] SPEC CPU2006 Benchmarks
+\begin{tabular}{|l|c|}
+\hline add, sub, addi & 16\% \\ 
+\hline lw, sw, lb, lbu, lh, lhu,sub, lui & 36\% \\ 
+\hline and, or, nor, andi, ori, sll, srl & 12\% \\ 
+\hline beq, bne, slt, slti, sltiu & 34\% \\ 
+\hline j, jr, jal & 2\% \\ 
+\hline 
+\end{tabular}
+Nessa tabela da SPEC CPU2006 mostra 99\% das instruções sendo mapeadas para 
+RISC, o que me da 1\% de instruções sendo mapeadas para o conjunto complexo do 
+x86, AMD64.
 
 \end{enumerate}
 
 \paragraph{2.34.1a}
+Ao traduzir as instruções precisamos dar um jeito de simular o que acontece por 
+trás da instruções ADD no ARM. Ela é uma instruções aritmética que seta flags 
+(Z, N, O, C). Flag Zero, Flag Negative, Flag Overflow, Flag Carry.
+
+\begin{verbatim}
+a.
+
+slt $t1, $s1, $s2 # em $t1 nós temos o mesmo valor que teríamos em
+                  # Z, N
+
+add $s0, $s1, $s2 # como não é uma adição condicional podemos fazer
+                  # assim, porém ela seta antes ou depois as flags
+
+
+b.
+
+li $t0, 0x4            # carrega a constante 4 no regs t0
+beq  $s0, $t0,  NOT    # s0 = 0x4 ? NOT else "ADDNE"
+add  $t0, $s1, $s0     # seta dinovo a flag por causa de add
+slt  $s1, $s1, $s0     # executa o add esperado
+NOT:  ...              # ADDNE contém uma branch implícita
+                       # além disso, contém setação de flag.
+\end{verbatim}
 \paragraph{2.35.2a}
 \paragraph{2.36.1a}
 \paragraph{2.37.2a}
