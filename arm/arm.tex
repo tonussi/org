@@ -143,12 +143,93 @@ li $t0, 0x4            # carrega a constante 4 no regs t0
 beq  $s0, $t0,  NOT    # s0 = 0x4 ? NOT else "ADDNE"
 add  $t0, $s1, $s0     # seta dinovo a flag por causa de add
 slt  $s1, $s1, $s0     # executa o add esperado
-NOT:  ...              # ADDNE contém uma branch implícita
+NOT: ...               # ADDNE contém uma branch implícita
                        # além disso, contém setação de flag.
 \end{verbatim}
+
 \paragraph{2.35.2a}
+
+Lembrar de gerar código como se você fosse um compilador, e você não sabe criar 
+lógicas mirabolantes, apenas você segue o padrão e gera instruções, e depois 
+você verifica se existem possíveis otimizações que também são padrões, nada de 
+lógica mirabolante.
+
+\begin{verbatim}
+a. LDR r0, [r1, #4]  ; r0 = memory[r1+4], r1 += 4
+
+lw $s0, 0x4($s1)     ; r0 recebe M[r1 + 4]
+addi $s1, $s1, 0x4   ; r1 recebe r1 + 4
+\end{verbatim}
+
 \paragraph{2.36.1a}
+
+Nesse eu entendo que ele começa dá direita para 
+esquerda.\footnote{\href{http://staff.science.nus.edu.sg/~phywjs/CZ101/labs-tutorials/tut5answr.html}
+{http://staff.science.nus.edu.sg/~phywjs/CZ101/labs-tutorials/tut5answr.html}}
+
+\begin{verbatim}
+a. ADD, r3, r2, r1, LSR #4  ; r3 = r2 + (r1 >> 4)
+                            ; lembrar também que a instrução aritmética
+                            ; no armv7 seta flag, e no caso do ADD
+                            ; pelo menos pode haver o caso dele setar
+                            ; Flag de Carry, Flag de Overflow. É possível.
+                            ; Então na verdade traduzir esse código para mips
+                            ; não seria apenas duas instruções, pois você
+                            ; teria que simular o esquema que o arm faz
+                            ; setando as 4 flags de controle.
+                            ; no mips isso daria algumas instruções
+                            ; envolvendo stlu, stl, ou sub direto mesmo.
+
+srl $s1, $s1, 4             ; r1 recebe r1 >> 4
+add $s3, $s2, $s1           ; r3 recebe r2 + r1
+sltu $t0, $s2, $s1          ; determina carry out em t0 = 0 ou 1, carry out 0
+                            ; ou carry 1 respectivamente.
+
+                            ; It coloca 0 ou 1 no registrador $t0 se ocorrer
+                            ; carry out 0 ou 1, respectivamente.
+                            ; Isso funciona por que $s3 == $s2 + $s1 se não
+                            ; ocorrer carry out (ou adição sem sinal com
+                            ; overflow equivalente). Então se não acontecer
+                            ; carry out $s3 vai ser >= $s1 (ou $s3 >= $s2).
+                            ; Se violar? então -> if $s3 for ao final da
+                            ; operação < $s2 um carry out deve ter acontecido
+                            ; Quando o carry out acontecer nós temos que
+                            ; $s3 + 2^32 = $s2 + $s1.
+\end{verbatim}
+
 \paragraph{2.37.2a}
+
+\begin{verbatim}
+a. START: mov  eax, 3
+          push eax
+          mov  eax, 4            ; x86 não é uma máquina loadstore
+          mov  ecx, 4            ; o que permite essa arquitetura
+          add  eax, ecx          ; trabalhar com a memória diferenciadamente
+          pop  ecx
+          add  eax, ecx
+
+(eax, ecx) -> ($s1, $s2)
+
+STARTMIPS: addi $s1, $0, 3
+           addi $sp, $sp, -4     ; Mips é uma máquina load store
+           sw   $s1, 0($sp)      ; então você vai ter que fazer as
+           addi $s1, $0, 4       ; transações com a memória, abrindo
+           addi $s2, $0, 4       ; espaço na pilha e fechando depois.
+           add  $s1, $s1, $s2
+           lw   $s2, 0($sp)
+           add  $sp, $sp, 4
+           add  $s1, $s1, $s2
+\end{verbatim}
+
 \paragraph{2.37.4b}
+
+\begin{verbatim}
+b. test eax, 0x00200010
+
+(eax) -> ($s1)
+lui $at, 0x0020
+ori $t0, $at, 0x0010
+slt $t1, $s1, $t0
+\end{verbatim}
 
 \end{document}
