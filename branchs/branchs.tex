@@ -32,15 +32,15 @@ claro ele será menor que qualquer número positivo que começa com 0 no seu bit
 mais significativo.
 
 \# máquina 32 bits você teria o seguinte exemplo:\\
-$0xF000CCCC < 0x700C8000 == 11110000000000001100110011001100 <
-01110000000011001000000000000000$, pensando em números sinalizados.
+0xF000CCCC $<$ 0x700C8000 $==$ 11110000000000001100110011001100 $<$
+01110000000011001000000000000000, pensando em números sinalizados.
 
 Por outro lado, números sem sinal, o 1 no bit mais significativo representa um
 número maior que qualquer outro que começa com 0 no seu bit mais significativo.
 
 Agora com números sem sinal, o exemplo acima, se inverte:\\
-$0xF000CCCC > 0x700C8000 == 11110000000000001100110011001100 >
-01110000000011001000000000000000$, pensando em números sem sinal.
+0xF000CCCC $>$ 0x700C8000 $==$ 11110000000000001100110011001100 $>$
+01110000000011001000000000000000, pensando em números sem sinal.
 
 (Existe uma maneira de reduzir o custo de checagem de limitantes em arrays de
 dados que se utiliza de checadores do tipo unsigned em mips. Em java isso
