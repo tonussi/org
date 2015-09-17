@@ -372,7 +372,7 @@ positive:
 
   lw  $4, 24($fp)         # carrega a0
   lw  $5, 28($fp)         # carrega a1
-	addu $2, $4, $5         # addit reduzido à uma instrução.
+  addu $2, $4, $5         # addit reduzido à uma instrução.
   nop                     # antes eram 14 instruções
 
   blez  $2, L2            # se o resultado em v0 (retornado por addit(a, b)
@@ -445,10 +445,10 @@ pode ser desastroso.
 f:
   addiu  $sp, $sp, -0x14 # abre espaço na pilha
   sw     $31, 0x14 ($sp) # preserva o conteúdo de: ra
-  sw     $4,  0x10 ($fp) # preserva o conteúdo de: a
-  sw     $5,  0xC  ($fp) # preserva o conteúdo de: b
-  sw     $6,  0x8  ($fp) # preserva o conteúdo de: c
-  sw     $7,  0x4  ($fp) # preserva o conteúdo de: d
+  sw     $4,  0x10 ($sp) # preserva o conteúdo de: a
+  sw     $5,  0xC  ($sp) # preserva o conteúdo de: b
+  sw     $6,  0x8  ($sp) # preserva o conteúdo de: c
+  sw     $7,  0x4  ($sp) # preserva o conteúdo de: d
 
   lw  $4, 0x10 ($sp)     # carrega a0 com $a0
   lw  $5, 0xC  ($sp)     # carrega a1 com $a1
@@ -456,8 +456,8 @@ f:
   nop
 
   move  $3, $2           # v1 recebe v0 (retorno do 1ro func(a,b))
-  lw    $4, 0x8 ($fp)    # a0 recebe $a2 (int c, preservado na pilha)
-  lw    $2, 0x4 ($fp)    # v0 recebe $a3 (int d, preservado na pilha)
+  lw    $4, 0x8 ($sp)    # a0 recebe $a2 (int c, preservado na pilha)
+  lw    $2, 0x4 ($sp)    # v0 recebe $a3 (int d, preservado na pilha)
   nop
   addu  $2, $4, $2       # v0 recebe c + d
   move  $4, $3           # mover $v1 para $a0 (primeiro parâmetro de func)
