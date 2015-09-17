@@ -197,14 +197,14 @@ chamada eu quero dizer.
 
 b. 0000 0001 0100 1011 0100 1000 0010 0010 two
 
-opcode 12    13    9     shamt funct
+opcode 10    11    9     shamt funct
 000000 01010 01011 01001 00000 100010
 
 Opcode é 0x0 novamente então é do tipo R, agora saibamos qual é o campo funct. 
 E ele vale 0x22, basta buscar a instrução do 0/22 hex no mips green card. E é 
 um subtract.
 
-sub $9, $12, $13 ou simbolicamente falando podemos colocar sub $t1, $t4, $t5.
+sub $9, $10, $11 ou simbolicamente falando podemos colocar sub $t1, $t2, $t3.
 \end{verbatim}
 
 \paragraph{não fazer \cancel{2.9.2} $\rightarrow$ fazer 2.10.2 da edição 4 rev.}
