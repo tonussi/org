@@ -1,0 +1,177 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=1.5cm, bottom=1.5cm]{geometry}
+\usepackage{cancel}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+\author{Lucas}
+\title{Treino de Branchs e Jumps}
+\begin{document}
+\maketitle
+
+\paragraph{Questão 1:} Você está no endereço efetivo 0x600 e quer deslocar o 
+fluxo do código para o endereço LABEL 2 = 0x0, você pode fazer isso usando 
+branch? jump? Quais os valores do branch (bne \$s1, \$0, LABEL2), e do jump (j 
+LABEL2) no formatos I, J respectivamente a seguir, para poder deslocar de 0x600 
+para 0x0.
+
+Formato I
+
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  opcode & rs & rt & imediato \\
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline  
+    &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+\end{tabular}
+
+Formato J
+
+\begin{tabular}{|c|c|}
+  \hline
+  opcode & imediato \\
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+    &  & \\
+    \hline
+  \end{tabular}
+\end{tabular}
+
+\pagebreak
+\paragraph{Questão 2:} Você está no endereço efetivo 0x400400 e quer deslocar o 
+fluxo do código para o endereço LABEL 2 = 0x403400, você pode fazer isso usando 
+branch? jump? Quais os valores do branch (bne \$s1, \$0, LABEL2), e do jump (j 
+LABEL2) no formatos I, J respectivamente a seguir, para poder deslocar de 
+0x400400 para 0x403400.
+
+Formato I
+
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  opcode & rs & rt & imediato \\
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline  
+    &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+\end{tabular}
+
+Formato J
+
+\begin{tabular}{|c|c|}
+  \hline
+  opcode & imediato \\
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+    &  & \\
+    \hline
+  \end{tabular}
+\end{tabular}
+
+\pagebreak
+\paragraph{Questão 3:} Você está no endereço efetivo 0x800 e quer deslocar o 
+fluxo do código para o endereço LABEL 2 = 0x900, você pode fazer isso usando 
+branch? jump? Quais os valores do branch (bne \$s1, \$0, LABEL2), e do jump (j 
+LABEL2) no formatos I, J respectivamente a seguir, para poder deslocar de 
+0x800 para 0x900.
+
+Formato I
+
+\begin{tabular}{|c|c|c|c|}
+  \hline
+  opcode & rs & rt & imediato \\
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|}
+    \hline  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline  
+    &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+\end{tabular}
+
+Formato J
+
+\begin{tabular}{|c|c|}
+  \hline
+  opcode & imediato \\
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline  &  &  &  &  & \\
+    \hline
+  \end{tabular}
+  & 
+  \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+    \hline  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  & 
+    &  & \\
+    \hline
+  \end{tabular}
+\end{tabular}
+
+\end{document}
