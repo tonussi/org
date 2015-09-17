@@ -1,6 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
-\usepackage[greek, brazil]{babel}
+\usepackage[brazil]{babel}
 \usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
 \usepackage{cancel}
 \usepackage{makeidx}
@@ -142,7 +142,7 @@ sc $t0, 0 ($s0)             ; verifica se a operação é atômica
 
 lock: la $s0, sem           ; pega o endereço base da label sem
 try:  ll $t1, 0($s0)        ; liga atômicamente com o endereço 0($s0)
-      bne $s1, $0, try      ; se para esse endereço ainda não estiver disponível
+      bne $t1, $0, try      ; se para esse endereço ainda não estiver disponível
                             ; operações atômicas, então tenta novamente o try:
                             ; até algum outro processador liberar esse 0($s0)
 
@@ -175,7 +175,8 @@ unlock: la $t1, sem         ; pega a posição de memória correta de 'sem'
 
 \end{enumerate}
 
-\paragraph{não fazer \cancel{2.9.1} $\rightarrow$ fazer 2.10.1 da edição 4 ext.}
+\paragraph{não fazer \cancel{2.9.1} $\rightarrow$ fazer 2.10.1 da edição 4 
+revisada.}
 
 \begin{verbatim}
 a. 0000 0010 0001 0000 1000 0000 0010 0000 two
@@ -206,11 +207,145 @@ um subtract.
 sub $9, $12, $13 ou simbolicamente falando podemos colocar sub $t1, $t4, $t5.
 \end{verbatim}
 
-\paragraph{não fazer \cancel{2.9.2} $\rightarrow$ fazer 2.10.2 da edição 4 ext.}
-\paragraph{não fazer \cancel{2.9.4} $\rightarrow$ fazer 2.10.4 da edição 4 ext.}
-\paragraph{2.28.2}
-\paragraph{2.28.3}
-\paragraph{2.28.4}
+\paragraph{não fazer \cancel{2.9.2} $\rightarrow$ fazer 2.10.2 da edição 4 rev.}
 
+Ambas são tipo R. (Patterson \& Hennesy - Computer Organization and Design, 
+Edição 4 Revisada)
+
+\paragraph{não fazer \cancel{2.9.4} $\rightarrow$ fazer 2.10.4 da edição 4 rev.}
+
+In the following problems, the data table contains MIPS instructions. You will 
+be asked to translate the entries into the bits of the opcode and determine the 
+MIPS instruction format.
+
+\pagebreak
+\begin{verbatim}
+a.   addi $t0, $t0, 0
+            \ /
+             .                                     ; ele troca os campos de
+            / \                                    ; lugar no formato I
+           /   \
+opcode   rs      rt      immed                     ; uma coisa experta de se
+[001000] [01000] [01000] [0000000000000000]        ; fazer é contar os bits
+31    26  25  21 20   16 15               0        ; para cada campo e depois
+                                                   ; contar para ver se tem 32
+                                                   ; bits no formato.
+
+b.   sw $t1, 32($t2)
+          \   /
+           \ /                                     ; ele troca os campos de
+            .                                      ; lugar no formato I
+           / \
+          |   \
+          |    \
+opcode   rs      rt      immed
+[101011] [01010] [01001] [0000000000100000]
+31    26  25  21 20   16 15               0
+
+\end{verbatim}
+
+\paragraph{2.28.2}
+
+\begin{verbatim}
+try: mov  r3, r4        ; move o conteúdo de r4 para r3
+     ll   r2, 0(r2)     ; salva em r2 o conteúdo de 0(r2) e inic. op. atômica
+     addi r2, r2, 1     ; incrementa r2 de 1
+     sc   r3, 0(r1)     ; tenta finalizar op. atômica porém em outro endereço
+     beqz r3, try       ; se não conseguir realizar op. atômica tenta novamente
+                        ; isto é, se r3 retornar com 0 ele falhou na operação
+                        ; atômica e deverá tentar novamente, se r3 retornar com 
+                        ; o valor 1 então deu certo e o branch não desloca para
+                        ; try: "tentar novamente".
+     mov  r4, r2        ; move o conteúdo de r2 para r4
+\end{verbatim}
+
+O store conditional pode não estár apontando para a mesma posição de memória 
+que o load linked. Isto é, pode ser que 0(r2) seja diferente de 0(r1). Mas o 
+código irá executar normalmente. Digamos que os endereços são diferentes, então 
+nesse caso, \underline{se não tiver} outra thread fazendo load linked na 
+posição 0(r1) igual a posição 0(r1) do store conditional aqui, então esse código
+vai ficar eternamente tentando pois r3 vai ser sempre 0. Mas se tem outra 
+thread que faz load linked a tempo do código acima verificar operação atômica 
+então o store conditional aqui vai conseguir retornar 1 em seu registrador e 
+vai conseguir terminar a operação atômica, e colocar o valor de r3 em 0(r1). 
+Outro caso é se 0(r2) é igual a 0(r1), nesse caso então temos que o código 
+executará no mínimo 6 instruções (todo o corpo), e no máximo $5n + 1$ 
+instruções.
+
+\paragraph{2.28.3}
+
+\begin{verbatim}
+try:  mov  r3, r4        ; move o conteúdo de r4 para r3
+      ll   r2, 0(r3)     ; salva em r2 o conteúdo de 0(r2) e inic. op. atômica
+
+      bne  r2, $0, try   ; se não liberar o semáforo fica tentando
+
+      addi r2, r2, 1     ; incrementa r2 de 1
+      sc   r2, 0(r3)     ; tenta finalizar op. atômica porém em outro endereço
+      beqz r2, try       ; se não conseguir realizar op. atômica tenta novamente
+                         ; isto é, se r3 retornar com 0 ele falhou na operação
+                         ; atômica e deverá tentar novamente, se r3 retornar 
+                         ; com o valor 1 então deu certo e o branch não desloca 
+                         ; para try: "tentar novamente".
+
+      mov  r4, r2        ; move o conteúdo de r2 para r4
+\end{verbatim}
+
+\pagebreak
+\paragraph{2.28.4a [5] 2.11 Fill out the table with the value of the registers 
+for each given cycle.}
+
+Each entry in the following table has code and also shows the contents of
+various registers. The notation ''(\$s1)'' shows the contents of a memory
+location pointed to by register \$s1 . The assembly code in each table is
+executed in the cycle shown on parallel processors with a shared memory space.
+
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline Processador 1 (P1) &
+       Processador 2 (P2) &
+       Ciclo              &
+       P1 - \$t1          &
+       P1 - \$t0          &
+       (\$s1)             &
+       P2 - \$t1          &
+       P2 - \$t0          \\
+
+\hline                  &                  & 0 & 1  & 2 & 99 & 30 & 40 \\ 
+\hline                  & ll \$t1, 0(\$s1) & 1 & 1  & 2 & 99 & 99 & 40 \\ 
+\hline ll \$t1, 0(\$s1) &                  & 2 & 99 & 2 & 99 & 99 & 40 \\ 
+\hline                  & sc \$t0, 0(\$s1) & 3 & 99 & 1 & 2  & 99 & 40 \\ 
+\hline sc \$t0, 0(\$s1) &                  & 4 & 99 & 1 & 2  & 99 & 0  \\ 
+\hline 
+\end{tabular} 
+\end{table}
+
+\paragraph{2.28.4b} Esse é um pouco mais complicado, mas da para fazer também, 
+manda bala.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+
+\hline Processador 1 (P1) &
+       Processador 2 (P2) &
+       Ciclo              &
+       P1 - \$t1          &
+       P1 - \$t0          &
+       (\$s1)             &
+       P2 - \$t1          &
+       P2 - \$t0          \\
+
+\hline                   &                    & 0 & 1   & 2 & 99  & 30  & 40 \\
+\hline  ll \$t1, 0(\$s1) &                    & 1 & 99  & 2 & 99  & 30  & 40 \\
+\hline                   & ll \$t1, 0(\$s1)   & 2 & 99  & 2 & 99  & 99  & 40 \\
+\hline                   & addi \$t1, \$t1, 1 & 3 & 99  & 2 & 99  & 100 & 40 \\
+\hline                   & sc \$t1, 0(\$s1)   & 4 & 99  & 2 & 100 & 1   & 40 \\
+\hline sc \$t0, 0(\$s1)  &                    & 5 & 99  & 0 & 100 & 1   & 40 \\
+\hline
+\end{tabular} 
+\end{table}
 
 \end{document}
