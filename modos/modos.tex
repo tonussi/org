@@ -288,7 +288,7 @@ immediate fields of the I-type and J-type instructions, we can save on the
 number of bits needed to represent these types of instructions. If the immediate
 field of I-type instructions were 8 bits and the immediate field of J-type
 instructions were 18 bits, rewrite the MIPS code above to reflect this change.
-Avoid using the lui instruction.
+\textbf{Avoid using the lui instruction}.
 
 \begin{verbatim}
 I-type [opcode 6 bits][rs 5 bits][rt 5 bits][immed 8 bits]
@@ -328,16 +328,10 @@ Para essa questão se você seguir como o compilador elabora a solução:
 \item Adiciona um jump
 \end{itemize}
 
-E também considerando que a questão não quer que usemos lui para carregar
-endereços grandes para que o jr possa saltar ainda mais longe que o jump, e
-também a questão quer que consideremos 8 bits de imediato para formato-I e 18
-bits para formato-J, isso complica a vida. Porém eu penso que a saída está que o
-jump concatena agora não mais apenas PC+4[31-28] \underline{\textbf{mas}}
-PC+4[31-20] que são 12 bits, o jump com 26 bits de imediato concatena
-PC+4[21-28] mas esse novo jump de formato J com 18 bits de imediato concatenará
-12 bits mais significativos do PC para poder saltar.
-
-Se não for isso, como você vai saltar se o jump não é PC-relative ?
+E também considerando que a questão não quer que usemos \verb|lui| para carregar
+endereços grandes para que o jr possa saltar ainda mais longe que o
+\textbf{jump}, e também a questão quer que consideremos 8 bits de imediato para
+formato-I e 18 bits para formato-J, isso complica a vida.
 
 \begin{verbatim}
 a. 0x00400000          beq $s0, $0, FAR
@@ -347,7 +341,7 @@ a. 0x00400000          beq $s0, $0, FAR
 
    Solução:
 
-a. 0x00400000        bne $s0, $0, 0x01 # (0x01 << 2) + 0x400004 = 0x400008
+   0x00400000        bne $s0, $0, 0x01 # (0x01 << 2) + 0x400004 = 0x400008
    0x00400004        j 0xC40           # 000000001000 :: 0000110001000000 :: 00
    0x00400008 Close:                                            |
                                                                 |
@@ -355,140 +349,22 @@ a. 0x00400000        bne $s0, $0, 0x01 # (0x01 << 2) + 0x400004 = 0x400008
    0x00403100 FAR:   addi $s0, $s0, 1              <------------+
 \end{verbatim}
 
-Nessa você pode ir colocando quantos jumps forem necessários. Lembrando que é 
-PC+4[31-20] a técnica que eu estou usando para solucionar o exercício. 
-{\bfseries Essa solução precisa de verificação.}
+A solução que o ARM da para problemas assim é fazer shifts dos valores, 
+preenchendo um registrador até possibilitar que eu salte para grandes 
+distâncias.
 
 \begin{verbatim}
-b. 0x00000100       j 0x3FFFC      # PC+4; 100+4 = 104
+b. 0x00000100        j CLOSE
 
-   0x000FFFFC L0    j 0x3FFFF      # PC+4; FFFFC+4 = 100000
+   0x00000104 CLOSE: add $at, $0, 0x40  ; t0 recebe 0x00000040
+                     sll $at, $at, 0x14 ; 0x00000040 vira 0x4000000
+                     ori $at, $at, 0x10 ; t0 recebe 0x4000010
 
-   0x001FFFFC L1    j 0x3FFFF      # PC+4; 1FFFFC+4 = 200000
+                     jr $at             ; agora é possível pular para
+                                        ; longas distâncias com pouco
+                                        ; campo de immediato.
 
-   0x002FFFFC L3    j 0x3FFFF
-
-   0x003FFFFC L4    j 0x3FFFF
-
-   0x004FFFFC L5    j 0x3FFFF
-
-   0x005FFFFC L6    j 0x3FFFF
-
-   0x006FFFFC L7    j 0x3FFFF
-
-   0x007FFFFC L8    j 0x3FFFF
-
-   0x008FFFFC L9    j 0x3FFFF
-
-   0x009FFFFC L10   j 0x3FFFF
-
-   0x00AFFFFC L11   j 0x3FFFF
-
-   0x00BFFFFC L12   j 0x3FFFF
-
-   0x00CFFFFC L13   j 0x3FFFF
-
-   0x00DFFFFC L14   j 0x3FFFF
-
-   0x00EFFFFC L15   j 0x3FFFF
-
-   0x00FFFFFC L16   j 0x3FFFF
-
-   0x011FFFFC L17   j 0x3FFFF
-
-   0x012FFFFC L18   j 0x3FFFF
-
-   0x013FFFFC L19   j 0x3FFFF
-
-   0x014FFFFC L20   j 0x3FFFF
-
-   0x015FFFFC L21   j 0x3FFFF
-
-   0x016FFFFC L22   j 0x3FFFF
-
-   0x017FFFFC L23   j 0x3FFFF
-
-   0x018FFFFC L24   j 0x3FFFF
-
-   0x019FFFFC L25   j 0x3FFFF
-
-   0x01AFFFFC L26   j 0x3FFFF
-
-   0x01BFFFFC L27   j 0x3FFFF
-
-   0x01CFFFFC L28   j 0x3FFFF
-
-   0x01DFFFFC L29   j 0x3FFFF
-
-   0x01EFFFFC L30   j 0x3FFFF
-
-   0x01FFFFFC L31   j 0x3FFFF
-
-   0x020FFFFC L32   j 0x3FFFF
-
-   0x021FFFFC L33   j 0x3FFFF
-
-   0x022FFFFC L34   j 0x3FFFF
-
-   0x023FFFFC L35   j 0x3FFFF
-
-   0x024FFFFC L36   j 0x3FFFF
-
-   0x025FFFFC L37   j 0x3FFFF
-
-   0x026FFFFC L38   j 0x3FFFF
-
-   0x027FFFFC L39   j 0x3FFFF
-
-   0x028FFFFC L40   j 0x3FFFF
-
-   0x029FFFFC L41   j 0x3FFFF
-
-   0x02AFFFFC L42   j 0x3FFFF
-
-   0x02BFFFFC L43   j 0x3FFFF
-
-   0x02CFFFFC L44   j 0x3FFFF
-
-   0x02DFFFFC L45   j 0x3FFFF
-
-   0x02EFFFFC L46   j 0x3FFFF
-
-   0x02FFFFFC L47   j 0x3FFFF
-
-   0x030FFFFC L48   j 0x3FFFF
-
-   0x031FFFFC L49   j 0x3FFFF
-
-   0x032FFFFC L50   j 0x3FFFF
-
-   0x033FFFFC L51   j 0x3FFFF
-
-   0x034FFFFC L52   j 0x3FFFF
-
-   0x035FFFFC L53   j 0x3FFFF
-
-   0x036FFFFC L54   j 0x3FFFF
-
-   0x037FFFFC L55   j 0x3FFFF
-
-   0x038FFFFC L56   j 0x3FFFF
-
-   0x039FFFFC L57   j 0x3FFFF
-
-   0x03AFFFFC L58   j 0x3FFFF
-
-   0x03BFFFFC L59   j 0x3FFFF
-
-   0x03CFFFFC L60   j 0x3FFFF
-
-   0x03DFFFFC L61   j 0x3FFFF
-
-   0x03EFFFFC L62   j 0x3FFFF
-
-   0x03FFFFFC L63   j 0x4
-
-   0x04000010 AWAY: addi $s0, $s0, 1
+   0x04000010  AWAY: addi $s0, $s0, 1
 \end{verbatim}
 
 \end{document}
