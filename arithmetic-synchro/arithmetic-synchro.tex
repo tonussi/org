@@ -322,6 +322,29 @@ executed in the cycle shown on parallel processors with a shared memory space.
 \end{tabular} 
 \end{table}
 
+Exemplo baseado no exercício anterior, mas com as instruções em lugares 
+diferentes.
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline Processador 1 (P1) &
+       Processador 2 (P2) &
+       Ciclo              &
+       P1 - \$t1          &
+       P1 - \$t0          &
+       (\$s1)             &
+       P2 - \$t1          &
+       P2 - \$t0          \\
+
+\hline                  &                  & 0 & 1  & 2 & 99 & 30 & 40 \\ 
+\hline ll \$t1, 0(\$s1) & ll \$t1, 0(\$s1) & 2 & 99 & 2 & 99 & 99 & 40 \\ 
+\hline sc \$t0, 0(\$s1) &                  & 3 & 99 & 1 & 2  & 99 & 40 \\ 
+\hline                  & sc \$t0, 0(\$s1) & 4 & 99 & 1 & 2  & 99 & 0  \\ 
+\hline 
+\end{tabular} 
+\end{table}
+
 \paragraph{2.28.4b} Esse é um pouco mais complicado, mas da para fazer também, 
 manda bala.
 
