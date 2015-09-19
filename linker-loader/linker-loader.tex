@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{cancel}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+
+\author{Lucas}
+
+\title{Linker {\small(mesclador de arquivos)}, Loader {\small(carregador de 
+arquivos)}}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+
+\item[142-147] Passos do Ligador: \begin{enumerate}
+\item Coloca códigos e módulos simbolicamente na memória.
+\item Determina endereços de dados e labels de instruções.
+\item Procura as bibliotecas dos programas para achar as rotinas contidas nelas 
+e que são usadas pelo programa em sí, combina ambas referências internas e 
+externas. Resolve referências entre os arquivos (B3 Patterson).
+\end{enumerate}
+
+Quando todas as referências estão resolvidas, o ligador então vai determinar as 
+localizações na memória que cada módulo deverá ocupar.
+
+\item[B18-B19] Passos do Carregador: \begin{enumerate}
+\item Lê o cabeçalho do executável, para determinar o tamanho do segmento de 
+dados e texto.
+\item Cria um novo espaço de endereços para o programa.
+\item Copia instruções e dados para um novo espaço de endereços.
+\item Copia para a pilha os argumentos passados pera o programa.
+\item Inicializa registradores da máquina, em geral a maioria dos registradores
+são limpados.
+\item Pula para uma rotina start-up que copia os argumentos do programa da pilha
+para registradores e chama a rotina principal (\verb|main|). Se ela terminar o
+programa termina com o \verb|exit system call|.
+\end{enumerate}
+
+\end{enumerate}
+
+\pagebreak
+\paragraph{2.31.1a} As tabelas abaixo tem as informações para o ligador, mesclar
+os objetos na memória, resolvendo os endereços internos e externos.
+
+\textbf{2.31.1 [5] 2.12} Ligue os objetos $\rightarrow$ Procedure A com .text
+size de 0x140 e .data size de 0x40 $\rightarrow$ Procedure B com .text size de
+0x300 e .data size de 0x50.\footnote{Como você pode ver nunca haverá a
+possibilidade de um jal, j, concatenar alguma coisa além de \textsc{PC+4[31-28]
+== 0000}. Senão você estaria pulando para uma área de dados, no layout que
+estamos trabalhando aqui. É por isso que dá erro de acesso indevido a memória.}
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline Text Segment & Address & Instruction & & Text Segment & Address & 
+Instruction & \\
+\hline  & 400000 & lbu \$a0, 8000(\$gp) & & & 400140 & sw \$a1, 8040(\$gp) & \\
+\hline  & 400004 & jal 100050 &  &  & 400144 & jal 100000 & \\
+\hline Data Segment & 10000000 & (X) &  & Data Segment & 10000040 & (Y) & \\
+\hline  & ... & ... & & & ... & ... & \\
+\hline Relocation Info & Address & Instruction Type & Dependency & Relocation
+Info & Address & Instruction Type & Dependency \\
+\hline  & 0 & lbu (I type) & X &  & 0 & sw (I type) & Y \\
+\hline  & 4 & jal (J type) & B &  & 4 & jal (J type) & A \\
+\hline Symbol Table & Address & Symbol &  & Symbol Table & Address & Symbol &  
+\\ 
+\hline  & --- & X &  &  & --- & Y &  \\ 
+\hline  & --- & B &  &  & --- & A &  \\ 
+\hline 
+\end{tabular}
+}
+
+\paragraph{2.31.1b} Ligue os objetos $\rightarrow$ Procedure A com .text
+size de 0x140 e .data size de 0x40 $\rightarrow$ Procedure B com .text size de
+0x300 e .data size de 0x50.
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline Text Segment & Address & Instruction &  & Text Segment & Address &
+Instruction &  \\
+\hline  & 400000 & lui \$at, 0x1000 &  &  & 400140 & sw \$a0, 8050(\$gp) &  \\
+\hline  & 400004 & ori \$a0, \$at, 0x0000 &  &  & 400144 & jmp 0x60 &  \\
+\hline  & ... & ... &  &  & ... & ... &  \\
+\hline  & 0x84 & jr \$ra &  &  & 0x180 & jal 0x100000 &  \\
+\hline  & ... & ... &  &  & ... & ... &  \\
+\hline Data Segment & 10000000 & (X) &  & Data Segment & 10000050 & (Y) &  \\
+\hline  & ... & ... &  &  & ... & ... &  \\
+\hline Relocation Info & Address & Instruction Type & Dependency & Relocation
+Info & Address & Instruction Type & Dependency \\
+\hline  & 0 & lui (I type) & X &  & 0 & sw (I type) & Y \\
+\hline  & 4 & ori (I type) & X &  & 4 & jump (J type) & F00 \\
+\hline  &  &  &  &  & 0x180 & jal (J type) & A \\
+\hline Symbol Table & Address & Symbol &  & Symbol Table & Address & Symbol &
+\\
+\hline  & --- & X &  &  & --- & Y &  \\
+\hline  &  &  &  &  & 0x180 & F00 &  \\
+\hline  &  &  &  &  & --- & A &  \\
+\hline
+\end{tabular}
+}
+
+\end{document}
