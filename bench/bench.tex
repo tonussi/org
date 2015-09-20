@@ -1,0 +1,347 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{cancel}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+
+\author{Lucas Skywalker}
+
+\title{Bench\textit{marks}}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+
+\item[pg. 35] $$CPU_{time} = Instruction\ count \times CPI \times Clock\ cycle\ 
+time$$
+
+$$CPU_{time} = \frac{Instruction\ count \times CPI}{Clock\ cycle\ time}$$
+
+\item[pg. 48] Wordload é um conjunto de programas rodando em um computador que 
+pode 
+ser tanto uma coleção de aplicações rodadas pelos usuário ou construída de 
+programas reais para aproximar o \verb|mix|. Um wordload típico especifica 
+ambos os programas e as frequências relativas.\footnote{SPEC significa System 
+Performance Evaluation Cooperative, Sistema Corporativo de Avaliação do 
+Desempenho.} A elaboração é que quando avaliar dois computadores usando 
+SPECratios, usar média geométrica para dar uma resposta normalizada sempre.
+
+\item[pg. 49] Tempo de execução é o produto de três fatores na tabela; Contagem
+de Instruções (em bilhões), Relógios (Clocks) por Instrução (CPI), e Tempo de
+Ciclo de Relógio (em nanosegundos). SPECratio é simplesmente o time de
+referência, o qual é suportado pelo SPEC, dividido pelo tempo de execução
+medido. ($SPECratio = \frac{Reference\ Time\ (Seconds)}{Execution\ Time\
+(Seconds)}$). Exemplo: $SPECratio(perl) = \frac{9770}{637} = 15,3$
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|r|r|r|r|r|r|r|r|}
+\hline Descrição & Nome & Contagem de Instruções em Bilhões & CPI & Tempo de 
+Ciclo de Relógio $(Segundos \times 10^{-9}$) & Tempo de Execução (Segundos) & 
+Tempo Referencial (Segundos) & SPECratio \\
+\hline Processador interpretador de strings & perl & 2118 & 0,75 & 0,4 & 637 & 
+9770 & 15,3 \\
+\hline
+\end{tabular}
+}
+
+
+\item[pg. 51] Lei de Amdahl, diz que aumento de desempenho possível dado por 
+uma melhoria é limitado pelo montante que o dispositivo melhorado usa (suporta).
+É uma medida quantitativa da lei do retorno diminuitivo.
+
+$$Execution\ time\ after\ improvement = \frac{Execution\ time\ affected\ by\ 
+improvement}{Amount\ of\ improvement} + Execution\ time\ unaffected$$
+
+\pagebreak
+\begin{center}
+\textbf{Pitfall}
+\end{center}
+
+$$Execution\ time\ after\ improvement =  \frac{80\ segundos}{n} + (100 - 80\ 
+segundos)$$
+
+$$20\ segundos =  \frac{80\ segundos}{n} + (20)$$
+
+$$0 =  \frac{80\ segundos}{n}$$
+
+\item[pg. 52] Lei de Amdahl é por vezes, usada para argumentar para limites 
+práticos para o número possível de processadores em paralelo. Ou seja, chega 
+uma hora que existirá uma barreira de processadores trabalhando em paralelo.
+
+\textbf{Falácia}: Computadores de baixo custo utilizam pouca energia.
+
+Eficiência de energia importa bastante quando se fala de computadores custo
+baixo, por causa que workload em servidores variam muito. Utilização de CPU para
+servidores da Goodle, por exemplo, está entre 10\% e 50\% na maioria do tempo e
+100\% em menos que 1\% do tempo.
+
+\begin{table}[ht!]
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+
+\hline Server Manufacturer                &
+       Micro Processor                    &
+       $\frac{Total\ Cores}{Sockets}$     &
+       Clock Rate                         &
+       Peak Performance (ssj\_ops)        &
+       100\% Load Power                   &
+       50\% Load Power                    &
+       $\frac{50\%\ Load}{100\%\ Power}$  &
+       10\% Load Power                    &
+       $\frac{10\%\ Load}{100\%\ Power}$  &
+       Active Idle Power                  &
+       $\frac{Active Idle}{100\%\ Power}$ \\
+
+\hline HP & Xeon E5440 & $\frac{8}{2}$ & 3.0 Ghz & 308022 & 269 W & 227 W & 
+84\% & 174 W & 65\% & 160 W & 59\% \\
+\hline 
+\end{tabular}
+}
+\caption{Até mesmo servidores que são utilizados 10\%, queimam próximo de dois
+terços do seu pico de energia.}
+\end{table}
+
+Desde que o workload de servidores varie mas use uma larga fração do seu pico de
+energia, Luiz Barroso e Urs Hölzle [2007] argumentaram que nós deveríamos
+redesenhar hardware para atingir "energia proporcional de computação". Se
+futuros servidores usaram 10\% do seu pico de energia à 10\% de worload, nós
+poderíamos reduzir o custo energético de central de dados, numa era pró-verde e
+de redução da emissão de $CO_{2}$ isso pode vir a calhar.
+
+\item[pg. 53] Milhões de instruções por segundo (MIPS) é uma medida de
+velocidade da execução de programas baseado no número de milhões de instruções.
+
+$$MIPS = \frac{Contagem\ de\ instr}{Tempo\ de\ exec\ \times  10^{6}}$$
+
+$$MIPS = \frac{Contagem\ de\ instr}{\frac{Contagem\ de\ instr \times
+CPI}{\frac{1}{Tempo\ de\ exec}} \times 10^{6}}$$
+
+$$MIPS = \frac{Contagem\ de\ instr}{\frac{Contagem\ de\ instr \times
+CPI}{Clock\ Rate} \times 10^{6}}$$
+
+\item[pg. 54] \textbf{Tempo de execução} é a única opção impecável de medição 
+da performance.
+
+$$\frac{Tempo\ (Segundos)}{Programa} = \frac{Contagem\ Instr.}{Programa} \times 
+\frac{Ciclos\ de\ Relog.}{Contagem\ Instr.} \times \frac{Tempo\ 
+(Segundos)}{Ciclos\ de\ Relog.}$$
+
+Individualmente esses fatores não definem performance. Mas o produto deles 
+igual ao tempo de execução, vira então, uma medida confiável de performance.
+\end{enumerate}
+
+
+\paragraph{1.12.1} Achar o CPI se temos um ciclo de relógio é 0,333 
+nanosegundos.
+
+\begin{verbatim}
++---------------------------------------------------------------+
+|    Name  | Intr. Count 10^9 | Execution Time | Reference Time |
++---------------------------------------------------------------+
+| a. bzip2 | 2389             | 750 s          | 9650  s        |
++---------------------------------------------------------------+
+| b. go    | 1658             | 700 s          | 10490 s        |
++---------------------------------------------------------------+
+\end{verbatim}
+
+{\flushleft
+
+\textbf{bzip2}
+
+$CPUfreq = \frac{1}{0,333 \times 10^{-9}}$
+
+$CPUfreq = 5,005005005 \times 10^{9}\ \textbf{Hz} = 5\ \textbf{Ghz}$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{Execution Time}{Instr.\ Count \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9}$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{750}{2389 \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9} = 1,569694433 \rightarrow 1,57\ Ciclos\ por\ instr.$
+
+}
+
+{\flushleft
+
+\textbf{go}
+
+$CPUfreq = \frac{1}{0,333 \times 10^{-9}}$
+
+$CPUfreq = 5,005005005 \times 10^{9}\ \textbf{Hz} = 5\ \textbf{Ghz}$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{Execution Time}{Instr.\ Count \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9} = 1,569694433 \rightarrow 1.6\ Ciclos\ por\ instr.$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{700}{1658 \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9} = 2,110977081 \rightarrow 2.1\ Ciclos\ por\ instr. $
+
+}
+
+\paragraph{1.12.2}
+
+{\flushleft
+
+\textbf{bzip2}
+
+$CPUfreq = \frac{1}{0,333 \times 10^{-9}}$
+
+$CPUfreq = 5,005005005 \times 10^{9}\ \textbf{Hz} = 5\ \textbf{Ghz}$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{Execution Time}{Instr.\ Count \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9}$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{750}{2389 \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9} = 1,569694433\ Ciclos\ por\ instr.$
+
+}
+
+{\flushleft
+
+\textbf{go}
+
+$CPUfreq = \frac{1}{0,333 \times 10^{-9}}$
+
+$CPUfreq = 5,005005005 \times 10^{9}\ \textbf{Hz} = 5\ \textbf{Ghz}$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{Execution Time}{Instr.\ Count \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9} = 1,569694433 \rightarrow 1.6\ Ciclos\ por\ instr.$
+
+$CPI = 5 \times 10^{9} \times 
+\frac{700}{1658 \times 10^{9}} = 5 \times 10^{9} \times 
+0,313938887 \times 10^{-9} = 2,110977081 \rightarrow 2.1\ Ciclos\ por\ instr. $
+
+}
+
+\paragraph{1.12.3}
+
+\textbf{bzip2}
+
+$SPECratio = \frac{RefTime}{ExecTime} = \frac{9650}{750} = 12,86$
+
+\textbf{go}
+
+$SPECratio = \frac{RefTime}{ExecTime} = \frac{10490}{700} = 14,98$
+
+\textbf{média geométrica}
+
+$GEOmean = \sqrt[2]{12,866666667 \times 14,985714286} = \sqrt[2]{192,81} 
+= 13,88$
+
+\pagebreak
+\paragraph{1.14.1}
+A seção 1.8 cita como pitfall a utilização de um subconjunto da equação da 
+performance como uma medida de desempenho. Para ilustrar isso, considere as 
+configurações abaixo para execução de um programa em diferentes processadores.
+
+\begin{tabular}{|l|l|l|l|l|}
+\hline  & Processador & Clock Rate & CPI & Nro. Instr. \\
+\hline a. & P1 & 4 Ghz & 0.9 & 5.00E+06 \\
+\hline  & P2 & 3 Ghz & 0.75 & 1.00E+06 \\
+\hline b. & P1 & 3 Ghz & 1.1 & 3.00E+06 \\
+\hline  & P2 & 2.5 Ghz & 1.0 & 0.50E+06 \\
+\hline
+\end{tabular}
+
+Uma falácia comum, é considerar o computador com a maior frequência como tendo 
+garantidamente a melhor performance. Veja se isso é verdade para os 
+processadores da tabela acima.
+
+$Tempo_{a.P1} = Nro.\ Instr \times \frac{CPI}{Clock Rate} = 5 \times 10^{6} 
+\times \frac{0,9}{4\ GHz} = 1,125 \times 10^{-3}\ segundos$
+
+$Tempo_{a.P2} = Nro.\ Instr \times \frac{CPI}{Clock Rate} = 1 \times 10^{6} 
+\times \frac{0,75}{3\ GHz} = 0,25 \times 10^{-3}\ segundos$
+
+$Tempo_{b.P1} = Nro.\ Instr \times \frac{CPI}{Clock Rate} = 3 \times 10^{6} 
+\times \frac{1,1}{3\ GHz} = 1,1 \times 10^{-3}\ segundos$
+
+$Tempo_{b.P2} = Nro.\ Instr \times \frac{CPI}{Clock Rate} = 0,5 \times 10^{6} 
+\times \frac{1,0}{2,5\ GHz} = 0,2 \times 10^{-3}\ segundos$
+
+Vemos que $Tempo_{a.P1} > Tempo_{a.P2}$. Tempo maior quer dizer que performance 
+de $Tempo_{a.P1}$ $<$ performance de $Tempo_{a.P2}$.
+
+Vemos também que $Tempo_{b.P1} > Tempo_{b.P2}$. Tempo maior quer dizer que 
+performance de $Tempo_{b.P1}$ $<$ performance de $Tempo_{b.P2}$.
+
+\paragraph{1.14.2} Outra falácia é considerar que o processador executando o
+maior número de instruções vai precisar de maior Tempo da CPU. Considerando que
+o processador P1 está executando a sequencia de $10^{6}$ instruções e que o CPI
+dos processadores P1 e P2 não mudam, \underline{\bfseries determine o número 
+de instruções que o P2 pode executar} no mesmo tempo que P1 precisa para 
+executar $10^{6}$ instruções.
+
+$Tempo_{a.P1} = Nro.\ Instr \times \frac{CPI}{Clock Rate} = 10^{6}
+\times \frac{0,9}{4\ GHz} = 0,225 \times 10^{-3}\ segundos$
+
+$Tempo_{a.P2} = Nro.\ Instr \times \frac{CPI}{Clock Rate} =  Nro.\ Instr
+\times \frac{0,75}{3\ GHz} = 0,225 \times 10^{-3}\ segundos$
+
+$Nro.\ Instr = \frac{3\ GHz \times 0,225 \times 10^{-3}\ segundos}{0,75} = 
+0,9 \times 10^{6}\ \textbf{instruções}$
+
+\pagebreak
+$Tempo_{b.P1} = Nro.\ Instr \times \frac{CPI}{Clock Rate} = 10^{6}
+\times \frac{1,1}{3\ GHz} = 0,36 \times 10^{-3}\ segundos$
+
+$Tempo_{b.P2} = Nro.\ Instr \times \frac{CPI}{Clock Rate} =  Nro.\ Instr
+\times \frac{1,1}{2,5\ GHz} = 0,36 \times 10^{-3}\ segundos$
+
+$Nro.\ Instr = \frac{3\ GHz \times 0,225 \times 10^{-3}\ segundos}{0,75} = 
+0,8 \times 10^{6}\ \textbf{instruções}$
+
+\textbf{1.14.2a}. Número de instruções para \underline{a.P2} aumentou muito 
+pouco para a nova configuração.
+
+\textbf{1.14.2b}. Número de instruções para \underline{b.P2} aumentou muito 
+pouco para a nova configuração.
+
+\textbf{Comentário:} Quer dizer que é uma falácia considerar genericamente que o
+processador com maior número de instruções levará (por causa disso) maior tempo
+de CPU.
+
+\paragraph{1.14.3} Calcule os MIPS para cada processador.
+
+$MIPS_{a.P1} = \frac{Clock Rate}{CPI \times 10^{6}} = \frac{4\ \textbf{GHz}}{0,9
+\times 10^{6}} = 4444$
+
+$MIPS_{a.P2} = \frac{Clock Rate}{CPI \times 10^{6}} = \frac{3\
+\textbf{GHz}}{0,75 \times 10^{6}} = 4000$
+
+$MIPS_{b.P1} = \frac{Clock Rate}{CPI \times 10^{6}} = \frac{3\ \textbf{GHz}}{1,1
+\times 10^{6}} = 2727$
+
+$MIPS_{b.P2} = \frac{Clock Rate}{CPI \times 10^{6}} = \frac{2,5\ 
+\textbf{GHz}}{1,0 \times 10^{6}} = 2500$
+
+Vemos que $MIPS_{a.P1} > MIPS_{a.P2}$. Porém $MIPS_{a.P1}$ leva mais tempo para 
+executar 5 milhões de instruções do que $MIPS_{a.P2}$ que leva menos tempo para 
+executar 1 milhão de instruções.
+
+Vemos também que $MIPS_{b.P1} > MIPS_{b.P2}$.
+
+
+\end{document}
