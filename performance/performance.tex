@@ -159,9 +159,42 @@ conjunto de instruções que você passou como parâmetro. Caso contrário $CPU_
 se desempenha melhor.
 
 $1,7\ \textbf{CPI} \times 190\ \textbf{pico segundos} < 2\ \textbf{CPI} \times 
-180\ \textbf{pico segundos}$ pois $323 < 360$ então $CPU_{A}$ tem 11\% menos 
-desempenho que $CPU_{B}$.
+180\ \textbf{pico segundos}$ pois $323\ \textbf{pico segundos}  < 360\ 
+\textbf{pico segundos}$ então $CPU_{A}$ tem 11\% menos desempenho que $CPU_{B}$.
 
+\item[pg 35] Equação de Desempenho Clássica
+
+$$CPU\ time = Instruction\ count \times CPI \times Clock\ cycle\ time$$
+$$CPU\ time = \frac{Instruction\ count\ \times CPI}{Clock\ rate}$$
+
+Essas fórmulas são bastante úteis pois elas separam os três fatores que afetam 
+o desempenho. Nós podemos usar essas fórmulas para comparar duas implementações 
+diferentes ou também para avaliar uma alternativa se nós sabemos os impactos 
+nesses três parâmetros.\\
+
+$CPU\ clock\ cycles = \sum_{i=1}^{n}(CPI_{i} \times C_{i})$\footnote{CPI é 
+uma média de ciclos por instruções.}\\
+
+Por exemplo: $CPU\ clock\ cycles = 2 \times 3 + 1,7 \times 9 + 1 \times 5 =
+26$ ciclos de clock. Veja que poderíamos considerar as contagens de cada classe
+como sendo $\times 10^{6}$ instruções $CPU\ clock\ cycles = 2 \times 3\ \times
+10^{6} + 1,7 \times 9\ \times 10^{6} + 1 \times 5\ \times 10^{6} = 26\ \times
+10^{6}$ ciclos de clock. Não tem problema nenhum. Para calcular o CPI geral,
+temos a seguinte fórmula $CPI_{total} = \frac{CPU\ clock\ cycles}{Instruction\
+count}$. Ora, então temos: Contagem 1 $3+9+5=17$ e aplicando a fórmula temos o 
+seguinte: $CPI_{total} = \frac{26}{17}=1,5$
+
+$$Time=\frac{Seconds}{Program}=\frac{Instructions}{Program}\times\frac{Clock\ 
+cycles}{Instruction}\times\frac{Seconds}{Clock\ cycle}$$
+
+Sempre tenha em mente que a medida confiável de medição do desempenho 
+(performance) é \underline{Tempo}. Por exemplo: mudar o conjunto de instruções 
+para uma contagem menor, pode liderar para tempo do ciclo de relógio maior (ou 
+seja, mais lento); ou também pode liderar para um maior CPI (média de ciclos 
+por instruções) que infere mudanças de melhoria na contagem de instrução. 
+Similarmente, por causa que CPI depende do tipo de instrução executada, 
+{\bfseries \color{Red} \Large o código que executa o menor número de 
+instruções pode \underline{não} ser o mais rápido}.
 
 \end{enumerate}
 
