@@ -1,0 +1,189 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{cancel}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+
+\author{Lucas}
+
+\title{Performance}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+
+\item[pg 26] O transistor é um interruptor simples de ligar/desligar, controlado
+por eletricidade. O circuito integrado (CI) combina dezenas de centenas de
+transistores em um único chip. VLSI (milhares de transistores), chamamos de
+circuito integrado de larguíssima escala (very large-scale integrated circuit).
+
+\item[pg 28] Tempo de Resposta (Responde Time) também chamado Tempo de Execução.
+O tempo total requerido para o computador completar uma tarefa qualquer,
+incluindo acessos ao disco, memória, I/O, overhead do sistema operacional, tempo
+de execução da CPU, etc.
+
+Vazão (Throughput) também chamado de largura de banda. É outra medida de
+desempenho, é o número de tarefas completadas por unidade de processamento.
+
+\item[pg 29] Na página 29 temos uma equação simples, comparativa: 
+$Performance_{x} = \frac{1}{Execution\ Time_{x}}$ Se o desempenho de $x$ é 
+melhor que o de $y$ então $Performance_{x} > Performance_{y}$ ou ainda 
+$\frac{1}{Execution\ Time_{x}} > \frac{1}{Execution\ Time_{y}}$ ou também 
+$Execution\ Time_{x} < Execution\ Time_{y}$. Isso significa que o tempo de 
+execução em $y$ é mais longo que o tempo de execução em $x$, bastante simples.
+
+$$\frac{Performance_{x}}{Performance_{y}} = \frac{Execution\
+Time_{y}}{Execution\ Time_{x}} = n$$
+
+\item[pg 30] O conceito de medir desempenho de computador se baseia em:  
+entender qual montante de (trabalho) ele estará processando, em um  dado tempo. 
+O processador que realizar o mesmo montante no menor tempo, teoricamente é mais 
+rápido. Tempo de execução do programa é medido em segundos por programa. A 
+definição mais direta é chamada de 'wall clock time', 'response time', ou 
+'elapsed time'. Esses termos significam o total para uma tarefa ser completada.
+
+\item[pg 31] Por consistência, vamos manter a distinção entre desempenho, 
+baseado em 'elapsed time' e por sua vez baseada em CPU 'execution time'. Clock 
+cycle (Ciclos de Relógio) também chamado de 'clock tick', 'period', 'cycle'. É 
+o tempo para um período de relógio (geralmente em picosegundos, microsegundos, 
+nanosegundos, ou segundos, depende do problema), usualmente o relógio do 
+processador, o qual está rodando à uma certa taxa constante (por exemplo: 4 GHz)
+
+\item[pg 32] Uma fórmula simples que relaciona fatores simples é:
+
+$$CPU\ execution\ time\ for\ a\ program\ = CPU\ clock\ cycles\ for\ a\ program 
+\times Clock\ cycle\ time$$
+
+Um exemplo genérico de melhoramento de performance usando essa fórmula acima é:
+
+$$CPU\ time_{A} = \frac{CPU\ clock\ cycles_{A}}{Clock\ rate_{A}}$$
+
+$$\frac{Seconds}{Program} = \frac{CPU\ clock\ cycles_{A}}{f \times 10^{n}\ 
+Hz}$$
+
+$$CPU\ clock\ cycles_{A} = (t\ \textbf{[s]}) \times (f \times 
+10^{n}\ \textbf{[Hz]})$$
+
+Onde $t$ é por exemplo: $12$ segundos, ou 3 nanosegundos. E $f \times
+10^{n}$ é por exemplo: $9\times10^{9}$ hertz, ou 9 Gigahertz. E assim por
+diante.
+
+$$\frac{Seconds}{Program} = \frac{(CPU\ clock\ cycles_{B} = CPU\ clock\ 
+cycles_{A} \times scalar\ cost)}{Clock\ Rate_{B}}$$
+
+assim, podemos simplificar para:
+
+$$\frac{Seconds}{Program} = \frac{(CPU\ clock\ cycles_{A} \times 
+scalar\ cost)}{Clock\ Rate_{B}}$$
+
+Ou seja se eu tenho um computador A que processa um programa qualquer em $13$ 
+segundos, sendo que esse tem $3$ GHz. Para que eu gere um computador B que 
+processe o mesmo $30\%$ mais rápido que o computador A. Eu precisaria que ele 
+tivesse 4,68 GHz se quisemos que o CPU B processasse a mesma informação em 10 
+segundos (3 segundos a menos, melhoria de $30\%$), pagando um custo de 1,4x 
+ciclos a mais, aí vai do seu critério, \underline{quanto você quer pagar a 
+mais}?
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{|l|l|}
+  \hline Changes & $\frac{Seconds}{Program} = \frac{(CPU\ clock\ cycles_{A} 
+  \times scalar\ cost)}{Clock\ Rate_{B}}$ \\ 
+  \hline $\uparrow {\frac{Seconds}{Program}}_{B}$ (e.g: $3\ s\rightarrow 
+  4\ s$) & Decresce $Clock\ rate_{B}$ \\ 
+  \hline $\uparrow (CPU\ clock\ cycles_{A} \times 
+  improvement)$ & Aumenta $Clock\ rate_{B}$ \\ 
+  \hline 
+  \end{tabular}
+\end{table}
+
+\item[pg 33] O termo clock cycles per intruction CPI, o qual é a média numérica 
+de ciclos de clock para cada instruções executada, varia bastante de classes de 
+instruções para classes de instruções, exemplos o CPI de instruções do tipo R 
+não vai ser o mesmo CPI para instruções do tipo I, de fato instruções do tipo I 
+contém em seu corpo branch, loads, stores, essas instruções contém veneno para 
+o datapath, da forma que ele leva mais ciclos para processar.
+
+$$CPU\ clock\ cycles = Instructions\ for\ a\ program \times Average\ clock\ 
+cycles\ per\ instruction$$
+
+Suponha você agora que temos um processador X com tempo para cada ciclo de 
+relógio de $N$ pico segundos e em média faz $s$ ciclos por instrução (CPI), e 
+um processador Y com tempo de clock cycle de $K$ pico segundos e em média faz 
+$p$ ciclos por instrução (CPI). Quem é mais rápido?
+
+$CPU\ clock\ cycles_{A} = (I\ \textbf{instr.} \times s\ \textbf{CPI})\ 
+\textbf{ciclos}$
+
+$CPU\ clock\ cycles_{B} = (I\ \textbf{instr.} \times p\ \textbf{CPI})\ 
+\textbf{ciclos}$
+
+$CPU\ time_{A} = CPU\ clock\ cycles_{A} \times Clock\ cycle\ time$\footnote{O 
+fator tempo de ciclo de relógio, é o tempo de 1 ciclo de relógio. O montante 
+total de ciclos para executar um programa completamente, executar uma tarefa 
+qualquer, vai levar (pensando logicamente) $n\ \textbf{cycles} \times clock\ 
+cycle\ time$.}
+
+$CPU\ time_{A} = I \times s \times N\ \textbf{pico segundos}$
+
+$CPU\ time_{B} = CPU\ clock\ cycles_{B} \times Clock\ cycle\ time$
+
+$CPU\ time_{B} = I \times p \times K\ \textbf{pico segundos}$
+
+Basta comparar ambos os resultados de tempo de CPU e ver qual se desempenhou 
+melhor.
+
+$$\frac{CPU\ time_{B}}{CPU\ time_{A}} = \frac{I \times p \times K}{I \times s 
+\times N} = \frac{p\ \textbf{CPI} \times K\ \textbf{pico segundos}}{s\ 
+\textbf{CPI} \times N\ \textbf{pico segundos}}$$
+
+Se por acaso, $p \times K > s \times N$ então $CPU_{B}$ se desempenha melhor no 
+conjunto de instruções que você passou como parâmetro. Caso contrário $CPU_{A}$ 
+se desempenha melhor.
+
+$1,7\ \textbf{CPI} \times 190\ \textbf{pico segundos} < 2\ \textbf{CPI} \times 
+180\ \textbf{pico segundos}$ pois $323 < 360$ então $CPU_{A}$ tem 11\% menos 
+desempenho que $CPU_{B}$.
+
+
+\end{enumerate}
+
+\clearpage%
+\section{Questões de performance}
+
+\paragraph{1.3.1}
+\paragraph{1.3.2}
+\paragraph{1.3.4}
+\paragraph{1.4.1}
+\paragraph{1.4.2}
+\paragraph{1.5.1a}
+\paragraph{1.6.1a}
+\paragraph{1.7.2}
+\paragraph{1.7.3}
+\paragraph{1.7.4}
+\paragraph{1.8.1}
+\paragraph{1.8.2}
+\paragraph{1.9.3a}
+\paragraph{1.10.2a}
+\paragraph{1.10.4a}
+\paragraph{1.10.5a}
+\paragraph{1.10.6a}
+
+\end{document}
