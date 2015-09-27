@@ -356,37 +356,44 @@ valor: \textbf{\color{Blue} 10011000000010010001110000}, concatena
 \textbf{\color{Green} 00} no LSB e PC[31-28] no MSB.
 
 Endereço alvo exemplo: \textbf{\color{Red} 0000}\textbf{\color{Blue}
-10011000000010010001110000}\textbf{\color{Green} 00}, o fluxo vai ser desviado
-incondicionalmente nessa direção.
+10011000000010010001110000}\textbf{\color{Green} 00}, esse é o endereço efetivo 
+final que o jump desviará o fluxo de execução.
+
+Abaixo uma tabela esquematizando o que está acontecendo no nosso exemplo:
 
 \begin{table}[ht!]
-\begin{tabular}{|c|c|}
-\hline  Static Data & $\uparrow$ \\
-\hline upwards(jump) & 0001 :: \underline{11111111111111111111111111 :: 00} =
-\verb|0x1FFFFFFC| \\
-\hline  & $\uparrow$ \\
-\hline  & \\
-\hline $PC_{atual}[31-28]$ & [31-28]=[de 0001 até 0000] \tiny{4 bits MSB do PC}
-vai variando conforme o pc se movimenta (espaço text).
-\\
-\hline  & $\downarrow$ \\
-\hline PC $\rightarrow$ \verb|0x400000| & $\downarrow$ \\
-\hline  & Espaço de Memória Reservado \\
-\hline downards(jump) & 0000 :: 00000000000000000000000000 :: 00 = 0 \\
-\hline
-\end{tabular}
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{|c|c|}
+    \hline  Static Data & $\uparrow$ \\
+    \hline upwards(jump) &
+    0000 :: \underline{11111111111111111111111111 :: 00} = $0xFFFFFFC$ \\
+    \hline  & $\uparrow$ \\
+    \hline  & ~ \\
+    \hline $PC_{atual}[31-28]$ & [31-28]=[0000] \tiny{4 bits MSB do PC}
+    vai variando conforme o pc se movimenta (espaço text). para o nosso layout 
+    de memória do mips greensheet. \\
+    \hline  & $\downarrow$ \\
+    \hline PC $\rightarrow$ $0x400000$ & $\downarrow$ \\
+    \hline  & Espaço de Memória Reservado \\
+    \hline downards(jump) & 0000 :: 00000000000000000000000000 :: 00 = 0 \\
+    \hline
+  \end{tabular}
+}
 \end{table}
 
-{\color{Red} \bfseries Se você observar o layout de memória, você vai ver que
-instruções ficam num espaço de \verb|0| até $\textsc{0x10000000}_{hex}$. Mas de
-\verb|0| até $\textsc{0x00400000}_{hex}$ é um espaço reservado pela memória que
-você não vai querer pular com jumps para lá, sem fazer perfeitamente o que esta
-fazendo. Ou seja, os jumps ficam pulando num espaço entre onde o pc inicia seu
-contador em $\textsc{0x00400000}_{hex}$ até $\textsc{0x10000000}_{hex}$ esse é
-o espaço de \textsc{TEXT} para o jump pular, são 264241152 bytes, 66060288
-endereços válidos. O mais longe que ele pode pular se o
-\verb|pc+4[31-28] == 0000| é FFFFFFC, são os 26 bits do jump iguais a 26{b'1'}
-assim ele desloca 2 para esquerda, e dá em FFFFFFC}.
+Se você observar o layout de memória do mips greensheet do livro Computer
+Organization and Design (Patterson \& Hennessy), você vai ver que a partir do
+endereço $1000000_{hex}$ é o campo no layout de dados estáticos, ou seja não tem
+instruções nessa parte da memória. As instruções ficam num espaço de
+$400000_{hex}$ até $\textsc{0xFFFFFFC}_{hex}$. Mas de $0_{hex}$ até
+$\textsc{0x3FFFFC}_{hex}$ é um espaço reservado pela memória que você não vai
+querer pular com jumps para lá, sem saber perfeitamente o que está fazendo. Ou
+seja, os jumps ficam pulando num espaço entre onde o PC inicia seu contador em
+$\textsc{0x400000}_{hex}$ até $\textsc{0xFFFFFFC}_{hex}$ esse é o espaço de
+\textsc{TEXT} para o jump pular, são 268435452 bytes, 67108863 endereços
+válidos. O mais longe que ele pode pular se o \verb|pc+4[31-28] == 0000| é
+FFFFFFC, são os 26 bits do jump iguais a 26\{b'1'\} assim ele desloca 2 para
+esquerda, e dá em FFFFFFC.
 
 \pagebreak
 \paragraph{O loadword, storeword} e derivados do mesmo tipo, usam outro modo de
