@@ -201,13 +201,377 @@ instruções pode \underline{não} ser o mais rápido}.
 \clearpage%
 \section{Questões de performance}
 
-\paragraph{1.3.1}
-\paragraph{1.3.2}
-\paragraph{1.3.4}
-\paragraph{1.4.1}
-\paragraph{1.4.2}
-\paragraph{1.5.1a}
-\paragraph{1.6.1a}
+\paragraph{1.3.1} Qual processador tem o melhor desempenho expresso em 
+instruções por segundo?
+
+Você pode decidir se quer contar como Milhões de Instruções por Segundo, ou 
+Instruções por Segundo. Basta multiplicar por $10^{6}$ todos os resultados 
+abaixo.
+
+$MIPS_{a.P_{1}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{3\ 
+\small{GHz}}{1,5 \times 10^{6}} = 2 \times 10^{3}$ milhões de instruções por 
+segundo.
+
+$MIPS_{a.P_{2}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{2,5\ 
+\small{GHz}}{1,0 \times 10^{6}} = 2,5 \times 10^{3}$ milhões de instruções por 
+segundo.
+
+$MIPS_{a.P_{3}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{4\ 
+\small{GHz}}{2,2 \times 10^{6}} = 1,8 \times 10^{3}$ milhões de instruções por 
+segundo.
+
+$MIPS_{b.P_{1}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{2\ 
+\small{GHz}}{1,2 \times 10^{6}} =$ {\color{Red} $1,6$} $\times 10^{3}$ milhões 
+de instruções por segundo.
+
+$MIPS_{b.P_{2}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{3\ 
+\small{GHz}}{0,8 \times 10^{6}} =$ {\color{Blue} $3,75$} $\times 10^{3}$ 
+milhões de instruções por segundo.
+
+$MIPS_{b.P_{2}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{4\ 
+\small{GHz}}{2,0 \times 10^{6}} = 2 \times 10^{3}$ milhões de instruções por 
+segundo.
+
+\underline{CPI} e \underline{Frequência} trabalham juntas na vazão de 
+instruções.
+
+\paragraph{1.3.2} Achar o número de ciclos e o número de instruções para 10 
+segundos de execução de uma tarefa por esses processadores.
+
+$Clock\ Cycle\ Time_{a.P_{1}} = \frac{1}{Clock\ Rate} = \frac{1}{3\ 
+\small{GHz}} = 0,33\ nanosegundos$
+
+$Clock\ Cycle\ Time_{a.P_{2}} = \frac{1}{Clock\ Rate} = \frac{1}{2,5\ 
+\small{GHz}} = 0,4\ nanosegundos$
+
+$Clock\ Cycle\ Time_{a.P_{3}} = \frac{1}{Clock\ Rate} = \frac{1}{4\ 
+\small{GHz}} = 0,25\ nanosegundos$
+
+$Clock\ Cycle\ Time_{b.P_{1}} = \frac{1}{Clock\ Rate} = \frac{1}{2\ 
+\small{GHz}} = 0,5\ nanosegundos$
+
+$Clock\ Cycle\ Time_{b.P_{2}} = \frac{1}{Clock\ Rate} = \frac{1}{3\ 
+\small{GHz}} = 0,33\ nanosegundos$
+
+$Clock\ Cycle\ Time_{b.P_{3}} = \frac{1}{Clock\ Rate} = \frac{1}{4\ 
+\small{GHz}} = 0,25\ nanosegundos$
+
+$10\ s = I \times 1,5 \times 0,33 \times 10^{-9} \rightarrow I = 20$ bilhões de 
+instruções.
+
+$10\ s = I \times 1,0 \times 0,4 \times 10^{-9} \rightarrow I = 25$ bilhões de 
+instruções.
+
+$10\ s = I \times 2,2 \times 0,25 \times 10^{-9} \rightarrow I = 18$ bilhões de 
+instruções.
+
+$10\ s = I \times 1,2 \times 0,5 \times 10^{-9} \rightarrow I = 16$ bilhões de 
+instruções.
+
+$10\ s = I \times 0,8 \times 0,33 \times 10^{-9} \rightarrow I = 37$ bilhões de 
+instruções.
+
+$10\ s = I \times 2,0 \times 0,25 \times 10^{-9} \rightarrow I = 20$ bilhões de 
+instruções.
+
+\paragraph{1.3.4} O ICP é o inverso do CPI então, lembrar que se CPI é uma 
+média de ciclos por instrução, ICP também é uma média de instruções por ciclo.
+
+$Tempo = 7 = {Nro.\ Instr}\times{CPI}\times\frac{1}{Freq.\ Relog.} \rightarrow 
+\frac{7 \times 3 \times 10^{9}}{20 \times 10^{9}} = CPI = 1,0 \rightarrow ICP = 
+\frac{1}{CPI} = \frac{1}{1} = 1$
+
+$Tempo = 10 = {Nro.\ Instr}\times{CPI}\times\frac{1}{Freq.\ Relog.} \rightarrow 
+\frac{10 \times 2,5 \times 10^{9}}{30 \times 10^{9}} = CPI = 0,8 \rightarrow 
+ICP = \frac{1}{CPI} = \frac{1}{0,8} = 1,25$
+
+$Tempo = 9 = {Nro.\ Instr}\times{CPI}\times\frac{1}{Freq.\ Relog.} \rightarrow 
+\frac{9 \times 4 \times 10^{9}}{90 \times 10^{9}} = CPI = 0,4 \rightarrow ICP = 
+\frac{1}{CPI} = \frac{1}{0,4} = 2,5$
+
+$Tempo = 5 = {Nro.\ Instr}\times{CPI}\times\frac{1}{Freq.\ Relog.} \rightarrow 
+\frac{5 \times 2 \times 10^{9}}{20 \times 10^{9}} = CPI = 0,5 \rightarrow ICP = 
+\frac{1}{CPI} = \frac{1}{0,5} = 2$
+
+$Tempo = 8 = {Nro.\ Instr}\times{CPI}\times\frac{1}{Freq.\ Relog.} \rightarrow 
+\frac{8 \times 3 \times 10^{9}}{30 \times 10^{9}} = CPI = 0,8 \rightarrow ICP = 
+\frac{1}{CPI} = \frac{1}{0,8} = 1,25$
+
+$Tempo = 7 = {Nro.\ Instr}\times{CPI}\times\frac{1}{Freq.\ Relog.} \rightarrow 
+\frac{7 \times 4 \times 10^{9}}{25 \times 10^{9}} = CPI = 1,1 \rightarrow ICP = 
+\frac{1}{CPI} = \frac{1}{1,1} = 0,9$
+
+\clearpage
+\paragraph{1.4.1a} Dado um programa de 1 milhão de instruções divididas em 
+classes de 10\% classe A, 20\% classe B, 50\% classe C, e 20\% classe D, qual 
+implementação é mais rápida?\footnote{Tempo é a medida mais honesta que você 
+pode ter, em performance.}
+
+\begin{verbatim}
+        Clock    CPI Class
+        Rate     A  B   C  D
+a.
+   P1 | 2,5 GHz  1  2   3  3
+   ---+---------------------
+   P2 | 3,0 GHz  2  2   2  2
+b.
+   P1 | 2,5 GHz  2  1,5 2  1
+   ---+---------------------
+   P2 | 3,0 GHz  1  2,0 1  1
+\end{verbatim}
+
+$$Tempo = No.\ Instr. \times CPI \times \frac{1}{Clock\ Rate}$$
+
+\textbf{Processador 1.}
+
+\begin{tabular}{|c|l|l|}
+\hline Classe A & $10 \times 10^{4} = 1 \times 10^{5}$ &
+
+$Tempo = 1 \times 10^{5} \times 1 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+0,4 \times 10^{-4}$ segundos \\
+
+\hline Classe B & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 2 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+1,6 \times 10^{-4}$ segundos \\
+
+\hline Classe C & $50 \times 10^{4} = 5 \times 10^{5}$ &
+
+$Tempo = 5 \times 10^{5} \times 3 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+6,0 \times 10^{-4}$ segundos \\
+
+\hline Classe D & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 3 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+2,4 \times 10^{-4}$ segundos \\
+
+\hline & & Tempo Total $10,4 \times 10^{-4}$ segundos \\
+
+\hline
+\end{tabular}
+
+\textbf{Processador 2.}
+
+\begin{tabular}{|c|l|l|}
+\hline Classe A & $10 \times 10^{4} = 1 \times 10^{5}$ &
+
+$Tempo = 1 \times 10^{5} \times 2 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+0,6 \times 10^{-4}$ segundos \\
+
+\hline Classe B & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 2 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+1,3 \times 10^{-4}$ segundos \\
+
+\hline Classe C & $50 \times 10^{4} = 5 \times 10^{5}$ &
+
+$Tempo = 5 \times 10^{5} \times 2 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+3,3 \times 10^{-4}$ segundos \\
+
+\hline Classe D & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 2 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+1,3 \times 10^{-4}$ segundos \\
+
+\hline & & Tempo Total $6,5 \times 10^{-4}$ segundos \\
+
+\hline
+\end{tabular}
+
+Nós constatamos que o Processador 1 leva mais tempo para completar a execução 
+das instruções (separadas em classes).
+
+\clearpage
+\paragraph{1.4.1b} Dado um programa de 1 milhão de instruções divididas em 
+classes de 10\% classe A, 20\% classe B, 50\% classe C, e 20\% classe D, qual 
+implementação é mais rápida?\footnote{Tempo é a medida mais honesta que você 
+pode ter, em performance.}
+
+$$Tempo = No.\ Instr. \times CPI \times \frac{1}{Clock\ Rate}$$
+
+\textbf{Processador 1.}
+
+\begin{tabular}{|c|l|l|}
+\hline Classe A & $10 \times 10^{4} = 1 \times 10^{5}$ &
+
+$Tempo = 1 \times 10^{5} \times 2 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+0,8 \times 10^{-4}$ segundos \\
+
+\hline Classe B & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 1,5 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+1,2 \times 10^{-4}$ segundos \\
+
+\hline Classe C & $50 \times 10^{4} = 5 \times 10^{5}$ &
+
+$Tempo = 5 \times 10^{5} \times 2 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+4,0 \times 10^{-4}$ segundos \\
+
+\hline Classe D & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 1 \times \frac{1}{2,5\ \textbf{\tiny GHz}} = 
+0,8 \times 10^{-4}$ segundos \\
+
+\hline & & Tempo Total $6,8 \times 10^{-4}$ segundos \\
+
+\hline
+\end{tabular}
+
+\textbf{Processador 2.}
+
+\begin{tabular}{|c|l|l|}
+\hline Classe A & $10 \times 10^{4} = 1 \times 10^{5}$ &
+
+$Tempo = 1 \times 10^{5} \times 1 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+0,3 \times 10^{-4}$ segundos \\
+
+\hline Classe B & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 2 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+1,3 \times 10^{-4}$ segundos \\
+
+\hline Classe C & $50 \times 10^{4} = 5 \times 10^{5}$ &
+
+$Tempo = 5 \times 10^{5} \times 1 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+1,6 \times 10^{-4}$ segundos \\
+
+\hline Classe D & $20 \times 10^{4} = 2 \times 10^{5}$ &
+
+$Tempo = 2 \times 10^{5} \times 1 \times \frac{1}{3\ \textbf{\tiny GHz}} = 
+0,6 \times 10^{-4}$ segundos \\
+
+\hline & & Tempo Total $3,8 \times 10^{-4}$ segundos \\
+
+\hline
+\end{tabular}
+
+\paragraph{1.4.2a} What is the global CPI for each implementation?
+
+$CPI_{a.P_{1}} = \frac{\sum_{i=0}^{3} (CPI_{i} \times Contagem\
+Instr_{i})}{Total\ Instr} = \frac{(1 \times 10^{4} \times 10 + 2 \times 10^{4}
+\times 20 + 3 \times 10^{4} \times 50 + 3 \times 10^{4} \times 20)}{10^{6}} =
+\frac{260 \times 10^{4}}{10^{6}} = 2,6$ ciclos por instrução (em média e
+considerando separação por classes).
+
+$CPI_{a.P_{2}} = \frac{\sum_{i=0}^{3} (CPI_{i} \times Contagem\
+Instr_{i})}{Total\ Instr} = \frac{(2 \times 10^{4} \times 10 + 2 \times 10^{4}
+\times 20 + 2 \times 10^{4} \times 50 + 2 \times 10^{4} \times 20)}{10^{6}} =
+\frac{200 \times 10^{4}}{10^{6}} = 2$ ciclos por instrução (em média e
+considerando separação por classes).
+
+O $CPI_{a.P_{1}} > CPI_{a.P_{2}}$ possivelmente terá melhor desempenho, porém. 
+Essa análise confirma para essas configurações de conjuntos de instruções 
+separados por classe. Outros casos podem alterar o resultado. Infelizmente 
+$a.P_{1}$ obteve $30\%$ melhor desempenho, para essa configuração da tabela, do 
+que $a.P_{2}$, o que é uma pena, pois eu estava confiante que $a.P_{2}$ iria 
+vencer.
+
+\clearpage
+
+\paragraph{1.4.2b} What is the global CPI for each implementation?
+
+$CPI_{b.P_{1}} = \frac{\sum_{i=0}^{3} (CPI_{i} \times Contagem\
+Instr_{i})}{Total\ Instr} = \frac{(2 \times 10^{4} \times 10 + 1,5 \times 10^{4}
+\times 20 + 2 \times 10^{4} \times 50 + 1 \times 10^{4} \times 20)}{10^{6}} =
+\frac{170 \times 10^{4}}{10^{6}} = 1,7$ ciclos por instrução (em média e
+considerando separação por classes).
+
+$CPI_{b.P_{2}} = \frac{\sum_{i=0}^{3} (CPI_{i} \times Contagem\
+Instr_{i})}{Total\ Instr} = \frac{(1 \times 10^{4} \times 10 + 2 \times 10^{4}
+\times 20 + 1 \times 10^{4} \times 50 + 1 \times 10^{4} \times 20)}{10^{6}} =
+\frac{120 \times 10^{4}}{10^{6}} = 1,2$ ciclos por instrução (em média e
+considerando separação por classes).
+
+A primeira implementação obteve melhor resultado, interessante.
+
+\paragraph{1.5.1a} Considere duas implementações diferentes, P1 e P2, do mesmo 
+conjunto de instruções (mesma arquitetura). Existem 5 classes de instruções (A, 
+B, C, D, e E) nesse conjunto de instruções. A frequência de relógio e o CPI de 
+cada classe é dado abaixo:
+
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline  &
+          & Clock Rate
+          & CPI Class A
+          & CPI Class B
+          & CPI Class C
+          & CPI Class D
+          & CPI Class E \\
+  \hline    a.
+          & P1
+          & 2,0 GHz
+          & 1
+          & 2
+          & 3
+          & 4
+          & 3 \\
+  \hline  & P2
+          & 4,0 GHz
+          & 2
+          & 2
+          & 2
+          & 4
+          & 4 \\
+  \hline
+\end{tabular}
+
+Assuma que o desempenho \underline{\textbf{pico}} é definido como a taxa mais 
+rápida que o computador pode executar qualquer sequência de instruções 
+(rajada). Quais são os picos de desempenhos para P1 e P2 individualmente medido 
+em instruções por segundos?
+
+$MIPS_{P_{1}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{2\ \textbf{\tiny 
+GHz}}{1 \times 10^{6}} = 2000$ milhões de instruções por segundo.
+
+$MIPS_{P_{2}} = \frac{Clock\ Rate}{CPI \times 10^{6}} = \frac{2\ \textbf{\tiny 
+GHz}}{2 \times 10^{6}} = 1000$ milhões de instruções por segundo.
+
+Nessa questão precisamos notar que, o menos CPI é o maior IPC. Se você tem um 
+CPI igual à 4, terá um IPC = 1/4 que é menor que se você tivesse um CPI igual à 
+2 e então um IPC = 1/2. Ou seja, $1/4 < 1/2$. E IPC é uma média de instruções 
+por ciclo. Note que na fórmula do MIPS você está trabalhando com IPC.
+
+$$MIPS = Clock\ Rate \times {\color{red} \frac{1}{CPI \downarrow}} \times 
+\frac{1}{10^{6}}$$
+
+\clearpage
+\paragraph{1.6.1a} Compiladores diferentes tem impactos em desempenho nos
+processadores. Para diferentes compiladores em um mesmo processador, ache o CPI 
+se o clock cycle time é de 1 nanosegundo.
+
+\begin{tabular}{|c|c|c|c|c|}
+\hline  & Compiler A &  & Compiler B &  \\
+\hline a. & No. Instr. & Exec. Time & No. Instr. & Exec. Time \\
+\hline  & 1,00E+09 & 1,8 s & 1,20E+09 & 1,8s \\
+\hline
+\end{tabular}
+
+$Tempo_{copmilador_{A}} = 1,8s = \frac{CPI \times No.\ Instr.}{\frac{1}{1 \times
+10^{-9}} \textbf{\tiny GHz}} \rightarrow \frac{1,8 \times 10^{9}}{1,0 \times
+10^{9}} = 1,8$ ciclos por instrução.
+
+$Tempo_{copmilador_{B}} = 1,8s = \frac{CPI \times No.\ Instr.}{\frac{1}{1 \times
+10^{-9}} \textbf{\tiny GHz}} \rightarrow \frac{1,8 \times 10^{9}}{1,2 \times
+10^{9}} = 1,5$ ciclos por instrução.
+
+Para um mesmo processador, mesma frequência de relógio, temos que um compilador
+gerou mais instruções que o outro. Esse que gerou mais instruções obteve menor
+CPI, e portanto melhor desempenho. Tempo vezes frequência de relógio, dá em
+ciclos do relógio naquele comprimento de tempo, isso dividido pelo número de
+instruções dá o CPI ciclos totais naquela largura de tempo dividido pelo total
+de instruções geradas pelo compilador. Quanto maior o número de instruções e
+mantendo fixo $tempo \times freq$ menor irá ser o CPI médio. O que é bom, termos
+poucos ciclos médios por instrução, isso aumenta o IPC que é o inverso do CPI,
+aumentando IPC você tem mais instruções dentro de um ciclo de relógio. Portanto
+o compilador que gerar mais instruções nesse ensaio, fará com que o processador
+tenha mais desempenho. Podemos pensar que o compilador que gerou menos
+instruções, foi mais eficiente. O compilador B obteve 16,6\% mais eficiência do
+que o compilador A. É mito dizer que o compilador que gerar menos instruções
+será melhor sempre, e hoje em dia com multinucleado multicores e pipeline você
+pode ter um compilador gerando mais instruções que outro porém ele sabe muito
+bem que as instruções estão organizadas para atingir bom desempenho utilizando
+os vários cores disponíveis, ou thread, etc.
+
 \paragraph{1.7.2}
 \paragraph{1.7.3}
 \paragraph{1.7.4}
