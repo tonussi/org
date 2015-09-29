@@ -154,10 +154,63 @@ $L3:
   nop                # de todas as chamadas de fact(n)
 \end{verbatim}
 
-
 Saiba que você pode eliminar o uso de \$fp e criar algumas optimizações, porém
 esse código é o código gerado automaticamente por mipsel-none-elf-gcc é um
 cross-compilador.
+
+
+\clearpage
+
+Converta o código em c abaixo para MIPS, lembrando os passos para criação de 
+procedimentos genéricos. (a) salvar contexto (se necessário), (b) salvar \$ra, 
+(c) dentro do escopo da rotina chamada -- criar alguma lógica, se necessária, 
+de pré chamada de função aninhada, (d) passar parâmetros se existir função 
+aninhada que requer parâmetros, (e) chamar usando \verb|jal| a rotina aninhada 
+desejada mais os seus parâmetros usando \$a0, \$a1, \$a2, \$a3 ordenadamente e 
+tantos quanto forem necessários (f) se necessário mais parâmetros então alocar 
+em pilha, (g) pular definitivamente para função interna (g) para cada função 
+chamada internar repetir c,d,e,f; (h) na volta de todas as funções mais 
+internas restaurar o contexto, que foi salvo anteriormente, e continuar com a 
+lógica do escopo, (i) observar possíveis labels, (j) observar possíveis branchs 
+com lógica invertida, (l) lembrar de salvar o retorno das funções em 
+registradores padrões i.e: \verb|$v0, $v1|, (m) lembrar de retornar utilizando 
+\verb|jr $ra|\footnote{\textbf{Meu esquema para lembrar como criar os 
+procedimentos genericamente, e seguindo o livro do Patterson \& Hennessy - 
+Computer Organization and Design}}.
+
+\begin{verbatim}
+int alpha (int x, int y, int z) {
+  if (x == 0) {
+    return x + beta(z, y);
+  } else {
+    return x - beta(z, y);
+  }
+}
+
+alpha: addi $sp, $sp, -8  ; abre locais na pilha para salvamento de contexto
+       sw   $ra, 0($sp)   ; salva ra para o retorno final
+       sw   $a0, 4($sp)   ; salva de x na pilha, pois é o único que eu p
+                          ; precisarei usar depois do retorno de beta(z, y).
+                          ; nesse exemplo, os valores que eu envio para beta
+                          ; não irão ser usados depois do retorno de beta(z, y)
+                          ; portanto eu não preciso salvar eles.
+       add $a0, $a2, $0   ; a0 recebe o valor de z ($a2)
+       add $a1, $a1, $0   ; a1 recebe o valor de y ($a1)
+                          ; estou aqui ordenando e obedecendo o protótipo
+                          ; da rotina beta(z, y)
+       jal beta           ; salta para beta(z, y), suja ra, possívelmente
+                          ; suja outros registradores i.e: a0, a1, a2....
+       lw $a0, 4($sp)     ; restaura o contexto de a0
+       lw $ra, 0($sp)     ; restaura o contexto de ra
+       addi $sp, $sp, 8   ; fecha pilha
+       bne $a0, $0, else  ; lógica do escopo da rotina alpha
+       add $v0, $a0, $v0  ; v0 recebe a0 + beta(z,y)
+       jr  $ra            ; retorna para a rotina chamadora
+else:  sub $v0, $a0, $v0  ; v0 recebe a0 - beta(z,y)
+       jr  $ra            ; retorna para a rotina chamadora
+\end{verbatim}
+
+\clearpage
 
 \begin{verbatim}
 int alpha (int x, int y, int z) {
