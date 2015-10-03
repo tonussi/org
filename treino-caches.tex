@@ -10,7 +10,7 @@
 \begin{document}
 \maketitle
 
-Cache tipo-diretamente-mapeada. 1 bit de validade, endereços físicos de 32 bits:
+Cache diretamente mapeada. 1 bit de validade, endereços físicos de 32 bits:
 
 \begin{tabular}{|l|l|l|}
 \hline tag & índice & offset \\ 
@@ -22,7 +22,7 @@ Cache tipo-diretamente-mapeada. 1 bit de validade, endereços físicos de 32 bit
 %|---|---|---|
 %| 16 | 7  | 9 |
 
-$2^{7} \times (16 + 1 + 2^{9} \times 8)\ bits$
+$1 \times 2^{7} \times (16 + 1 + 2^{9} \times 8)\ bits$
 
 $128 \times (16+1+4096)\ bits$
 
@@ -30,7 +30,7 @@ $\frac{264320}{8}=33040\ bytes$
 
 --------------------------------------------------
 
-Cache tipo-2-way. 1 bit de validade, endereços físicos de 32 bits:
+Cache 2 way. 1 bit de validade, endereços físicos de 32 bits:
 
 \begin{tabular}{|l|l|l|}
 \hline tag & índice & offset \\ 
@@ -50,14 +50,14 @@ $\frac{8402944}{8}=1050368\ bytes$
 
 --------------------------------------------------
 
-Cache tipo-3-way. 1 bit de validade, endereços físicos de 34 bits:
+Cache 3 way. 1 bit de validade, endereços físicos de 34 bits:
 
-Mas nesse exemplo, temos que a cache tem 24576 KB de dados.
+Mas nesse exemplo, temos que a cache tem 196608 KB de dados.
 
 \begin{tabular}{|l|l|l|}
-\hline tag & índice & offset \\ 
-\hline ? & ? & 12 \\ 
-\hline 
+\hline tag & índice & offset \\
+\hline ? & ? & 12 \\
+\hline
 \end{tabular}
 
 %| tag  | índice | offset |
@@ -66,14 +66,14 @@ Mas nesse exemplo, temos que a cache tem 24576 KB de dados.
 
 Para revelar as interrogações:
 
-$24576\ \textbf{\tiny KB} \times 1024 \times 8 = 201326592\ bits$ (de 
-dados)\footnote{$24576\ \textbf{\tiny KB} \times 1024 = 25165824\ bytes$ serve 
-para transformar de KB para bytes e vezes 8 para mostrar a quantidade em 
+$196608\ KB \times 1024 = 201326592\ bytes$ (de dados, mais fácil de
+trabalhar)\footnote{$24576\ \textbf{\tiny KB} \times 1024 = 25165824\ bytes$
+serve para transformar de KB para bytes e vezes 8 para mostrar a quantidade em
 bits.}
 
-$\frac{201326592}{3\ ways} = 67108864\ bits$ (por via)
+$\frac{201326592}{3\ ways} = 67108864\ bytes$ (por via)
 
-$\frac{8388608}{2^{12}} = 16384 = 2^{14}\ entradas$ (conjuntos)
+$\frac{67108864}{2^{12}} = 16384 = 2^{14}\ entradas$ (conjuntos)
 
 \begin{tabular}{|l|l|l|}
 \hline tag & índice & offset \\ 
@@ -85,19 +85,20 @@ $\frac{8388608}{2^{12}} = 16384 = 2^{14}\ entradas$ (conjuntos)
 %|---|---|---|
 %| $34-12-11=11$ | 11  | 12 |
 
-$3\times(2^{14}\times(8+1+(2^{12}\times8)))\ bits$
+$3\times(2^{14}\times((34-14-12)+1+(2^{12}\times8)))\ bits$
 
 $3\times(16384\times(8+1+32768)) = 1611055104\ bits$
 
-$\frac{201400320}{8} = 201381888\ bytes$
+$\frac{1611055104}{8} = 201381888\ bytes$
 
 $\frac{201381888}{1024} = 196662\ KB$ (total da cache)
+
 
 --------------------------------------------------
 
 \clearpage
 
-Cache tipo-3-way. 1 bit de validade, endereços físicos de 32 bits:
+Cache 3 way. 1 bit de validade, endereços físicos de 32 bits:
 
 Mas nesse exemplo, temos que a cache tem 24 MB de dados.
 
@@ -109,26 +110,33 @@ Mas nesse exemplo, temos que a cache tem 24 MB de dados.
 
 Para revelar as interrogações:
 
-$24 \times 1024 \times 8 = 196608\ bits$ (de dados)
+$24 \times 1024 \times 1024 = 25165824\ bytes$ (de dados na cache 3 way)
+
+$1\ [megabyte]\ \textbf{tem}\ 2^{20}\ bytes$
 
 Aqui tomar cuidado com as unidades, não
 divida bytes por bits ou o contrário.
 Sempre bytes por bytes e bits por bits.
 
-$\frac{196608}{3} = 65536\ bits$ (por via)
+$\frac{25165824}{3} = 8388608\ bytes$ (por via)
 
-$\frac{65536}{2^{12} \times 8} = 2$ MB (conjuntos)
+$\frac{8388608}{2^{12}} = 2048 = 2^{11}\ entradas$ (conjuntos)
 
-$2$ MB são $2^{11}\ bytes$ portanto já revelamos o índice que é 11.
+Portanto o índice são os 11 bits após os 12 bits do offset.
 
 \begin{tabular}{|l|l|l|}
-\hline tag & índice & offset \\ 
-\hline $32-12-11=9$ & 11 & 12 \\ 
-\hline 
+\hline tag & índice & offset \\
+\hline $32-12-11=9$ & 11 & 12 \\
+\hline
 \end{tabular}
 
-Espaço ocupado pela cache em sua totalidade: 
-$3 \times 2^{11} \times (9 + 1 + 2^{12} \times 8) = 201388032$ (bytes)
-$201388032\ bits = 24583,5$ (MB)
+Espaço ocupado pela cache em sua totalidade:
+
+$3 \times 2^{11} \times (9 + 1 + 2^{12} \times 8) = 201388032\ [bits]$
+
+$\frac{201388032\ bits}{8} = 25173504\ bytes$
+
+${Total\ Cache\ 3\ way} - {Total\ Dados} = {25173504} - {25165824} = 7680\ 
+[bytes]$ a mais.
 
 \end{document}
