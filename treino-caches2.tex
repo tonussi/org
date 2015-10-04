@@ -1,0 +1,271 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[greek,brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{cancel}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[usenames,dvipsnames]{xcolor}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+
+\author{Lucas Skywalker}
+
+\title{Treino \textit{caches}}
+\begin{document}
+
+As questões a seguir requerem que você traga os blocos para a memória cache: A 
+Tabela l mostra de forma simbólica, para alguns endereços de memória
+na faixa de 0 até 31C, o conteúdo da memória principal. As colunas em branco
+são campos auxiliares para facilitar a correspondência entre endereços
+hexadecimais e binários.
+
+Considere uma cache do tipo 2-way, inicialmente vazia, com 128 palavras, sendo
+que cada bloco contém 8 palavras. Preencha a Tabela 2 com o conteúdo final da
+cache imediatamente após aplicada a sequência de referências acima, usando os
+seguintes critérios e convenções: 1-Havendo 2 blocos livres num conjunto, o
+bloco trazido da memória deve ser armazenado no bloco livre de menor número (o
+preenchimento dos blocos na Tabela 2 deve ser da esquerda para a direita);
+2-Havendo 1 bloco livre, nele deve ser armazenado o bloco trazido da memória;
+3-Não havendo blocos livres, um dos blocos deve ser substituído de acordo com o
+critério LRU (dentre os dois blocos o último preenchido ainda é mais atual que o
+segundo, então o segundo será anulado e preenchido com novos dados, ou seja o
+segundo foi o menos usado recentemente MUR = LRU); 4-O conteúdo de cada bloco
+válido deve ser indicado explicitando todas as suas palavras.
+
+\clearpage
+
+Treino 1: Referências: 4 \textbf{\tiny hex}, 20 \textbf{\tiny hex}, 10C 
+\textbf{\tiny hex}, 318 \textbf{\tiny hex}, 1C \textbf{\tiny hex}.
+
+% A 1010
+% B 1011
+% C 1100
+% D 1101
+% E 1110
+% F 1111
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
+       Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
+\hline 0000 0000 &          & A & 0000 0100 &              & \textgreek{α} \\
+\hline 0000 0004 & 00000100 & B & 0000 0104 &              & \textgreek{β} \\
+\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
+\hline 0000 000C &          & D & 0000 010C & 000100001100 & \textgreek{δ} \\
+\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
+\hline 0000 0014 &          & L & 0000 0114 &              & \textgreek{θ} \\
+\hline 0000 0018 &          & M & 0000 0118 &              & \textgreek{ρ} \\
+\hline 0000 001C & 00011100 & N & 0000 011C &              & \textgreek{ω} \\
+\hline 0000 0020 & 00100000 & W & 0000 0300 &              & E \\
+\hline 0000 0024 &          & X & 0000 0304 &              & F \\
+\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
+\hline 0000 002C &          & Z & 0000 030C &              & H \\
+\hline 0000 0030 &          & P & 0000 0310 &              & T \\
+\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
+\hline 0000 0038 &          & R & 0000 0318 & 001100011000 & V \\
+\hline 0000 003C &          & S & 0000 031C &              & J \\
+\hline
+\end{tabular}
+}
+\caption{Conteúdo (parcial) da memória principal.}
+\end{table}
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
+               & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+\hline Conjunto 0 &  &  &  & A & B & C & D & K &  &  &  &  &  &  &  &  \\
+\hline Conjunto 1 & S & \textgreek{α} & \textgreek{β} & \textgreek{χ} & 
+\textgreek{δ} & \textgreek{π} & \textgreek{θ} & \textgreek{ρ} &  &  &  &  &  &  
+&  & \\
+\hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 & K & L & M & N & W & X & Y & Z & V & J &  &  &  &  &  &  \\
+\hline Conjunto 4 & W & X & Y & Z & P & Q & R & S &  &  &  &  &  &  &  &  \\
+\hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+}
+\caption{Status da cache após a sequência de acessos.}
+\end{table}
+
+\clearpage
+Treino 2: Referências: 24 \textbf{\tiny hex}, 104 \textbf{\tiny hex}, 100 
+\textbf{\tiny hex}, 11C \textbf{\tiny hex}, 300 \textbf{\tiny hex}.
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
+       Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
+\hline 0000 0000 &          & A & 0000 0100 & 000100000000 & \textgreek{α} \\
+\hline 0000 0004 &          & B & 0000 0104 & 000100000100 & \textgreek{β} \\
+\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
+\hline 0000 000C &          & D & 0000 010C &              & \textgreek{δ} \\
+\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
+\hline 0000 0014 &          & L & 0000 0114 &              & \textgreek{θ} \\
+\hline 0000 0018 &          & M & 0000 0118 &              & \textgreek{ρ} \\
+\hline 0000 001C &          & N & 0000 011C & 000100011100 & \textgreek{ω} \\
+\hline 0000 0020 &          & W & 0000 0300 & 001100000000 & E \\
+\hline 0000 0024 & 00100100 & X & 0000 0304 &              & F \\
+\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
+\hline 0000 002C &          & Z & 0000 030C &              & H \\
+\hline 0000 0030 &          & P & 0000 0310 &              & T \\
+\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
+\hline 0000 0038 &          & R & 0000 0318 &              & V \\
+\hline 0000 003C &          & S & 0000 031C &              & J \\
+\hline
+\end{tabular}
+}
+\caption{Conteúdo (parcial) da memória principal.}
+\end{table}
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
+               & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+\hline Conjunto 0 & E & F & G & H & T & U & V & J &  \textgreek{α} &  
+\textgreek{β} & \textgreek{χ} & \textgreek{δ} & \textgreek{π} & \textgreek{θ} & 
+\textgreek{ρ} & \textgreek{ω} \\
+\hline Conjunto 1 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 & \textgreek{δ} & \textgreek{π} & \textgreek{θ} & 
+\textgreek{ρ} & \textgreek{ω} & E & F & G &  &  &  &  &  &  &  &  \\
+\hline Conjunto 4 & L & M & N & W & X & Y & Z & P &  &  &  &  &  &  &  &  \\
+\hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+}
+\caption{Status da cache após a sequência de acessos.}
+\end{table}
+
+\clearpage
+Treino 3: Referências: 310 \textbf{\tiny hex}, 14 \textbf{\tiny hex}, 18 
+\textbf{\tiny hex}, 0 \textbf{\tiny hex}, 2C \textbf{\tiny hex}.
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
+       Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
+\hline 0000 0000 & 00000000 & A & 0000 0100 &              & \textgreek{α} \\
+\hline 0000 0004 &          & B & 0000 0104 &              & \textgreek{β} \\
+\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
+\hline 0000 000C &          & D & 0000 010C &              & \textgreek{δ} \\
+\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
+\hline 0000 0014 & 00010100 & L & 0000 0114 &              & \textgreek{θ} \\
+\hline 0000 0018 & 00011000 & M & 0000 0118 &              & \textgreek{ρ} \\
+\hline 0000 001C &          & N & 0000 011C &              & \textgreek{ω} \\
+\hline 0000 0020 &          & W & 0000 0300 &              & E \\
+\hline 0000 0024 &          & X & 0000 0304 &              & F \\
+\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
+\hline 0000 002C & 00101100 & Z & 0000 030C &              & H \\
+\hline 0000 0030 &          & P & 0000 0310 & 001100010000 & T \\
+\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
+\hline 0000 0038 &          & R & 0000 0318 &              & V \\
+\hline 0000 003C &          & S & 0000 031C &              & J \\
+\hline
+\end{tabular}
+}
+\caption{Conteúdo (parcial) da memória principal.}
+\end{table}
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
+               & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+\hline Conjunto 0 & A & B & C & D & K & L & M & N &  &  &  &  &  &  &  &  \\
+\hline Conjunto 1 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 2 & T & U & V & J &  &  &  &  & L & M & N & W & X & Y & Z & P \\
+\hline Conjunto 3 & M & N & W & X & Y & Z & P & Q &  &  &  &  &  &  &  &  \\
+\hline Conjunto 4 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 5 & N & W & X & Y & Z & P & Q & R &  &  &  &  &  &  &  &  \\
+\hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+}
+\caption{Status da cache após a sequência de acessos.}
+\end{table}
+
+\clearpage
+Treino 3: Referências: 3C \textbf{\tiny hex}, 31C \textbf{\tiny hex}, 304 
+\textbf{\tiny hex}, 10C \textbf{\tiny hex}, 4 \textbf{\tiny hex}.
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
+       Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
+\hline 0000 0000 &          & A & 0000 0100 &              & \textgreek{α} \\
+\hline 0000 0004 & 00000100 & B & 0000 0104 &              & \textgreek{β} \\
+\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
+\hline 0000 000C &          & D & 0000 010C & 000100001100 & \textgreek{δ} \\
+\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
+\hline 0000 0014 &          & L & 0000 0114 &              & \textgreek{θ} \\
+\hline 0000 0018 &          & M & 0000 0118 &              & \textgreek{ρ} \\
+\hline 0000 001C &          & N & 0000 011C &              & \textgreek{ω} \\
+\hline 0000 0020 &          & W & 0000 0300 &              & E \\
+\hline 0000 0024 &          & X & 0000 0304 & 001100000100 & F \\
+\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
+\hline 0000 002C &          & Z & 0000 030C &              & H \\
+\hline 0000 0030 &          & P & 0000 0310 &              & T \\
+\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
+\hline 0000 0038 &          & R & 0000 0318 &              & V \\
+\hline 0000 003C & 00111100 & S & 0000 031C & 001100010011 & J \\
+\hline
+\end{tabular}
+}
+\caption{Conteúdo (parcial) da memória principal.}
+\end{table}
+
+\begin{table}[ht!]
+\centering
+\resizebox{\linewidth}{!}{
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
+               & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
+\hline Conjunto 0 & \textgreek{θ} & \textgreek{ρ} & \textgreek{ω} & E & F & G & 
+H & T &  &  &  & A & B & C & D & K \\
+\hline Conjunto 1 & S & \textgreek{α} & \textgreek{β} & \textgreek{χ} & 
+\textgreek{δ} & \textgreek{π} & \textgreek{θ} & \textgreek{ρ} &  &  &  &  &  &  
+&  & \\
+\hline Conjunto 2 & T & U & V & J &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 4 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 7 & Z & P & Q & R & S & \textgreek{α} & \textgreek{β} & 
+\textgreek{χ} &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+}
+\caption{Status da cache após a sequência de acessos.}
+\end{table}
+
+\end{document}
