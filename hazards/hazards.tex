@@ -326,15 +326,16 @@ estão em memória e são endereçáveis com deslocamentos a partir de \$t0.
 Achar os hazards para desviar a execução total de qualquer stall no pipeline.
 
   \begin{verbatim}
-lw  $t1,0($t0)   | IF ID EX MEM WB
-lw  $t2,4($t0)   |    IF ID EX  MEM WB
-add $t3,$t1,$t2  |       X  X   X   IF  ID  EX MEM WB
-sw  $t3,12($t0)  |                      IF  ID EX  MEM WB
-lw  $t4,8($t0)   |                          IF ID  EX  MEM WB
-add $t5,$t1,$t4  |                             X   X   X   IF  ID  EX MEM WB
-sw  $t5,16($t0)  |                                             IF  ID EX  MEM WB
+    lw  $t1,0($t0)   | IF ID EX MEM WB
+    lw  $t2,4($t0)   |    IF ID EX  MEM WB
+    add $t3,$t1,$t2  |          X   IF  ID EX MEM WB
+    sw  $t3,12($t0)  |                  IF ID EX  MEM WB
+    lw  $t4,8($t0)   |                     IF ID  EX  MEM WB
+    add $t5,$t1,$t4  |                            X   IF  ID EX MEM WB
+    sw  $t5,16($t0)  |                                    IF ID EX  MEM WB
   \end{verbatim}
 
+\clearpage
 Para arrumar o código MIPS basta mover \verb|lw  $t4,8($t0)| para perto dos load
 words; assim desviará das dependências. Não acontece mais hazard estrutural pois
 a instrução add não acessa a memória. Mas enquanto o primeiro load esta
@@ -346,28 +347,116 @@ estruturais------pois usa duas memórias, uma memória para instruções e outra
 para dados, facilitando desviar-se de dependências estruturais.
 
   \begin{verbatim}
-lw  $t1,0($t0)   | IF ID EX MEM WB
-lw  $t2,4($t0)   |    IF ID EX  MEM WB
-lw  $t4,8($t0)   |       IF ID  EX  MEM WB
-add $t3,$t1,$t2  |          IF  ID  EX  MEM WB
-sw  $t3,12($t0)  |              IF  ID  EX  MEM WB
-add $t5,$t1,$t4  |                  IF  ID  EX  MEM WB
-sw  $t5,16($t0)  |                      IF  ID  EX  MEM WB
+    lw  $t1,0($t0)   | IF ID EX MEM WB
+    lw  $t2,4($t0)   |    IF ID EX  MEM WB
+    lw  $t4,8($t0)   |       IF ID  EX  MEM WB
+    add $t3,$t1,$t2  |          IF  ID  EX  MEM WB
+    sw  $t3,12($t0)  |              IF  ID  EX  MEM WB
+    add $t5,$t1,$t4  |                  IF  ID  EX  MEM WB
+    sw  $t5,16($t0)  |                      IF  ID  EX  MEM WB
   \end{verbatim}
 
 \end{enumerate}
 
 \clearpage
 
-\paragraph{4.12.1a}
+\paragraph{4.12.1a} Nesse exercício, examinamos como o pipeline influência no 
+tempo de ciclo de relógio do processador.
 
-\paragraph{4.12.2a}
+  \begin{verbatim}
+       IF    ID    EX    MEM   WB
+    a. 250ps 350ps 150ps 300ps 200ps
+    b. 200ps 170ps 220ps 210ps 150ps
+  \end{verbatim}
 
-\paragraph{4.12.3a}
+Tempo de ciclo de relógio na máquina sem pipeline é:
 
-\paragraph{4.13.2}
+$\qquad soma(250ps,350ps,150ps,300ps,200ps) = 1250ps$
 
-\paragraph{4.13.3}
+Tempo de ciclo de relógio na máquina com pipeline é:
+
+$\qquad maior(250ps, 350ps, 150ps, 300ps, 200ps) = 350ps$
+
+\paragraph{4.12.2a} Qual é a latência total de uma instrução load word em um 
+processador pipeline e em um não-pipeline.
+
+Latência de load word na máquina sem pipeline é:
+
+$\qquad soma(250ps,350ps,150ps,300ps,200ps) = 1250ps$
+
+Latência de load word na máquina com pipeline é:
+
+$\qquad maior(250ps, 350ps, 150ps, 300ps, 200ps) = 350ps$
+
+$\qquad soma(350ps,350ps,350ps,350ps,350ps) = 5 \times 350 = 1750ps$
+
+\paragraph{4.12.3a} Se nós pudéssemos dividir um estágio em dois novos 
+estágios, cada um com a metade da latência do original. Qual poderíamos dividir?
+
+$\qquad maior(250ps, 350ps, 150ps, 300ps, 200ps) = 350ps$
+
+$\qquad \frac{350ps}{2} = 175ps$
+
+Tempo de ciclo de relógio na máquina sem pipeline é:
+
+$\qquad soma(250ps,175ps,175ps,150ps,300ps,200ps) = 1250ps$
+
+Tempo de ciclo de relógio na máquina com pipeline é:
+
+$\qquad maior(250ps, 175ps, 175ps, 150ps, 300ps, 200ps) = 300ps$
+
+\textbf{Comentário:} Saiba você que tem um limite para sair dividindo estágios
+pela metade. Existem barreiras em alguns estágios que impossibilitam a divisão.
+E chega uma hora que muitos estágios fica muito complexo para o sistema
+administrar. Mas nesse ensaio, dividir o estágio ID na letra \textbf{a.} jogou o
+tempo de ciclo de relógio para 300 pico segundos.
+
+\paragraph{4.13.2} Assuma que não tem forwarding no pipeline do processador, 
+indique os hazards e adicione instruções NOP para eliminar os hazards, e veja o 
+efeito disso em instruções e tamanho do código.
+
+\begin{verbatim}
+Instruction Sequence
+
+a. SW R16,-100(R6)
+   LW R4,8(R16)
+   ADD R5,R4,R4
+\end{verbatim}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+\hline sw r16, -100(r6) & IF& ID& EX& MEM&  WB&   &   &    &   \\
+\hline lw r4, 8(r16)    &   & IF& ID&  EX& MEM& WB&   &    &   \\
+\hline add r5, r4, r4   &   &   &  X&   X&  IF& ID& EX& MEM& WB\\
+\hline
+\end{tabular}
+
+Tamanho do código, cada X é um nop inserido.
+
+$2 \times nop + 3 \times instr = 5\ instr \times 4\ bytes = 20\ bytes$
+
+\begin{verbatim}
+Instruction Sequence
+
+b. OR R1,R2,R3
+   OR R2,R1,R4
+   OR R1,R1,R2
+\end{verbatim}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+  \hline OR R1,R2,R3 & IF& ID& EX& MEM&  WB&   &   &    &    &   &   &    &   \\
+  \hline OR R2,R1,R4 &   &  X&  X&   X&  IF& ID& EX& MEM&  WB&   &   &    &   \\
+  \hline OR R1,R1,R2 &   &   &  X&   X&   X&  X&  X&   X&  IF& ID& EX& MEM& WB\\
+  \hline
+\end{tabular}
+
+Tamanho do código, cada X é um nop inserido.
+
+$9 \times nop + 3 \times instr = 12\ instr \times 4\ bytes = 48\ bytes$
+
+\paragraph{4.13.3} Agora assuma que existe forwarding completo, indique então os
+hazards e adicione instruções NOP para eliminar elas.
+
+
 
 \paragraph{4.13.4}
 
