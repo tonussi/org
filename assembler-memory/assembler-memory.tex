@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
+\usepackage{cancel}
+\usepackage{tikz}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\renewcommand{\thefootnote}{\alph{footnote}}
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+
+\hypersetup {
+  colorlinks,
+  citecolor = NavyBlue,
+  filecolor = NavyBlue,
+  linkcolor = NavyBlue,
+  urlcolor = NavyBlue
+}
+
+\author{Servente}
+
+\title{Montador e sua relação com a Memória}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+
+\item[pg 118] Uma variável C é genericamente uma localização na memória, e sua 
+interpretação depende de seu tipo classe de armazenamento. Exemplos incluem 
+inteiros, caracteres, etc. C tem duas classes de armazenamento: automático  
+\item[pg 121] \textbf{Alocando Espaço para Novos Dados na Heap}: Quando 
+adicionamos variáveis automáticas que são locais no escopo de procedimentos, os 
+programadores C precisarão de espaço em memória para variáveis estáticas e para 
+estruturas de dados dinâmicos. \textbf{A pilha} começa no maior endereço e 
+aumenta em direção ao menor endereço. A primeira 
+
+\begin{verbatim}
+$sp -> 7fff fffc hex ------>+--------------+
+                            |    Stack     |
+                            |      \/      |
+                            |              |
+                            |              |
+                            |              |
+                            |      /\      |
+                            | Dynamic data |
+                            +--------------+
+                            |              |
+$gp -> 1000 8000 hex ------>| Static data  |
+                            |              |
+       1000 0000 hex ------>|              |
+                            +--------------+
+                            |    Text      |
+ pc -> 0040 0000 hex ------>|              |
+                            +--------------+
+                            |   Reserved   |
+               0 hex        +--------------+
+\end{verbatim}
+
+\item[139-142]
+\item[B10-B17]
+\item[B20-B22]
+
+\end{enumerate}
+
+\paragraph{2.30.1}
+
+\paragraph{2.21.2}
+
+\paragraph{2.21.1}
+
+\end{document}
