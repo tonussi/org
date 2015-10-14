@@ -540,9 +540,9 @@ processadores. Para diferentes compiladores em um mesmo processador, ache o CPI
 se o clock cycle time é de 1 nanosegundo.
 
 \begin{tabular}{|c|c|c|c|c|}
-\hline  & Compiler A &  & Compiler B &  \\
+\hline    & Compiler A &            & Compiler B &            \\
 \hline a. & No. Instr. & Exec. Time & No. Instr. & Exec. Time \\
-\hline  & 1,00E+09 & 1,8 s & 1,20E+09 & 1,8s \\
+\hline    & 1,00E+09   & 1,8 s      & 1,20E+09   & 1,8s       \\
 \hline
 \end{tabular}
 
@@ -572,15 +572,139 @@ pode ter um compilador gerando mais instruções que outro porém ele sabe muito
 bem que as instruções estão organizadas para atingir bom desempenho utilizando
 os vários cores disponíveis, ou thread, etc.
 
-\paragraph{1.7.2}
-\paragraph{1.7.3}
-\paragraph{1.7.4}
-\paragraph{1.8.1}
-\paragraph{1.8.2}
-\paragraph{1.9.3a}
-\paragraph{1.10.2a}
-\paragraph{1.10.4a}
-\paragraph{1.10.5a}
-\paragraph{1.10.6a}
+\paragraph {
+  \cancel{1.7.2},
+  \cancel{1.7.3},
+  \cancel{1.7.4},
+  \cancel{1.8.1}, 
+  \cancel{1.8.2}
+} cancelei essas questões, na quarta edição revisada, elas me parecem não ter 
+relevância.
+
+\paragraph{1.9.3a} Determine a razão da potência-estática e potência-dinâmica 
+para cada tecnologia.
+
+Frequência de troca é uma função da frequência de relógio. A carga capacitiva 
+por transistor é uma função de ambos o número de transistores conectados a uma 
+saída (chamada de fanout) e a tecnologia. As quais ambas determinam a 
+capacitância de ambos wires e transistores.
+
+\begin{verbatim}
+   Technology Dynamic Power (W) Static Power (W) Voltage (V)
+a. 180 nm     50                10               1.2
+b.  70 nm     90                60               0.9
+\end{verbatim}
+
+Dissipação estática de potência\footnote{A potência consumida pelo dispositivo.
+potência estática vai ser consumida sempre, e tem contribuição de vazamento nos
+transistores.} $\int_{0}^{1}V_{DD}I_{leak}dt$ Você pode minimizar $I_{leak}$
+fazendo diminuição da tensão, ou também colocando menos transistores $I_{leak}$.
+
+Dissipação dinâmica de potência\footnote{Potência consumida quando o dispositivo
+está em operação. Esta associado com a frequência de troca dos transistores.}
+$\int_{0}^{1}VC^{2}_{DD}f_{c}dt$, podemos diminuir $I_{switch}$ fazendo
+diminuição da tensão, menos trocas capacitivas, diminuição da frequência de
+trocas.
+
+Ambos somados dá na potência total $E = 
+\int_{0}^{t}(V_{DD}I_{leak}+VC^{2}_{DD}f_{c})dt$
+
+$Power = Capacitive\ load \times Voltage^{2} \times Frequency_{switched}$
+
+$Raz = \frac{10}{50} = \frac{1}{5}$
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline  & Processadores & & No. Instruções por Processador & & & CPI & \\
+\hline  & & Aritméticas &
+            LOAD/STORE  &
+            Branch      &
+            Aritméticas &
+            LW/SW       &
+            Branch      \\
+\hline a.& 1& 2560& 1280& 256& 1&  4& 2\\
+\hline   & 2& 1280&  640& 128& 1&  5& 2\\
+\hline   & 4&  640&  320&  64& 1&  7& 2\\
+\hline   & 8&  320&  160&  32& 1& 12& 2\\
+\hline
+\end{tabular}
+
+\paragraph{1.10.2a} Dado os valores de CPI, ache o tempo total de execução para 
+esses programas em números de processadores: 1,2,4, e 8. Assumir que cada 
+processador tem frequência de relógio 2 GHz.
+
+$Tempo = CPI \times Instr. \times Clock\ Rate$
+
+$CPI_{p_{1}} = \sum_{1}^{3} (CPI_{i} \times Instr_{i}) =
+1 \times 2560 + 4 \times 1280 + 2 \times 256 = 8192$
+
+$Tempo_{p_{1}} = {8192} \times \frac{1}{2\times10^{9}} =
+\frac{8192}{2\times10^{9}} = 4096\ nanosegundos$
+
+$CPI_{p_{2}} = \sum_{1}^{3} (CPI_{i} \times Instr_{i}) =
+1 \times 1280 + 5 \times 640 + 2 \times 128 = 4736$
+
+$\frac{CPI}{Nro\ Processadores} = \frac{4736}{2} = 2368$
+
+$Tempo_{p_{2}} = {2368} \times \frac{1}{2\times10^{9}} =
+\frac{2368}{2\times10^{9}} = 1184\ nanosegundos$, mas com uma vazão duas vezes 
+maior que o primeiro ensaio.
+
+$CPI_{p_{3}} = \sum_{1}^{3} (CPI_{i} \times Instr_{i}) =
+1 \times 640 + 7 \times 320 + 2 \times 64 = 3008$
+
+$\frac{CPI}{Nro\ Processadores} = \frac{3008}{4} = 752$
+
+$Tempo_{p_{3}} = {752} \times \frac{1}{2\times10^{9}} =
+\frac{752}{2\times10^{9}} = 376\ nanosegundos$, mas com uma vazão duas vezes 
+maior que o segundo ensaio.
+
+$CPI_{p_{4}} = \sum_{1}^{3} (CPI_{i} \times Instr_{i}) =
+1 \times 320 + 12 \times 320 + 2 \times 32 = 2304$
+
+$\frac{CPI}{Nro\ Processadores} = \frac{2304}{8} = 288$
+
+$Tempo_{p_{4}} = {288} \times \frac{1}{2\times10^{9}} =
+\frac{288}{2\times10^{9}} = 36\ nanosegundos$, mas com uma vazão duas 
+vezes maior que o terceiro ensaio e quatro vezes maior que o segundo ensaio.
+
+Na melhor das hipóteses os tempos serão esses, mas nunca é garantido que os 
+processadores conseguirão dividir o CPI médio. Existe uma dificuldade em 
+relacionar instruções e sincronia de threads.
+
+\paragraph{1.10.4a} Assuma frequência de relógio 3 GHz. Qual são os tempos de 
+execuções?
+
+\begin{verbatim}
+   +---------------------+-----------------------+-------------+
+   | Cores per Processor | Instructions per Core | Average CPI |
+   +---------------------+-----------------------+-------------+
+a. | 1 cores             | 1.00E+10              | 1.2         |
+   | 2 cores             | 5.00E+09              | 1.4         |
+   | 4 cores             | 2.50E+09              | 1.8         |
+   | 8 cores             | 1.25E+09              | 2.6         |
+   +---------------------+-----------------------+-------------+
+\end{verbatim}
+
+$CPI = 1.2 \times \frac{\textbf{1.00E+10}}{1\ core} \times \frac{1}{3 \times 
+10^{9}} = 4,0$
+
+$CPI = 1.4 \times \frac{\textbf{5.00E+09}}{2\ core} \times \frac{1}{3 \times 
+10^{9}} = 1,16$
+
+$CPI = 1.8 \times \frac{\textbf{2.50E+09}}{4\ core} \times \frac{1}{3 \times 
+10^{9}} = 0,375$
+
+$CPI = 2.6 \times \frac{\textbf{1.25E+09}}{8\ core} \times \frac{1}{3 \times 
+10^{9}} = 0,13$
+
+\paragraph{\cancel{1.10.5a}} cancelei essa questão, na quarta edição 
+revisada. essa não me parece ter relevância.
+
+\paragraph{1.10.6a} Usando um core único, ache o CPI requerido nesse core para 
+obter um tempo de execução igual aos tempos obtidos na questão 1.10.4. Note que 
+o número de instruções deve ser o número de instruções agregado ao tempo de 
+execução através dos cores.
+
+
 
 \end{document}
