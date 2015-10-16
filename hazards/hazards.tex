@@ -423,16 +423,23 @@ a. SW R16,-100(R6)
    ADD R5,R4,R4
 \end{verbatim}
 
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
-\hline sw r16, -100(r6) & IF& ID& EX& MEM&  WB&   &   &    &   \\
-\hline lw r4, 8(r16)    &   & IF& ID&  EX& MEM& WB&   &    &   \\
-\hline add r5, r4, r4   &   &   &  X&   X&  IF& ID& EX& MEM& WB\\
+Infelizmente para que o \verb|add| tenha o valor correto para buscar no banco 
+de registradores, eu tenho que esperar a instrução \verb|lw| terminar até o 
+estágio WB aí sim eu poderei acomodar a instrução \textbf{add} após 3 nops. 
+Pois add.ID recupera o valor de r4 (novo) do banco de registradores, não da 
+memória. add.ID tem que preceder add.EX claro, não dá para adivinhar o valor de 
+r4 antes de buscá-lo do banco de registradores.
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+\hline sw r16, -100(r6) & IF& ID& EX& MEM&  WB&   &   &   &    &   \\
+\hline lw r4, 8(r16)    &   & IF& ID&  EX& MEM& WB&   &   &    &   \\
+\hline add r5, r4, r4   &   &   &  X&   X&   X& IF& ID& EX& MEM& WB\\
 \hline
 \end{tabular}
 
 Tamanho do código, cada X é um nop inserido.
 
-$2 \times nop + 3 \times instr = 5\ instr \times 4\ bytes = 20\ bytes$
+$3 \times nop's + 3 \times instr = 6\ instr \times 4\ bytes = 24\ bytes$
 
 \begin{verbatim}
 Instruction Sequence
@@ -513,10 +520,10 @@ tempos estão abaixo, na tabela.
   \textbf{a.}
 
     \begin{tabular}{l}
-      Sem forwarding, o tempo de execução é: $9 \times 250ps = 2250ps$\\
+      Sem forwarding, o tempo de execução é: $10 \times 250ps = 2250ps$\\
       Com forwarding, o tempo de execução é: $8 \times 300ps = 2400ps$\\
-      Aceleração com pós forwarding: $\frac{2400ps}{2250ps} \downarrow -6,6\%$\\
-      Quer dizer que para esse ensaio o forwarding não melhorou o desempenho.\\
+      Aceleração com pós forwarding: $\frac{2400ps}{2250ps} \uparrow 4,1\%$\\
+      Acelerou um pouco.
     \end{tabular}
 
   &
@@ -595,8 +602,8 @@ forwarding?
   \textbf{a.}
 
     \begin{tabular}{l}
-      Sem forwarding, o tempo de execução é: $9 \times 250ps = 2250ps$\\
-      Alu-Alu forwarding, o tempo de execução é: $9 \times 290ps = 2610ps$\\
+      Sem forwarding, o tempo de execução é: $10 \times 250ps = 2500ps$\\
+      Alu-Alu forwarding, o tempo de execução é: $10 \times 290ps = 2610ps$\\
       Aceleração com pós forwarding: $\frac{2400ps}{2250ps} \downarrow -16\%$\\
       Quer dizer que para esse ensaio o forwarding ALU ALU não melhorou o desempenho.\\
     \end{tabular}
@@ -618,9 +625,10 @@ forwarding?
   \end{tabular}
 }
 
-Eu acredito que esse ensaio mostra que sequencias de instruções no formato I (mas pegando 
-loads e stores) precedendo tipo R de instruções, decresce a performance, porém veja que isso 
-é incontornável, da forma que os programas muito comumente são construídos buscando coisas 
-da memória, operando sobre elas, e salvando a memória.
+Eu acredito que esse ensaio mostra que sequencias de instruções no formato I
+(mas pegando loads e stores) precedendo tipo R de instruções, decresce a
+performance, porém veja que isso é incontornável, da forma que os programas
+muito comumente são construídos buscando coisas da memória, operando sobre elas,
+e salvando a memória.
 
 \end{document}
