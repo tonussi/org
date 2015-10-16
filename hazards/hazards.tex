@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[greek, brazil]{babel}
 \usepackage[left=1cm, right=1.5cm, top=5cm, bottom=5cm]{geometry}
-\usepackage{amsmath}
+\usepackage{cancel}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{makeidx}
@@ -453,15 +453,174 @@ Tamanho do código, cada X é um nop inserido.
 
 $9 \times nop + 3 \times instr = 12\ instr \times 4\ bytes = 48\ bytes$
 
-\paragraph{4.13.3} Agora assuma que existe forwarding completo, indique então os
-hazards e adicione instruções NOP para eliminar elas.
+\clearpage
+\paragraph{4.13.3} Agora assuma que existe forwarding completo, indique os
+hazards e adicione instruções NOP para elimina-las.
 
+\textbf{a.}
 
+Com o \verb|sw| e \verb|lw| a dependência de dados está aqui, nesse caso, \verb|8(r16)| pode 
+por ventura ser igual a \verb|-100(r6)|. Nesse caso então o código pode ser dinamicamente 
+escalonado.
 
-\paragraph{4.13.4}
+$forward(instructionSource_{number}.\textbf{STAGE SOURCE}, 
+instructionTarget_{number}.\textbf{STAGE TARGET})$
 
-\paragraph{4.13.5}
+$forward(lw_{1}.MEM, add_{1}.EX)$
 
-\paragraph{4.13.6}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline sw r16, -100(r6) & IF& ID& EX& MEM&  WB&   &    &   \\
+\hline lw r4, 8(r16)    &   & IF& ID&  EX& MEM& WB&    &   \\
+\hline add r5, r4, r4   &   &   &  X&  IF&  ID& EX& MEM& WB\\
+\hline
+\end{tabular}
+
+\textbf{b.}
+
+$forward(or_{1}.EX, or_{2}.EX)$
+
+$forward(or_{2}.EX, or_{3}.EX)$
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+  \hline OR R1,R2,R3 & IF& ID& EX& MEM&  WB&    &   \\
+  \hline OR R2,R1,R4 &   & IF& ID&  EX& MEM&  WB&   \\
+  \hline OR R1,R1,R2 &   &   & IF&  ID&  EX& MEM& WB\\
+  \hline
+\end{tabular}
+
+\clearpage
+\textbf{Para as próximas questões use também a tabela abaixo.}
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline  & Sem forwarding & Com forwarding & Alu-Alu forwarding \\
+\hline a. & 250ps & 300ps & 290ps \\
+\hline b. & 180ps & 240ps & 210ps \\
+\hline
+\end{tabular}
+\caption{Latências}
+\end{table}
+
+\paragraph{4.13.4} Qual é o tempo total de execução para as instruções, sabendo que os 
+tempos estão abaixo, na tabela.
+
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{|c|c|}
+
+  \hline
+
+  \textbf{a.}
+
+    \begin{tabular}{l}
+      Sem forwarding, o tempo de execução é: $9 \times 250ps = 2250ps$\\
+      Com forwarding, o tempo de execução é: $8 \times 300ps = 2400ps$\\
+      Aceleração com pós forwarding: $\frac{2400ps}{2250ps} \downarrow -6,6\%$\\
+      Quer dizer que para esse ensaio o forwarding não melhorou o desempenho.\\
+    \end{tabular}
+
+  &
+
+  \textbf{b.}
+
+    \begin{tabular}{l}
+
+      Sem forwarding, o tempo de execução é: $13 \times 180ps = 2340ps$\\
+      Com forwarding, o tempo de execução é: $7 \times 240ps = 1680ps$\\
+      Aceleração com pós forwarding: $\frac{1680ps}{2340ps} \uparrow 28,2\%$\\
+      Nesse ensaio o desempenho foi melhorado pelos caminhos de forwarding.\\
+    \end{tabular}
+
+  \\
+  \hline
+  \end{tabular}
+}
+
+\paragraph{\cancel{4.13.5}, \cancel{4.13.6}} Adicionar instruções NOP para eliminar hazards, 
+porém apenas ALU-ALU \underline{forwarding} E não é permitido forwarding do estágio MEM 
+para o estágio EX.
+
+\begin{verbatim}
+Instruction Sequence
+
+a. SW R16,-100(R6)
+   LW R4,8(R16)
+   ADD R5,R4,R4
+\end{verbatim}
+
+Antes do estágio EX temos que, em um estágio anterior já ter pegado os valores do banco de 
+registradores para poder trabalhar com eles.
+
+Esses valores são fornecidos apenas no estágio WB, pois, MEM não faz forwarding nesse ensaio 
+aqui, pois só é válido Alu-Alu forwarding. E inclusive não é válido fazer MEM-EX forwarding 
+("MEM-ALU forwarding").
+
+\textbf{a.}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+\hline sw r16, -100(r6) & IF& ID& EX& MEM&  WB&   &   &   &    &   \\
+\hline lw r4, 8(r16)    &   & IF& ID&  EX& MEM& WB&   &   &    &   \\
+\hline add r5, r4, r4   &   &   &  X&   X&   X& IF& ID& EX& MEM& WB\\
+\hline
+\end{tabular}
+
+\textbf{b.}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+  \hline OR R1,R2,R3 & IF& ID& EX& MEM&  WB&    &   \\
+  \hline OR R2,R1,R4 &   & IF& ID&  EX& MEM&  WB&   \\
+  \hline OR R1,R1,R2 &   &   & IF&  ID&  EX& MEM& WB\\
+  \hline
+\end{tabular}
+
+\paragraph{4.13.6a} Qual é a aceleração ganhada nesse ensaio, se comparado com o ensaio sem 
+forwarding?
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline  & Sem forwarding & Com forwarding & Alu-Alu forwarding \\
+\hline a. & 250ps & 300ps & 290ps \\
+\hline b. & 180ps & 240ps & 210ps \\
+\hline
+\end{tabular}
+\caption{Latências}
+\end{table}
+
+\resizebox{\textwidth}{!}{
+  \begin{tabular}{|c|c|}
+
+  \hline
+
+  \textbf{a.}
+
+    \begin{tabular}{l}
+      Sem forwarding, o tempo de execução é: $9 \times 250ps = 2250ps$\\
+      Alu-Alu forwarding, o tempo de execução é: $9 \times 290ps = 2610ps$\\
+      Aceleração com pós forwarding: $\frac{2400ps}{2250ps} \downarrow -16\%$\\
+      Quer dizer que para esse ensaio o forwarding ALU ALU não melhorou o desempenho.\\
+    \end{tabular}
+
+  &
+
+  \textbf{b.}
+
+    \begin{tabular}{l}
+
+      Sem forwarding, o tempo de execução é: $13 \times 180ps = 2340ps$\\
+      Alu-Alu forwarding, o tempo de execução é: $7 \times 210ps = 1470ps$\\
+      Aceleração com pós forwarding: $\frac{1680ps}{2340ps} \uparrow 62,8\%$\\
+      Nesse ensaio o desempenho foi melhorado pelos caminhos de forwarding ALU ALU.\\
+    \end{tabular}
+
+  \\
+  \hline
+  \end{tabular}
+}
+
+Eu acredito que esse ensaio mostra que sequencias de instruções no formato I (mas pegando 
+loads e stores) precedendo tipo R de instruções, decresce a performance, porém veja que isso 
+é incontornável, da forma que os programas muito comumente são construídos buscando coisas 
+da memória, operando sobre elas, e salvando a memória.
 
 \end{document}
