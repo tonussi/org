@@ -12,6 +12,10 @@
 \renewcommand{\thefootnote}{\alph{footnote}}
 \setlength{\parskip}{\baselineskip}
 \setlength{\parindent}{0pt}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
 \hypersetup {
   colorlinks,
   citecolor = NavyBlue,
@@ -19,18 +23,234 @@
   linkcolor = NavyBlue,
   urlcolor = NavyBlue
 }
-\author{Luke Skywalker}
+\author{Lucas}
 \title{Desvios atrasados e predição dinâmica}
 \begin{document}
 \maketitle
 
 \begin{enumerate}
-\item[pg 380] Assuma a seguinte forma de predição (forma básica): "desvios não 
-são tomados". Nesse caso predizemos que branchs (ble, beq, bne, begz, etc) não 
-são tomados, e quando nós estamos errados nessa hipótese? então descarregamos o 
-pipeline quando estivermos errados a respeito dessa forma básica. 
-\item[pg 381]
-\item[pg 382]
+\item[pg 380] Assuma a seguinte forma de predição (forma básica): "desvios não
+são tomados". Nesse caso predizemos que \textit{branches} (ble, beq, bne, begz,
+etc) não são tomados, e quando nós estamos errados nessa hipótese? então
+descarregamos o pipeline quando estivermos errados a respeito dessa forma
+básica.\footnote{Para o pipeline de 5 estágios predições em tempo de compilação
+são suficientes, porém pipelines mais profundos requerem um preditor mais
+avançado.} Em um pipeline agressivo um preditor estático vai gastar muita
+performance (degradar performance). O custo da penalidade por \textit{branches}
+mau preditos, \textit{branches} preditos erroneamente é em instruções perdidas,
+no pipeline isso degrada a vazão de instruções.
+
+Uma abordagem é olhar para o endereço da instrução do desvio que já  foi 
+processado pelo datapath e verificar se ele \textbf{\underline{foi tomado}}, e 
+se foi mesmo, começa a buscar novas instruções do mesmo lugar da última vez. 
+Essa técnica é chamada predição dinâmica de desvios.
+
+Uma implementação dessa abordagem é criar uma fila de predições dos desvios que 
+já foram processados pelo datapath, também é chamado de tabela histórico dos 
+desvios.\footnote{É um jeito simples de ordenara a filha (buffer), a máquina 
+não tem certeza se a predição está correta na tabela histórico de desvios.}.
+
+Nessa predição 1-bit (0-não tomado, 1-tomado): mesmo se o desvio é sempre 
+tomado, nós podemos predizer incorretamente 2 vezes, ao invés de apenas uma 
+vez, quando um desvio não for tomado ("e foi predito que era para ser tomado").
+
+Considere o exemplo de um loop que garantidamente é tomado 9 vezes. Porém o
+preditor está com seu histórico vazio. Assim, ele começa predizendo 'não-tomado'
+e verifica que foi tomado (pois no histórico estava como foi tomado), o preditor
+segue 8x predizendo corretamente, porém na décima predição ele errada, pois
+estava no histórico que antigamente aquele esse branch fora tomado, errando
+assim duas vezes.
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|}
+\hline t & t & t & t & t & t & t & t & t & n \\
+\hline n & t & t & t & t & t & t & t & t & t \\
+\hline
+\end{tabular}
+
+\begin{enumerate}
+\item Primeiro o preditor considera não tomado, mas foi tomado.
+\item O preditor dinâmico, então, registra no histórico que foi tomado
+\item Aí então ele considera tomado as próximas iterações.
+\item E então na última iteração, que era para ser não tomado, o preditor 
+considera tomado por causa do histórico. Errou duas vezes, ao invés de uma vez.
 \end{enumerate}
+
+\item[pg 381] Idealmente, a acurácia do preditor iria combinar com a frequência 
+de desvios, considerando eles regulares, isto é não variam. Para remediar essa 
+fraqueza, projetistas de hardware usam comumente: 2-bit prediction scheme. Veja 
+que agora a predição precisa errar duas vezes antes de mudar a tabela histórico 
+dos desvios.
+
+\begin{figure}[ht!]
+\centering
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3.8cm,
+                    semithick]
+
+  \tikzstyle{every state}=[draw=none,text=white]
+
+  \node[state,fill=green] (A)                    {00};
+  \node[state,fill=green] (B) [above right of=A] {01};
+  \node[state,fill=red]   (D) [below right of=A] {11};
+  \node[state,fill=red]   (C) [below right of=B] {10};
+
+
+  \path (A) edge [loop left]  node {T } (A)
+            edge [bend left]  node {NT} (B)
+        (B) edge [bend left]  node {T } (A)
+            edge              node {NT} (C)
+        (C) edge [loop right] node {NT} (C)
+            edge [bend left]  node {T } (D)
+        (D) edge [bend left]  node {NT} (C)
+            edge              node {T } (A);
+\end{tikzpicture}
+\caption{Esquemático da predição dinâmica usando 2 bits. Os estados em verde
+"gravam" predição de desvio tomado na tabela histórico de desvios, e os estados
+em vermelho ''atualizam'' predição de desvio não tomado, na mesma tabela
+(exemplo: começando no estado '10'---histórico vazio, e então o desvio foi
+tomado ele pula para o estado '11'---atualiza a tabela (NT), na próxima iteração
+foi tomado novamente---atualiza a tabela (T), pula para o estado '10' e acerta
+todas até o final do loop, predizendo corretamente $\frac{9}{10}$ do tempo.)}
+\end{figure}
+
+A implementação, vista a grosso modo, se da pelas alternativas (1): tabela
+histórico de desvios é feita em cache dedicada, indexada pelos bits menos
+significativos do endereço de desvio, e o acesso acontece no estágio de
+\underline{Busca da Instrução} (IF); alternativa (2) a tabela histórico de
+desvios é embutido na cache de instruções e exitem um campo para armazenas par
+de bits extras para o controle. O esquema de dois bits é uma instancia
+generalizada de um contador-preditor, ele incremente quando uma predição é bem
+sucedida e decrementa quando uma predição é mau sucedida.\footnote{Implementando
+um preditor de 2 bits, quando temos um branch que fortemente é tomado ou é
+fortemente não tomado, estatisticamente os \textit{branches} são assim. Ou eles
+são muito tomados, ou são muito não tomados, esse preditor de 2-bits se da
+melhor em preencher a tabela histórico.}
+
+\item[pg 382] Um branch com atraso vai sempre executar a próxima instrução, mas
+a segunda instrução seguinte do branch vai ser afetada pelo branch. Compiladores
+e montadores tentam colocar uma instrução que sempre executa após o branch no
+campo de atraso do \textit{branch}\footnote{Campo de atraso do \textit{branch}:
+é o campo diretamente depois da instrução \underline{\textit{branch} com
+atraso}, a qual na arquitetura MIPS é preenchido por uma instrução que não afeta
+o branch.}. As limitações em agendar branch atrasado vem de (1) a restrição
+sobre a instrução que foi acomodada dentro do campo de atraso e (2) nossa
+habilidade de predizer em tempo de compilação quando um branch é provavelmente
+tomado ou não. \textit{branch} atrasados funcionam bem em pipelines de 5
+estágios, mas quanto mais estágios maior fica o campo de atraso do branch, e
+pipelines que emitem múltiplas instruções aumentam ainda mais o campo de atraso
+do branch, e acaba que um único campo de atraso, nesses pipelines mais modernos,
+é insuficiente. Branch atrasado perdeu a popularidade, comparado com abordagens
+caras porém dinamicamente flexíveis\footnote{Paralelamente, o crescimento de
+maior números de transistores por chip tem feito possível baratear o custo de
+predição dinâmica.}.
+
+\textbf{Elaboração:} Um preditor de desvios nos diz quando um branch é tomado e
+quando não é. mas ainda requer cálculos do alvo para onde se deslocar. Em um
+pipeline de 5 estágios, esse cálculo \textbf{leva 1 ciclo}, significando que
+\textit{branches} tomados irão ter \textbf{1 ciclo} de penalidade associado. Os
+3 tipos de \textit{delayed} \textit{branches} são uma maneira de eliminar essa
+\underline{penalidade de 1 ciclo}, veja:
+
+\textbf{a.} Preenchimento com uma instrução \underline{independente} e anterior 
+ao branch, essa estratégia é a melhor de todas.
+
+\begin{verbatim}
++---------------------+
+| add $s1, $s2, $s3   |
+| if $s2 = 0 then     |
+|   [delay slot]      |
++---------------------+
+
++---------------------+
+| if $s2 = 0 then     |
+|   add $s1, $s2, $s3 |
++---------------------+
+\end{verbatim}
+
+\textbf{b.} Instrução vindo a partir do endereço alvo do branch, \textbf{b.} é 
+usado com \textbf{a.} não é possível de se fazer. Existe uma dependência de 
+dados para com \$s1---por isso eu não poderia mover o \verb|add| para dentro do 
+\textit{delay} \textit{slot}. Essa estratégia é preferível quando existem 
+branch de alta probabilidade de acontecer como em \textit{branch-loop}.
+
+\begin{verbatim}
+        +---------------------+
+target: | sub $t4, $t5, $t6   |
+        |     ...             |
+        | add $s1, $s2, $s3   |
+        | if $s1 = 0 then     |
+        |   [delay slot]      |
+        +---------------------+
+
+        +---------------------+
+target: |     ...             |
+        | add $s1, $s2, $s3   |
+        | if $s1 = 0 then     |
+        |   sub $t4, $t5, $t6 |
+        +---------------------+
+\end{verbatim}
+
+\textbf{c.} Vindo de dentro do branch, \textbf{c.} é usado com \textbf{a.} não 
+é possível de se fazer. Veja que eu não posso mover \verb|add| para o campo de 
+atraso, pois \$s1 é modificado/atualizado logo antes do branch, que por sua vez 
+utiliza o \$s1 para verificar se é igual a zero, existe uma dependência de 
+dados. Só é possível mover instruções de dentro do branch para o \textit{delay} 
+\textit{slot} se obrigatoriamente elas não afetam de nenhum jeito a maneira 
+como o branch irá desvios o fluxo de execução.
+
+\begin{verbatim}
++---------------------+
+| add $s1, $s2, $s3   |
+| if $s1 = 0 then     |
+|   [delay slot]      |
+|   ...               |
+|   sub $t4, $t5, $t6 |
++---------------------+
+
++---------------------+
+| add $s1, $s2, $s3   |
+| if $s2 = 0 then     |
+|   sub $t4, $t5, $t6 |
++---------------------+
+\end{verbatim}
+
+\item[pg 383] Outra abordagem que iremos discutir é a utilização de cache para
+salvar o destino do PC ou salvar a instrução destino, usando enfileiramento de
+desvios alvo (branch target buffer)\footnote{Estrutura que salva na cache o PC
+destino, ou instrução destino para um branch qualquer. É mais custoso que um
+simples preditor enfileirador.}. O esquema de predição com 2-bits dinâmico usa
+apenas informação sobre um branch em particular. Pesquisadores notaram que
+usando informações sobre ambos o \textit{branch} local, e o comportamento global
+dos \textit{branches} ajudam a aumentar a acurácia da predição, usando o mesmo
+número de bits para no preditor. Esses preditores são chamados preditores
+correlatos. Um preditor correlato\footnote{É um preditor de branches que combina
+comportamento de desvios locais e globais (recentemente executados)} poderá ter
+2-bit para cada branch. E mais bits extra para índice do comportamento global
+dos \textit{branches}. Uma descoberta mais recente é o uso de torneio do
+preditor, que usa múltiplos preditores, traçando, para cada branch, qual
+preditor levanta o melhor resultado. Um torneio\footnote{Um conjunto de
+preditores, cada um fazendo predições para cada branch e há uma seleção do
+preditor que se sai melhor predizendo branches.} típico pode conter duas
+predições para cada índice de branch: m é baseado na informações de
+comportamento local e o outro na global. Um seletor poderia escolher qual
+preditor usar, para qualquer predição dada. O seletor pode operar similarmente
+para 1-bit ou 2-bit preditor, alternando entre esse dois preditores tem mostrado
+ser mais acurado. Alguns microprocessadores essa elaboração.
+
+\textbf{Elaboração:} Um caminho para reduzir o número de desvios condicionais é 
+adicionar instruções condicionais de \verb|moção|. Ao invés de mudar o PC com 
+um desvio condicional, a instrução condicionalmente muda o registrador destino 
+do \verb|move|. Se a condição falhar, o move atua como um nop. Por exemplo, uma 
+versão do MIPS tem duas novas instruções chamadas \verb|movn| (move if not 
+zero) e \verb|movz| (move if zero). Então, \verb|movn $8, $11, $4| copia o 
+conteúdo do registrador 11 para o registrador 8, ''sabendo que o valor do 
+registrador 4 não é negativo''; do contrário, não acontece nada.
+
+O ARM tem um campo condicional na maioria das suas instruções. Isso foi feito 
+sabendo que os programas ARM poderiam ter menos desvios condicionais que 
+programas MIPS.
+
+\end{enumerate}
+
+\paragraph{1.0} Mova a instrução para preencher o \textit{delay} \textit{slot}.
 
 \end{document}
