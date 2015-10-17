@@ -251,6 +251,45 @@ programas MIPS.
 
 \end{enumerate}
 
-\paragraph{1.0} Mova a instrução para preencher o \textit{delay} \textit{slot}.
+\paragraph{Questão} Mova 1 instrução para o \textit{delay} \textit{slot} se 
+possível para evitar desperdiçar 1 ciclo de cálculo do endereço do branch, e 
+exponha o método que você utilizou.
+
+\textbf{a.}
+
+\begin{verbatim}
+       ...
+       ADD R1,R2,R3
+       SW R1,20(R2)
+       BEQ R3,R0,Label
+       [delay slot]
+       OR R2,R1,R0
+       ADD R1,R1,R3
+       ...
+LABEL:
+\end{verbatim}
+
+Nesse código acima é possível que eu faça a estratégia (1), mover uma instrução 
+anterior para dentro do delay slot. Sabendo que o valor de R1 (atualizado) pelo 
+primeiro ADD, vai ser colocado em 20(R2). E sabendo que o branch é tomado. Caso 
+o branch não for tomado o valor de R1 tem que ser salvo em 20(R2).
+
+\clearpage
+\textbf{b.}
+
+\begin{verbatim}
+       LA R1,pyrc
+       LW R1,0(R2)
+       BEQ R1,R0,Label
+       [delay slot]
+       ORI $v0,R3,0x4
+LABEL: ADD R5,R10,R3
+\end{verbatim}
+
+Nesse caso podemos fazer a estratégia número (2), visto que a estratégia (1) 
+não pode ser utilizada nesse ensaio. A estratégia (2) visa transferir uma 
+instrução do alvo do branch para o delay slot. No caso a instrução a ser movida 
+é o ADD R5,R10,R3. Nesse ensaio LABEL é o alvo do branch.
+
 
 \end{document}
