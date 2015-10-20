@@ -273,27 +273,243 @@ for lenta \footnote{Faltas na caches torna o acesso a memória custoso em termos
 de ciclos de relógio (tempo)}. Escalonamento em pipeline dinâmico permite tais 
 hazards serem ''anulados'' completamente ou parcialmente.
 
-\item[pg 400]
+\textbf{Escalonamento com pipeline dinâmico}: é um modelo que escolhe quais 
+serão as próximas instruções a serem executadas, possivelmente reordenando 
+elas para evitar \textit{stalls}. Em tais processadores que usam esse modelo, o 
+pipeline é dividido em 3 unidades majoritárias: um \underline{buscador} de 
+pacotes de instrução (\textit{mix}, \textit{issue packet}), múltiplas unidades 
+funcionais\footnote{Cada unidade funcional tem buffers, chamado de estações 
+reservatório, o que segura os ''operandos'' e ''operadores'', em 2008 
+eram 12 unidades para se ter noção}, e uma unidade de \textit{commit}, que 
+contém um buffer (\textit{enfileirador reordenador}), é usado para dar suporte 
+aos operandos (registradores) da mesma maneira que a lógica de forwarding em 
+escalonamento com pipeline estático. Quando um resultado é cometido para o 
+banco de registradores, o resultado pode ser buscado diretamente de lá, assim 
+como em um pipeline normal.
 
-\item[pg 401]
+\item[pg 400] A implementação que cuida dos reservatórios e das unidades 
+funcionais deve dentre outras coisas, enfileirar instruções que chegam para as 
+unidades funcionais, as instruções terão prioridade de execução intrínseca 
+muitas vezes, mas nada impede do modelo de escalonamento dinâmico reordenar 
+instruções dentro do processo, trabalhando em cima das unidades funcionais, e 
+quando tiver que executar algumas instruções com prioridade ele executa as 
+prioridades, esperando que algumas unidades funcionais liberem seus resultados 
+para que outras unidades funcionais que dependem desses resultados, possam 
+processar as suas instruções, no final a unidade de entrega, vai reordenar as 
+instruções para que siga a lógica que o programador fez, o produto final é o 
+mesmo. Mas o modelo dinâmico possivelmente trocou a ordem de instruções para 
+obter maiores taxas de emissões múltiplas (\textit{out-of-order execution}).
 
-\item[pg 402]
+Escalonamento dinâmico também permite uma opção chamada de \textit{in-order}, 
+ondem a ordem que o compilador gerou, vai ser a mesma ordem que entra e saí do 
+pipeline com escalonador dinâmico, hoje em dia é o que mais se usa. 
+Escalonadores dinâmicos em-ordem usam também especulação para BRANCHES e 
+endereços de LOAD/STORES, visto que a execução é em ordem, após a unidade de 
+entrega se pode fazer certas especulações sobre o resultados dessas classes de 
+instruções.
 
-\item[pg 403]
+\item[pg 401] Mas por que usar escalonamento dinâmico? \textbf{(1)} Stalls são
+um vilão para os processadores, por causa de faltas na caches, stalls podem ser
+imprevistos, e o pipeline dinâmico pode utilizar os ciclos de stall para
+substituí-los inserindo outras instruções para serem processadas, não degradando
+\textit{instruction} \textit{level} \textit{parallelism}, \textbf{(2)}
+incorporar especulação dinâmica funciona melhor com um hardware que escalona
+dinamicamente as instruções, pois o compilador não consegue especular BRANCHES,
+LOADS e STORES em tempo de compilação, \textbf{(3)} escalonamento dinâmico
+comporta melhor compilações de máquinas diferentes, e código legado também
+recebe um benefício rodando em máquinas que usam escalonamento
+dinâmico\footnote{Pipelining e emissão múltipla aumentam a vazão de instruções e
+ILP. Todavia, hazards de dados e controle colocam uma cota superior para a 
+sustentabilidade da performance, por causa que processadores precisam esperar 
+que a dependência seja resolvida, modelagens centradas em software exigem que o 
+compilador seja eficaz em remover ao máximo as dependências de dados e controle 
+para que o emissor múltiplo com pipeline possa ser eficaz em obter grandes 
+rajadas de instruções. E modelagens centradas em hardware encontram saídas em 
+extensões do pipeline e dispositivos de emissão. Especulação, realizada pelo 
+compilador ou pelo hardware, pode aumentar o montante de ILP que pode ser 
+explorado, no entanto atente que especulação incorreta reduz performance.}
 
-\item[pg 404]
+\item[pg 402] Power Efficiency and Advanced Pipelining The downside to the
+increasing exploitation of instruction-level parallelism via dynamic multiple
+issue and speculation is power efficiency.
 
-\item[pg 405]
+\begin{table}[ht!]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{llllllll}
+\hline
+Microprocessor & Year & Clock Rate & Pipeline Stages & Issue Width & 
+Out-of-Order/ & Speculation Cores/Chip & Power \\
+\hline
+Intel 486 & 1989 & 25 MHz & 5 & 1 & No & 1 & 5 W \\
+Intel Pentium & 1993 & 66 MHz & 5 & 2 & No & 1 & 10 W \\
+Intel Pentium Pro & 1997 & 200 MHz & 10 & 3 & Yes & 1 & 29 W \\
+Intel Pentium 4 Willamette & 2001 & 2000 MHz & 22 & 3 & Yes & 1 & 75 W \\
+Intel Pentium 4 Prescott & 2004 & 3600 MHz & 31 & 3 & Yes & 1 & 103 W \\
+Intel Core & 2006 & 2930 MHz & 14 & 4 & Yes & 2 & 75 W \\
+UltraSPARC IV+ & 2005 & 2100 MHz & 14 & 4 & No & 1 & 90 W \\
+Sun UltraSPARC T1 (Niagara) & 2005 & 1200 MHz & 6 & 1 & No & 8 & 70 W \\
+\end{tabular}}
+\caption{Tabela de processadores Intel e Microprocessadores Sun em termos de
+complexidade de pipeline, número de cores, e custo energético. Os estágios do
+pipeline Pentium 4 não incluem unidade de \textit{commit}. Se incluirmos, o
+então pipeline do Pentium 4 será mais profundo.}
+\end{table}
 
-\item[pg 406]
+Acessos à memória se beneficiam de caches que não bloqueiam. Execução
+fora-de-ordem precisa de modelos de cache que permitem instruções serem
+executadas durante um miss.
+
+\item[pg 404] Opteron X4 usa um esquema para resolver anti-dependências e 
+especulação incorreta que usa reordenamento do buffer junto com renomeação de 
+registradores. Renomeia registradores arquiteturais\footnote{O conjunto de 
+instruções de registradores visíveis do processador; por exemplo, em MIPS, eles 
+são os 32 registradores para inteiros e os 16 para ponto flutuantes.}
+
 
 \end{enumerate}
 
+\paragraph{4.29} Nesse execício, nós consideramos a execução do loop em 
+escalonamento estático super-escalar. Para simplificar o exercício, assuma que 
+qualquer combinação de tipos de instruções é possível no mesmo ciclo de 
+relógio, e.g., em um 3-\textit{issue} super-escalar, as 3 instruções pode ser 3 
+operações ALU, 3 branches, 3 load/store, ou combinações dessas mesmas. Notar 
+que isso apenas remove hazards estruturais, mas permanece a possibilidade de 
+hazards de controle e dados e esses dois últimos precisam ser tratados 
+corretamente.
 
-\paragraph{4.29.4}
+\paragraph{4.29.4b} Desenrole o laço do código abaixo uma vez apenas e escalone
+ele para um emissor duplo estático super-escalar. Assumir que o laço sempre
+executa um número \underline{par} de iterações. Você pode usar registradores R10
+até R20 quando mudar o código para eliminar possíveis dependências.
+
+\textbf{antes do desenrolar}.
+
+\textbf{a.}
+
+\begin{verbatim}
+Loop: ADDI R1,R1,4
+      LW R2,0(R1)
+      LW R3,16(R1)
+      ADD R2,R2,R1
+      ADD R2,R2,R3
+      BEQ R2,zero,Loop
+\end{verbatim}
+
+\begin{tabular}{|c|l|l|}
+\hline Loop: & ADDI R1,R1,4 & \textbf{nop} \\ 
+\hline & \textbf{nop} & LW R2,0(R1) \\
+\hline & \textbf{nop} & LW R3,16(R1) \\
+\hline & ADD R2,R2,R1 & \textbf{nop} \\ 
+\hline & ADD R2,R2,R3 & \textbf{nop} \\
+\hline & BEQ R2,zero,Loop & \textbf{nop} \\
+\hline
+\end{tabular} 
+
+\textbf{pós desenrolar}.
+
+\begin{verbatim}
+Loop: ADDI R1, R1, 4
+
+      LW R2, -4(R1)
+      LW R3, 12(R1)
+
+      LW R10, 0(R1)
+      LW R11, 16(R1)
+
+      ADD R2, R2, R1
+
+      ADD R2, R2, R3
+      ADD R2, R10, R11
+
+      BEQ R2, zero, Loop
+\end{verbatim}
+
+\begin{tabular}{|c|l|l|}
+\hline Loop: & ADDI R1,R1,4 & \textbf{nop} \\
+\hline & \textbf{nop} & LW R2, -4(R1) \\
+\hline & \textbf{nop} & LW R3, 12(R1) \\
+\hline & ADD R2, R2, R1 & LW R10, 0(R1) \\
+\hline & ADD R2, R2, R3 & LW R11, 16(R1) \\
+\hline & ADD R2, R10, R11 & \textbf{nop} \\
+\hline & BEQ R2, zero, Loop & \textbf{nop} \\
+\hline
+\end{tabular} 
+
+\clearpage
+\textbf{antes do desenrolar}.
+\textbf{b.}
+
+\begin{verbatim}
+Loop: LW R1,0(R1)         F D E M W
+                          X X X X X
+      AND R1,R1,R2          X F D E M W
+                            X X X X X X
+      LW R2,0(R2)               F D E M W
+                                X X X X X
+      BEQ R1,zero,Loop            F D E M W
+                                  X X X X X
+\end{verbatim}
+
+Podemos mover LW R@,0(R2) para segunda linha.
+
+\begin{tabular}{|c|l|l|}
+\hline Loop: & LW R1,0(R1) & \textbf{nop} \\
+\hline & AND R1,R1,R2 & \textbf{nop} \\
+\hline & LW R2,0(R2) & \textbf{nop} \\
+\hline & BEQ R1,zero,Loop & \textbf{nop} \\
+\hline
+\end{tabular}
+
+\clearpage
+\textbf{pós desenrolar}.
+
+\begin{verbatim}
+Loop: LW R1,0(R1)        F D E M W
+                         X X X X X
+      LW R3,4(R1)          F D E M W
+                           X X X X X
+      AND R1,R1,R2           F D E M W
+                             X X X X X
+      AND R3,R3,R2             F D E M W
+                               X X X X X
+      AND R1,R1,R3               F D E M W
+      LW R2,0(R2)                F D E M W
+      LW R2,4(R2)                  F D E M W
+      BEQ R1,zero,Loop             F D E M W
+\end{verbatim}
+
+\begin{quotation}
+''A static two-issue datapath. The additions needed for double issue are
+highlighted: another 32 bits from instruction memory, two more read ports and
+one more write port on the register file, and another ALU. Assume the bottom ALU
+handles address calculations for data transfers and the top ALU handles
+everything else.''
+
+\flushright -----page 395, Patterson \& Hennessy, Computer Org. and Design
+\end{quotation}
+
+No entanto, subir uma instrução AND R3,R3,R2 para combinar em um issue-packet 
+causa dependência de dados com LW R3,4(R1) que exige \textit{use latency} de 1 
+ciclo.
+
+\begin{tabular}{|c|l|l|l|}
+\hline LABEL & EMISSÃO 1 & EMISSÃO 2 & Ciclo \\
+\hline Loop: & \textbf{nop} &  LW R1,0(R1) & 1 \\
+\hline & \textbf{nop} & LW R3,4(R1) & 2 \\
+\hline & AND R1,R1,R2 & \textbf{nop} & 3 \\
+\hline & AND R3,R3,R2 & \textbf{nop} & 4 \\
+\hline & AND R1,R1,R3 & LW R2,0(R2) & 5 \\
+\hline & \textbf{nop} & LW R2,4(R2) & 6 \\
+\hline & \textbf{nop} & BEQ R1,zero,Loop & 7 \\
+\hline
+\end{tabular}
+
+Número de instruções $7*2=14$ instruções contando os nops junto  e $14*4=56$ 
+bytes ao total.
+
 
 \paragraph{4.29.5}
-
 
 \paragraph{4.29.6}
 
