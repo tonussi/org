@@ -6,6 +6,7 @@
 \usepackage{makeidx}
 \usepackage{graphicx}
 \usepackage{hyperref}
+
 \usepackage[usenames,dvipsnames]{xcolor}
 \renewcommand{\thefootnote}{\alph{footnote}}
 \setlength{\parskip}{\baselineskip}
@@ -22,6 +23,11 @@
 \author{Lucas Skywalker}
 
 \title{Treino \textit{caches}}
+
+\usepackage[flushmargin]{footmisc}
+
+\addtolength{\footnotesep}{2mm} % change to 1mm
+
 \begin{document}
 
 As questões a seguir requerem que você traga os blocos para a memória cache: A 
@@ -42,6 +48,27 @@ critério LRU (dentre os dois blocos o último preenchido ainda é mais atual qu
 segundo, então o segundo será anulado e preenchido com novos dados, ou seja o
 segundo foi o menos usado recentemente MUR = LRU); 4-O conteúdo de cada bloco
 válido deve ser indicado explicitando todas as suas palavras.
+
+
+\textbf{Observação:} Por ser uma cache 2-vias, e foi avisado que temos 128
+palavras para comportar os dados (na cache inteira). Primeiro você tem que fazer
+umas contas básicas antes de começar a preencher a cache. $\frac{128\
+palavras}{2-vias \times 8\ conjuntos} = 8$ palavras por via por conjunto, cada
+palavra tem 4 bytes, portanto $8 \times 4 = 32\ bytes$ e para indexar 32 bytes 
+é preciso ter apenas 5 bits de offset, para indexar 8 conjuntos é preciso ter 3 
+bits de índice e o cálculo da tag é igual $tag = 32 - 5 - 3 = 24$ bits.
+
+\begin{tabular}{|c|c|c|}
+\hline TAG & ÍNDICE & OFFSET \\
+\hline 24 & 3 & 5 \\
+\hline
+\end{tabular}
+
+Tamanho dos dados: $2 \times 2^{3} \times 2^{5} = 512\ bytes = 128\ palavras$
+
+Tamanho da cache total: $2 \times 2^{3} \times (24 + 0 + (2^{5} * 8)) = 4480\ 
+bits = 140\ palavras$, um pouco a mais do que o tamanho de dados da 
+cache\footnote{\textbf{\underline{0}} bits de controle.}.
 
 \clearpage
 
@@ -89,16 +116,15 @@ Treino 1: Referências: 4 \textbf{\tiny hex}, 20 \textbf{\tiny hex}, 10C
 \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
                & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
-\hline Conjunto 0 &  &  &  & A & B & C & D & K &  &  &  &  &  &  &  &  \\
-\hline Conjunto 1 & S & \textgreek{α} & \textgreek{β} & \textgreek{χ} & 
-\textgreek{δ} & \textgreek{π} & \textgreek{θ} & \textgreek{ρ} &  &  &  &  &  &  
-&  & \\
-\hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 3 & K & L & M & N & W & X & Y & Z & V & J &  &  &  &  &  &  \\
-\hline Conjunto 4 & W & X & Y & Z & P & Q & R & S &  &  &  &  &  &  &  &  \\
-\hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 0 & K& L& M& N& W& X& Y& Z& \textgreek{χ} & \textgreek{δ} & 
+\textgreek{π} & \textgreek{θ} & \textgreek{ρ} & \textgreek{ω} & E & F\\
+\hline Conjunto 1 & W& X& Y& Z& P& Q& R& S& H& T& U& V& J& & & \\
+\hline Conjunto 2 & & & & & & & & & & & & & & & & \\
+\hline Conjunto 3 & K& L& M& N& W& X& Y& Z& & & & & & & & \\
+\hline Conjunto 4 & W& X& Y& Z& P& Q& R& S& & & & & & & & \\
+\hline Conjunto 5 & & & & & & & & & & & & & & & & \\
+\hline Conjunto 6 & & & & & & & & & & & & & & & & \\
+\hline Conjunto 7 & & & & & & & & & & & & & & & & \\
 \hline
 \end{tabular}
 }
