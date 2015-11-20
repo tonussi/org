@@ -22,7 +22,7 @@
 
 \author{Lucas Skywalker}
 
-\title{Treino \textit{caches}}
+\title{Treino \textit{caches 2-way}}
 
 \usepackage[flushmargin]{footmisc}
 
@@ -70,6 +70,11 @@ Tamanho da cache total: $2 \times 2^{3} \times (24 + 0 + (2^{5} * 8)) = 4480\
 bits = 140\ palavras$, um pouco a mais do que o tamanho de dados da 
 cache\footnote{\textbf{\underline{0}} bits de controle.}.
 
+\begin{center}
+\Large \textbf{Imprima os treinos e faça a lápix e borracha que é melhor e 
+mais prático.}
+\end{center}
+
 \clearpage
 
 Treino 1: Referências: 4 \textbf{\tiny hex}, 20 \textbf{\tiny hex}, 10C 
@@ -88,22 +93,22 @@ Treino 1: Referências: 4 \textbf{\tiny hex}, 20 \textbf{\tiny hex}, 10C
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
        Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
-\hline 0000 0000 &          & A & 0000 0100 &              & \textgreek{α} \\
-\hline 0000 0004 & 00000100 & B & 0000 0104 &              & \textgreek{β} \\
-\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
-\hline 0000 000C &          & D & 0000 010C & 000100001100 & \textgreek{δ} \\
-\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
-\hline 0000 0014 &          & L & 0000 0114 &              & \textgreek{θ} \\
-\hline 0000 0018 &          & M & 0000 0118 &              & \textgreek{ρ} \\
-\hline 0000 001C & 00011100 & N & 0000 011C &              & \textgreek{ω} \\
-\hline 0000 0020 & 00100000 & W & 0000 0300 &              & E \\
-\hline 0000 0024 &          & X & 0000 0304 &              & F \\
-\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
-\hline 0000 002C &          & Z & 0000 030C &              & H \\
-\hline 0000 0030 &          & P & 0000 0310 &              & T \\
-\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
-\hline 0000 0038 &          & R & 0000 0318 & 001100011000 & V \\
-\hline 0000 003C &          & S & 0000 031C &              & J \\
+\hline 0000 0000 &          & X & 0000 0100 &              & P \\
+\hline 0000 0004 & 00000100 & X & 0000 0104 &              & L \\
+\hline 0000 0008 &          & X & 0000 0108 &              & U \\
+\hline 0000 000C &          & Y & 0000 010C & 000100001100 & G \\
+\hline 0000 0010 &          & Z & 0000 0110 &              & A \\
+\hline 0000 0014 &          & Z & 0000 0114 &              & N \\
+\hline 0000 0018 &          & X & 0000 0118 &              & D \\
+\hline 0000 001C & 00011100 & C & 0000 011C &              & P \\
+\hline 0000 0020 & 00100000 & O & 0000 0300 &              & L \\
+\hline 0000 0024 &          & M & 0000 0304 &              & A \\
+\hline 0000 0028 &          & P & 0000 0308 &              & Y \\
+\hline 0000 002C &          & U & 0000 030C &              & X \\
+\hline 0000 0030 &          & T & 0000 0310 &              & Y \\
+\hline 0000 0034 &          & A & 0000 0314 &              & Y \\
+\hline 0000 0038 &          & R & 0000 0318 & 001100011000 & Y \\
+\hline 0000 003C &          & K & 0000 031C &              & Y \\
 \hline
 \end{tabular}
 }
@@ -113,22 +118,22 @@ Treino 1: Referências: 4 \textbf{\tiny hex}, 20 \textbf{\tiny hex}, 10C
 \begin{table}[ht!]
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c||c|c|c|c|c|c|c|c|}
 \hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
                & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
-\hline Conjunto 0 & K& L& M& N& W& X& Y& Z& \textgreek{χ} & \textgreek{δ} & 
-\textgreek{π} & \textgreek{θ} & \textgreek{ρ} & \textgreek{ω} & E & F\\
-\hline Conjunto 1 & W& X& Y& Z& P& Q& R& S& H& T& U& V& J& & & \\
-\hline Conjunto 2 & & & & & & & & & & & & & & & & \\
-\hline Conjunto 3 & K& L& M& N& W& X& Y& Z& & & & & & & & \\
-\hline Conjunto 4 & W& X& Y& Z& P& Q& R& S& & & & & & & & \\
-\hline Conjunto 5 & & & & & & & & & & & & & & & & \\
-\hline Conjunto 6 & & & & & & & & & & & & & & & & \\
-\hline Conjunto 7 & & & & & & & & & & & & & & & & \\
+\hline Conjunto 0 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 1 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 & & & & &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 4 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline
 \end{tabular}
 }
-\caption{Status da cache após a sequência de acessos.}
+\caption{Status da cache após a sequência de acessos. Dois conjuntos foram 
+substituídos.}
 \end{table}
 
 \clearpage
@@ -141,22 +146,22 @@ Treino 2: Referências: 24 \textbf{\tiny hex}, 104 \textbf{\tiny hex}, 100
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
        Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
-\hline 0000 0000 &          & A & 0000 0100 & 000100000000 & \textgreek{α} \\
-\hline 0000 0004 &          & B & 0000 0104 & 000100000100 & \textgreek{β} \\
-\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
-\hline 0000 000C &          & D & 0000 010C &              & \textgreek{δ} \\
-\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
-\hline 0000 0014 &          & L & 0000 0114 &              & \textgreek{θ} \\
-\hline 0000 0018 &          & M & 0000 0118 &              & \textgreek{ρ} \\
-\hline 0000 001C &          & N & 0000 011C & 000100011100 & \textgreek{ω} \\
-\hline 0000 0020 &          & W & 0000 0300 & 001100000000 & E \\
-\hline 0000 0024 & 00100100 & X & 0000 0304 &              & F \\
-\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
-\hline 0000 002C &          & Z & 0000 030C &              & H \\
-\hline 0000 0030 &          & P & 0000 0310 &              & T \\
-\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
-\hline 0000 0038 &          & R & 0000 0318 &              & V \\
-\hline 0000 003C &          & S & 0000 031C &              & J \\
+\hline 0000 0000 &          & J & 0000 0100 & 000100000000 & V \\
+\hline 0000 0004 &          & E & 0000 0104 & 000100000100 & A \\
+\hline 0000 0008 &          & S & 0000 0108 &              & A \\
+\hline 0000 000C &          & U & 0000 010C &              & A \\
+\hline 0000 0010 &          & S & 0000 0110 &              & A \\
+\hline 0000 0014 &          & C & 0000 0114 &              & M \\
+\hline 0000 0018 &          & R & 0000 0118 &              & O \\
+\hline 0000 001C &          & I & 0000 011C & 000100011100 & R \\
+\hline 0000 0020 &          & S & 0000 0300 & 001100000000 & E \\
+\hline 0000 0024 & 00100100 & T & 0000 0304 &              & P \\
+\hline 0000 0028 &          & O & 0000 0308 &              & A \\
+\hline 0000 002C &          & T & 0000 030C &              & Z \\
+\hline 0000 0030 &          & E & 0000 0310 &              & X \\
+\hline 0000 0034 &          & S & 0000 0314 &              & Y \\
+\hline 0000 0038 &          & A & 0000 0318 &              & Z \\
+\hline 0000 003C &          & L & 0000 031C &              & K \\
 \hline
 \end{tabular}
 }
@@ -166,17 +171,14 @@ Treino 2: Referências: 24 \textbf{\tiny hex}, 104 \textbf{\tiny hex}, 100
 \begin{table}[ht!]
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c||c|c|c|c|c|c|c|c|}
 \hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
                & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
-\hline Conjunto 0 & E & F & G & H & T & U & V & J &  \textgreek{α} &  
-\textgreek{β} & \textgreek{χ} & \textgreek{δ} & \textgreek{π} & \textgreek{θ} & 
-\textgreek{ρ} & \textgreek{ω} \\
-\hline Conjunto 1 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 0 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 1 & & & & & & & & & &  &  &  &  &  &  &  \\
 \hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 3 & \textgreek{δ} & \textgreek{π} & \textgreek{θ} & 
-\textgreek{ρ} & \textgreek{ω} & E & F & G &  &  &  &  &  &  &  &  \\
-\hline Conjunto 4 & L & M & N & W & X & Y & Z & P &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 & & & & &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 4 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
@@ -196,22 +198,22 @@ Treino 3: Referências: 310 \textbf{\tiny hex}, 14 \textbf{\tiny hex}, 18
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline Endereço (0x) & End. [7:0] (0b) & Conteúdo &
        Endereço (0x) & End. [7:0] (0b) & Conteúdo \\
-\hline 0000 0000 & 00000000 & A & 0000 0100 &              & \textgreek{α} \\
-\hline 0000 0004 &          & B & 0000 0104 &              & \textgreek{β} \\
-\hline 0000 0008 &          & C & 0000 0108 &              & \textgreek{χ} \\
-\hline 0000 000C &          & D & 0000 010C &              & \textgreek{δ} \\
-\hline 0000 0010 &          & K & 0000 0110 &              & \textgreek{π} \\
-\hline 0000 0014 & 00010100 & L & 0000 0114 &              & \textgreek{θ} \\
-\hline 0000 0018 & 00011000 & M & 0000 0118 &              & \textgreek{ρ} \\
-\hline 0000 001C &          & N & 0000 011C &              & \textgreek{ω} \\
-\hline 0000 0020 &          & W & 0000 0300 &              & E \\
-\hline 0000 0024 &          & X & 0000 0304 &              & F \\
-\hline 0000 0028 &          & Y & 0000 0308 &              & G \\
-\hline 0000 002C & 00101100 & Z & 0000 030C &              & H \\
-\hline 0000 0030 &          & P & 0000 0310 & 001100010000 & T \\
-\hline 0000 0034 &          & Q & 0000 0314 &              & U \\
-\hline 0000 0038 &          & R & 0000 0318 &              & V \\
-\hline 0000 003C &          & S & 0000 031C &              & J \\
+\hline 0000 0000 & 00000000 & A & 0000 0100 &              & J \\
+\hline 0000 0004 &          & B & 0000 0104 &              & U \\
+\hline 0000 0008 &          & C & 0000 0108 &              & S \\
+\hline 0000 000C &          & D & 0000 010C &              & T \\
+\hline 0000 0010 &          & P & 0000 0110 &              & I \\
+\hline 0000 0014 & 00010100 & P & 0000 0114 &              & Ç \\
+\hline 0000 0018 & 00011000 & R & 0000 0118 &              & A \\
+\hline 0000 001C &          & U & 0000 011C &              & J \\
+\hline 0000 0020 &          & D & 0000 0300 &              & E \\
+\hline 0000 0024 &          & E & 0000 0304 &              & F \\
+\hline 0000 0028 &          & N & 0000 0308 &              & G \\
+\hline 0000 002C & 00101100 & C & 0000 030C &              & H \\
+\hline 0000 0030 &          & I & 0000 0310 & 001100010000 & T \\
+\hline 0000 0034 &          & A & 0000 0314 &              & U \\
+\hline 0000 0038 &          & P & 0000 0318 &              & V \\
+\hline 0000 003C &          & P & 0000 031C &              & J \\
 \hline
 \end{tabular}
 }
@@ -221,15 +223,15 @@ Treino 3: Referências: 310 \textbf{\tiny hex}, 14 \textbf{\tiny hex}, 18
 \begin{table}[ht!]
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c||c|c|c|c|c|c|c|c|}
 \hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
                & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
-\hline Conjunto 0 & A & B & C & D & K & L & M & N &  &  &  &  &  &  &  &  \\
-\hline Conjunto 1 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 2 & T & U & V & J &  &  &  &  & L & M & N & W & X & Y & Z & P \\
-\hline Conjunto 3 & M & N & W & X & Y & Z & P & Q &  &  &  &  &  &  &  &  \\
+\hline Conjunto 0 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 1 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 & & & & &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 4 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 5 & N & W & X & Y & Z & P & Q & R &  &  &  &  &  &  &  &  \\
+\hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline
@@ -273,21 +275,17 @@ Treino 3: Referências: 3C \textbf{\tiny hex}, 31C \textbf{\tiny hex}, 304
 \begin{table}[ht!]
 \centering
 \resizebox{\linewidth}{!}{
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c||c|c|c|c|c|c|c|c|}
 \hline Palavra & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111
                & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\
-\hline Conjunto 0 & \textgreek{θ} & \textgreek{ρ} & \textgreek{ω} & E & F & G & 
-H & T &  &  &  & A & B & C & D & K \\
-\hline Conjunto 1 & S & \textgreek{α} & \textgreek{β} & \textgreek{χ} & 
-\textgreek{δ} & \textgreek{π} & \textgreek{θ} & \textgreek{ρ} &  &  &  &  &  &  
-&  & \\
-\hline Conjunto 2 & T & U & V & J &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 3 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 0 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 1 & & & & & & & & & &  &  &  &  &  &  &  \\
+\hline Conjunto 2 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline Conjunto 3 & & & & &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 4 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 5 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline Conjunto 6 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
-\hline Conjunto 7 & Z & P & Q & R & S & \textgreek{α} & \textgreek{β} & 
-\textgreek{χ} &  &  &  &  &  &  &  &  \\
+\hline Conjunto 7 &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
 \hline
 \end{tabular}
 }

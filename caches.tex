@@ -118,4 +118,136 @@ $2^{33-11}\times(6+(24-11))$
 
 $2^{22}\times(6+13))$
 
+\section{Teoria}
+
+\begin{enumerate}
+
+\item[pg. 452]
+\begin{itemize}
+\item Localidade Temporal (localidade no tempo): Se um item é referenciado, ele
+tenderá a ser referenciado novamente, em breve.
+\item Localidade Espacial (localidade no espaço): Se um item é referenciado,
+itens cujos endereços estão perto, tenderão a serem referenciados também, em
+breve.
+
+\begin{quotation}
+\parbox{0.8\textwidth}{ Programas exibem costumeiramente ambos: localidade
+temporal, a tendência em reusar itens recentemente acessados, e localidade
+espacial, a tendência em referenciar dados que estão perto daquele dado
+recentemente acessado. Hierarquia de memória usa a vantagem de localidade
+temporal deixando itens recentemente acessados mais perto do processador.
+Hierarquia de memória tiram vantagem de localidade espacial movendo blocos de
+dados consistindo de múltiplas palavras contíguas para níveis de memória mais
+acima. Um dado da hierarquia não pode estár em um nível $n$ se não estiver em 
+um nível $n+1$, funciona como uma hierarquia normal.}
+\end{quotation}
+
+\end{itemize}
+\item[pg. 454]
+\begin{itemize}
+\item Bloco (ou Linha): A unidade mínima de informação que pode estár presente 
+ou não na cache.
+\item Taxa de Acertos: A fração de acessos achados na memória em um nível da 
+hierarquia de memória.
+\item Taxa de Erros: A fração de acessos não-achados na memória em um nível da 
+hierarquia de memória. $miss\ rate = 1 - hit\ rate$
+\item Penalidade por faltas: O tempo requerido para buscar um \underline{bloco} 
+em um nível mais abaixo na hierarquia de memória, incluindo o tempo de acesso 
+ao bloco, transmita isso de uma nível para outro, insira no nível que 
+experienciou o miss, e então passe o bloco para o requisitador.
+\item Tempo de Acerto: O tempo requerido para acessar um nível de memória, 
+incluindo o tempo necessário para determinar quando é acesso é um \textit{hit} 
+ou um \textit{miss}\footnote{Explorar hierarquia de memória é chave para obter 
+boa performance.}.
+\end{itemize}
+
+\item[pg. 457] Cache de mapeamento direto é uma cache onde cada localização na 
+memória é mapeada para exatamente uma localização na cache. $X_{1}, X_{2}, 
+X_{3}, \dots, X_{n-1}$, então o processador requisita uma palavra $X_{n}$ da 
+cache e se essa palavra não estiver lá, acarretará em um miss, porém o dado 
+referenciado pelo endereço $X_{n}$ vai ser inserido na cache, na posição 
+segundo a fórmula: $(Block\ Address)\ modulo\ (Number\ of\ blocks\ in\ the\ 
+cache)$\footnote{Leituras na memória são mais simples de se tratar do que 
+escritas na memória}.
+
+\item[pg. 458]
+
+\begin{itemize}
+\item Tag: Um campo em uma tabela, usado para a hierarquia de memória, que 
+contém a informação do endereço requerida para identificar quando o bloco 
+associado na hierarquia corresponde à palavra requisitada.
+
+\item Bit de Validade: É um campo na tabela de uma hierarquia de memória, que 
+indica que o bloco associado na hierarquia contém um dado válido (1) ou 
+inválido (0).
+\end{itemize}
+
+
+\item[459-63] Eu achei muito complicado o jeito que o Patterson criou uma 
+formula para calcular caches diretamente mapeadas, segue a minha solução para 
+calcular caches diretamente mapeadas:
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline TAG & ÍNDICE & OFFSET \\
+    \hline t bits & i bits & o bits \\
+    \hline
+  \end{tabular}
+\end{table}
+
+$2^{i} \times (t + c + 2^{o} \times 8)$ Essa fórmula mais simples calcula o
+tamanho total da cache. Sendo que 'c' é bits de controle, por exemplo c=1 (bit
+de validade). Caso você não tenha os valores diretos de tag, índice, offset.
+Provavelmente um problema te dará $p\ KB$ (por exemplo, 4 KB) de dados na cache,
+e dá também quanto cada bloco dessa cache tem: $s\ B$, ou $s\ KB$ (por exemplo, 
+64 bytes, ou 1 KB). Assim sabendo que é diretamente mapeada, basta dividir 
+$\frac{p\ KB}{s\ B} = Nro.\ Blocos$, ou $\frac{p\ KB}{s\ KB} = Nro.\ Blocos$ a 
+partir do número de blocos, basta você tirar $log_{2}\ (nro.\ blocos) = indice\ 
+bits$; por exemplo $log_{2}\ (\frac{2 KB \times 2^{10}\ =\ 2048\ bytes}{64\ 
+bytes} = 32) = 5$, pois $2^{5} = 32$, ou seja: 5 bits mapeiam 32 blocos na 
+cache diretamente mapeada. Sabendo que cada bloco tem 64 bytes é porquê nós 
+temos um offset de $log_{2}\ (64) = 6$ bits, então temos que $tag = 32 - indice 
+- offset = 32 - 5 - 6 = 21$ bits\footnote{Confira os resultados na aplicação: 
+\href{http://cachesapp.herokuapp.com/}{http://cachesapp.herokuapp.com/}.}.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|c|}
+    \hline TAG & ÍNDICE & OFFSET \\ 
+    \hline 21 bits & 5 bits & 6 bits \\ 
+    \hline 
+  \end{tabular}
+\end{table}
+
+\item[464] Em uma cache diretamente mapeada com 64 blocos e 16 bytes por bloco.
+E no exemplo um endereço $1200_{10}$ chega para essa cache, onde o dado contido
+nesse endereço $M[1200_{10}]$ vai para na cache? Simples: $(1200\ // 16)\ mod\
+64 = 11$\footnote{// significa divisão inteira, nessa divisão inteira você está
+na verdade retirando os bits menos significativos, é como se estivesse fazendo
+deslocamento.}. A operação modular do ponto de vista binário você está pegando
+do valor binário o que lhe interessa, pois 1200 em binário é $010010110000_{2}$
+fazer ''// 16'' você retira os 4 bits menos significativos ''do offset'',
+fazendo agora ''mod 64'' acha o local onde na cache, pois você pega os 6 bits
+menos significativos que é o resto da divisão.
+
+\item[470]
+\item[471]
+\item[472]
+\item[473]
+\item[474]
+\item[475]
+\item[476]
+\item[477]
+\item[478]
+\item[479]
+\item[480]
+\item[481]
+\item[482]
+\item[483]
+\item[484]
+\item[485]
+\item[486]
+\end{enumerate}
+
 \end{document}
